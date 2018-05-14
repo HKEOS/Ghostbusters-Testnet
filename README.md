@@ -6,18 +6,16 @@
 
 ```console
 mkdir Ghostbusters
+wget https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/installGhostbusters.sh
 ```
-
-Find the [installGhostbusters.sh](https://github.com/jchung00/Ghostbusters-Testnet/blob/master/installGhostbusters.sh) script and copy the whole file. Then, do:
-
-```console
-nano installGhostbusters.sh
-```
-and paste it into the file.
 
 ### 2. Fill out info in install script
 
 Edit the following information in the file:
+
+```console
+nano installGhostbusters.sh
+```
 
 ***Will make a screenshot with inputs that need to be inserted in highlights***
 
@@ -31,6 +29,8 @@ sudo chmod u+x installGhostbusters.sh
 ### 4. Publish info.json
 
 The `info.json` file should have been created in your directory. ***Need instructions on how we should publish this***
+
+#### 4.1 Keybase.pub instructions
 
 ### 5. Check scripts
 
