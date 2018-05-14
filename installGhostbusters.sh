@@ -299,7 +299,7 @@ if [[ ! -d $TESTNET_DIR ]]; then
     log-level-net-plugin = info
     max-clients = 120
     connection-cleanup-period = 30
-    network-version-match = 0
+    network-version-match = 1
     sync-fetch-span = 2000
     enable-stale-production = false
     required-participation = 33
