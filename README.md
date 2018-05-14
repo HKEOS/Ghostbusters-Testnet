@@ -36,6 +36,9 @@ The `info.json` file should have been created in your directory. ***Need instruc
 - Install keybase: https://keybase.io/docs/the_app/install_linux
  Ubuntu instructions
  ```console
+# Install curl if required
+sudo apt install curl
+
 curl -O https://prerelease.keybase.io/keybase_amd64.deb
 # if you see an error about missing `libappindicator1`
 # from the next command, you can ignore it, as the
