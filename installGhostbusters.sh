@@ -38,7 +38,8 @@ PRODUSER_NAME="<producer-name>"
 PRODUCER_AGENT_NAME="<producer-name>"
 
 ### STANDARD BLOCK PRODUCER INFO - according to https://github.com/eosrio/bp-info-standard
-PRODUCER_URL="<producer-info-url>"
+### Replace username with your keybase username
+PRODUCER_URL="https://<username>.keybase.pub/bp_info.json"
 
 ### WALLET INFO ###
 WALLET_HOST="127.0.0.1"
