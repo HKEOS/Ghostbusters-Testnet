@@ -3,6 +3,31 @@
 ### 0. Wireguard VPN Setup
 
 ***Should we put this first?***
+```console
+sudo add-apt-repository ppa:wireguard/wireguard
+sudo apt-get update
+sudo apt-get install wireguard
+
+umask 077
+wg genkey | tee privatekey | wg pubkey > publickey
+echo -e "[Interface]\nPrivateKey = $(cat privatekey)\nSaveConfig = true\nDNS = 1.1.1.1" > ghostbusters.conf
+echo -e "ListenPort = 5555" >> ghostbusters.conf
+echo -e "Address = 192.168.10.X/24" >> ghostbusters.conf
+sudo cp ghostbusters.conf /etc/wireguard/.
+sudo nano /etc/wireguard/ghostbusters.conf
+# Add your trusted vpn peers by repeating the line below for each peer
+
+[Peer]
+PublicKey = <peer-public-key>
+AllowedIPs = 192.168.10.Y/32
+Endpoint = <peer-public-endpoint>:<peer-vpn-port>
+
+# Save the file
+# Start wireguard
+sudo wg-quick up ghostbusters
+# Test configuration
+sudo wg show ghostbusters
+```
 
 ### 1. Setup
 
