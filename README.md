@@ -57,11 +57,11 @@ run_keybase
  - Save on KBFS:
  ```console
  cd /keybase/public/username
- wget https://raw.githubusercontent.com/eosrio/bp-info-standard/master/bp_info_sample.json
- nano bp_info.js
+ curl -O https://raw.githubusercontent.com/eosrio/bp-info-standard/master/bp_info_sample.json > bp_info.json
+ nano bp_info.json
  # add your bp info and save it!
  ```
- - Verify file on `https://[username].keybase.pub/bp_info.js`
+ - Verify file on `https://[username].keybase.pub/bp_info.json`
  ***Need to add instructions for verification on command line.***
 
 ### 5. Check scripts
