@@ -2,7 +2,6 @@
 
 ### 0. Wireguard VPN Setup
 
-***Should we put this first?***
 ```console
 sudo add-apt-repository ppa:wireguard/wireguard
 sudo apt-get update
@@ -23,6 +22,17 @@ AllowedIPs = 192.168.10.Y/32
 Endpoint = <peer-public-endpoint>:<peer-vpn-port>
 
 # Save the file
+```
+It is recommended that you use Keybase to share information between trusted peers. Both you and your peer must add each other to the Wireguard config.
+
+Check firewall settings, and make sure that port 5555 is open. If not, you can use:
+```console
+sudo ufw allow 5555
+```
+
+Then, start Wireguard and check that it is working.
+
+```console
 # Start wireguard
 sudo wg-quick up ghostbusters
 # Test configuration
