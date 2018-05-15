@@ -57,7 +57,7 @@ run_keybase
  - Save on KBFS:
  ```console
  cd /keybase/public/username
- wget https://raw.githubusercontent.com/eosrio/bp-info-standard/master/bp_info.js
+ wget https://raw.githubusercontent.com/eosrio/bp-info-standard/master/bp_info_sample.json
  nano bp_info.js
  # add your bp info and save it!
  ```
