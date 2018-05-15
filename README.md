@@ -106,7 +106,7 @@ run_keybase
  curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
  sudo apt-get install -y nodejs
  ```
- Now `cd` to your `Ghostbusters` folder. `schema.json` should have been generated from the Ghostbusters install script from earlier.
+ Now `cd` to your `Ghostbusters` folder. `schema.json` should have been generated from the Ghostbusters install script from earlier, and your `bp_info.json` file should be in there too.
  ```console
  sudo npm install -g ajv-cli
  ajv validate -s schema.json -d bp_info.json
