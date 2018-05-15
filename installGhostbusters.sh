@@ -59,8 +59,17 @@ echo -n $'\E[0;37m'
 
 PRODUCER_PRIV_KEY_DEF="!! INSERT HERE PRIVATE KEY TO THIS PUBLIC ADDRESS !!";
 TESTNET_DIR="$GLOBAL_PATH/$TESTNET"
+
 if [[ $EOS_SOURCE_DIR == "" ]]; then
     EOS_SOURCE_DIR="$GLOBAL_PATH/eos-source"
+else
+    EOS_VERSION=$("$EOS_SOURCE_DIR/build/programs/nodeos/nodeos" --version)
+    EOS_TARGET_VERSION="2615709958";
+    echo "Current nodeos version: $EOS_VERSION";
+    if [[ "$EOS_VERSION" != "$EOS_TARGET_VERSION" ]]; then
+       echo "Wrong version, $EOS_TARGET_VERSION required!";
+       exit 1
+   fi
 fi
 
 WALLET_DIR="$GLOBAL_PATH/wallet"
