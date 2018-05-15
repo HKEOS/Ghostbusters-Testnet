@@ -71,8 +71,7 @@ Try `cat config.ini`, and `cat cleos.sh` to check that all the information is co
 
 ### 6. Add peers
 
-***Still need to define this step better with the web of trust idea. Should refer to launch status spreadsheet***
-***Merge with step 0?***
+***Still need to define this step better with the web of trust idea. Should refer to launch status spreadsheet. Merge with step 0?***
 
 ##### 6.1 Bios Node
 
