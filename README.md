@@ -1,5 +1,9 @@
 # Ghostbusters Testnet Instructions
 
+### 0. Wireguard VPN Setup
+
+***Should we put this first?***
+
 ### 1. Setup
 
 `cd` to your `opt` folder.
@@ -58,6 +62,7 @@ run_keybase
  # add your bp info and save it!
  ```
  - Verify file on `https://[username].keybase.pub/bp_info.js`
+ ***Need to add instructions for verification on command line.
 
 ### 5. Check scripts
 
@@ -67,3 +72,19 @@ Try `cat config.ini`, and `cat cleos.sh` to check that all the information is co
 ### 6. Add peers
 
 ***Still need to define this step better with the web of trust idea. Should refer to launch status spreadsheet***
+***Merge with step 0?***
+
+##### 6.1 Bios Node
+
+If you were selected as the bios node, please follow instructions [here](https://github.com/jchung00/Ghostbusters-Testnet/blob/master/bios-instructions.md)
+
+### 7. Receive genesis file
+
+***Need directions for this***
+
+### 8. Sync
+
+```console
+./start.sh
+tail -F stderr.txt
+```
