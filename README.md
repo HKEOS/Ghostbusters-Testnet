@@ -112,6 +112,8 @@ run_keybase
  ajv validate -s schema.json -d bp_info.json
 ```
 
+***Join Keybase group***
+
 ### 5. Check scripts
 
 `cd` into your Ghostbusters testnet folder, which was created from the install script.
