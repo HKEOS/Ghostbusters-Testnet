@@ -46,28 +46,6 @@ PEER_LIST='
 ISBP=true
 PRODUCER_URL="<producer-info-url>"
 
-INFO_JSON='{
-	"candidate_name": String,
-	"org_location": String,
-	"org_country_code": String,
-	"p2p_endpoint": String,
-	"api_endpoint": String,
-	"node_location": [{
-		"place": String
-		"latitude": Number,
-		"longitude": Number
-	}],
-	"website": String,
-	"social": {
-		"steemit": String,
-		"twitter": String,
-		"youtube": String,
-		"facebook": String,
-		"reddit": String,
-		"keybase": String,
-		"telegram": String
-	}'
-
 GENESIS=''
 
 
@@ -339,11 +317,6 @@ if [[ ! -d $TESTNET_DIR ]]; then
     fi
 
     echo "$PEER_LIST" >> $TESTNET_DIR/config.ini
-
-
-# creating info.json
-    echo '..:: Creating info.json ::..'
-    echo -ne "$INFO_JSON" > $TESTNET_DIR/info-$PRODUSER_NAME.json
 
 fi
 
