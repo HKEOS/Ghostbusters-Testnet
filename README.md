@@ -27,11 +27,7 @@ sudo chmod u+x installGhostbusters.sh
 ./installGhostbusters.sh
 ```
 
-### 4. Publish info.json
-
-The `info.json` file should have been created in your directory. ***Need instructions on how we should publish this***
-
-#### 4.1 Keybase.pub instructions
+### 4. Publishing BP info on Keybase
 
 - Install keybase: https://keybase.io/docs/the_app/install_linux
  Ubuntu instructions
