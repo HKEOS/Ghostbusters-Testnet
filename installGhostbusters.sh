@@ -259,6 +259,12 @@ if [[ ! -d $TESTNET_DIR ]]; then
     # bp_info_sample.json
     echo "..:: Downloading bp_info_sample.json ::..";
     curl -O https://raw.githubusercontent.com/eosrio/bp-info-standard/master/bp_info_sample.json > bp_info_sample.json
+    
+    # sort_btc_block.sh
+    
+    echo "..:: Downloading sort_btc_block.sh ::..";
+    curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/sort_btc_block.sh > sort_btc_block.sh
+    chmod u+x sort_btc_block.sh
 
 
 # config.ini 
