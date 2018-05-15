@@ -207,6 +207,11 @@ if [[ ! -d $TESTNET_DIR ]]; then
     # genesis.json
 
     echo -ne "$GENESIS" > $TESTNET_DIR/genesis.json
+    
+    # schema.json
+
+    echo "..:: Downloading schema.json ::..";
+    curl -O https://raw.githubusercontent.com/eosrio/bp-info-standard/master/schema.json > schema.json
 
 
 # config.ini 
