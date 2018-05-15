@@ -62,7 +62,7 @@ run_keybase
  # add your bp info and save it!
  ```
  - Verify file on `https://[username].keybase.pub/bp_info.js`
- ***Need to add instructions for verification on command line.
+ ***Need to add instructions for verification on command line.***
 
 ### 5. Check scripts
 
