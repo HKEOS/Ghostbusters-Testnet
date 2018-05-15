@@ -324,7 +324,7 @@ fi
 
 
 echo '
-allowed-connection = any
+allowed-connection = specified
 
 log-level-net-plugin = info
 max-clients = 120
@@ -334,8 +334,7 @@ sync-fetch-span = 2000
 enable-stale-production = false
 required-participation = 33
 
-# peer-key =
-# peer-private-key =
+peer-key =
 
 plugin = eosio::chain_api_plugin
 plugin = eosio::history_plugin
@@ -354,11 +353,13 @@ if [[ $ISBP == true ]]; then
     plugin = eosio::producer_plugin
     private-key = ["'$PRODUCER_PUB_KEY'","'$PRODUCER_PRIV_KEY'"]
     producer-name = '$PRODUSER_NAME'
+    peer-private-key = ["'$PRODUCER_PUB_KEY'","'$PRODUCER_PRIV_KEY'"]
     ' >> $TESTNET_DIR/config.ini
 else 
     echo '
     #plugin = eosio::producer_plugin
     #private-key = ["'$PRODUCER_PUB_KEY'","'$PRODUCER_PRIV_KEY'"]
+    #peer-private-key = ["'$PRODUCER_PUB_KEY'","'$PRODUCER_PRIV_KEY'"]
     #producer-name = '$PRODUSER_NAME'
     ' >> $TESTNET_DIR/config.ini
 
