@@ -97,7 +97,20 @@ run_keybase
  # add your bp info and save it!
  ```
  - Verify file on `https://[username].keybase.pub/bp_info.json`
- ***Need to add instructions for verification on command line.***
+ 
+ You can also verify using command line.
+ 
+ If npm is not installed:
+ ```console
+ sudo apt-get update
+ curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+ sudo apt-get install -y nodejs
+ ```
+ Now `cd` to your `Ghostbusters` folder. `schema.json` should have been generated from the Ghostbusters install script from earlier.
+ ```console
+ sudo npm install -g ajv-cli
+ ajv validate -s schema.json -d bp_info.json
+```
 
 ### 5. Check scripts
 
@@ -114,7 +127,11 @@ If you were selected as the bios node, please follow instructions [here](https:/
 
 ### 7. Receive genesis file
 
-***Need directions for this***
+*Find link published by bios node*
+
+*Use `keybase verify`*
+
+***Need further directions for this***
 
 ### 8. Sync
 
