@@ -24,7 +24,7 @@ PersistentKeepAlive = 201
 
 # Save the file
 ```
-It is recommended that you use Keybase to share information between trusted peers. Both you and your peer must add each other to the Wireguard config. With your trusted peers, you should share:
+It is recommended that you use Keybase to share information between your 6-8 trusted peers. Both you and your peer must add each other to the Wireguard config. With your trusted peers, you should share the following information:
 
 - Wireguard Public Key
 - VPN IP Address
@@ -66,6 +66,10 @@ nano installGhostbusters.sh
 Input your information for the highlighted fields shown below:
 
 ![gb-config](https://github.com/jchung00/Ghostbusters-Testnet/blob/master/gb-config.png)
+
+You should have received the p2p-peer-address and public keys of your trusted peers. Fill in the corresponding information for all of your peers in the section shown below:
+
+![gb-peers](https://github.com/jchung00/Ghostbusters-Testnet/blob/master/gb-peers.png)
 
 ### 3. Run the script
 
@@ -131,24 +135,19 @@ run_keybase
 `cd` into your Ghostbusters testnet folder, which was created from the install script.
 Try `cat config.ini`, and `cat cleos.sh` to check that all the information is correct.
 
-### 6. Add peers
-
-***Still need to define this step better with the web of trust idea. Should refer to launch status spreadsheet. Merge with step 0?***
-
-##### 6.1 Bios Node
+##### 6 Bios Node
 
 If you were selected as the bios node, please follow instructions [here](https://github.com/jchung00/Ghostbusters-Testnet/blob/master/bios-instructions.md)
 
 ### 7. Receive genesis file
 
-*Find link published by bios node*
+*Automated*
 
-*Use `keybase verify`*
+***Further directions?***
 
-***Need further directions for this***
+### 8. Resync
 
-### 8. Sync
-
+If at any point you need to restart your node:
 ```console
 ./start.sh
 tail -F stderr.txt
