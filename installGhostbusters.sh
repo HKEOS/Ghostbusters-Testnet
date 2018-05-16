@@ -267,7 +267,7 @@ if [[ ! -d $TESTNET_DIR ]]; then
     
     # Add cronjob
     croncmd="bash $TESTNET_DIR/autolaunch.sh >> $TESTNET_DIR/autolaunch.log";
-    cronjob="*/10 * * * * $croncmd";
+    cronjob="0,10,20,30,40,50 * * * * $croncmd";
     
     ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
     
