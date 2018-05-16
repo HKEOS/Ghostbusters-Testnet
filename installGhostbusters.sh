@@ -380,6 +380,8 @@ echo "$PEER_LIST" >> $TESTNET_DIR/config.ini
 
 echo "$PEER_KEYS" >> $TESTNET_DIR/config.ini
 
+fi
+
 ###############################
 # Register Producer
 
