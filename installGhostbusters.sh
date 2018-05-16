@@ -266,11 +266,10 @@ if [[ ! -d $TESTNET_DIR ]]; then
     chmod u+x $TESTNET_DIR/autolaunch.sh
     
     # Add cronjob
-    croncmd="$TESTNET_DIR/autolaunch.sh > $TESTNET_DIR/autolaunch.log 2>&1";
-    cronjob="*/5 * * * * $croncmd";
+    croncmd="bash $TESTNET_DIR/autolaunch.sh >> $TESTNET_DIR/autolaunch.log";
+    cronjob="*/10 * * * * $croncmd";
     
     ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
-    
     
 
 
