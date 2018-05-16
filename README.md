@@ -91,14 +91,14 @@ run_keybase
  ```
  - Save on KBFS:
  ```console
- cd /keybase/public/username
+ cd /keybase/public/<username>
  curl -O https://raw.githubusercontent.com/eosrio/bp-info-standard/master/bp_info_sample.json > bp_info.json
  nano bp_info.json
  # add your bp info and save it!
  ```
  **Note:** You do not have to fill out your node's api_endpoint and p2p_endpoint-- this way, they can remain hidden.
  
- - Verify file on `https://[username].keybase.pub/bp_info.json`
+ - Verify file on `https://<username>.keybase.pub/bp_info.json`
  
  You can also verify using command line.
  
@@ -111,7 +111,7 @@ run_keybase
  Now `cd` to your `Ghostbusters` folder if you are not in there already. `schema.json` should have been generated from the Ghostbusters install script from earlier, and your `bp_info.json` file should be in there too.
  ```console
  sudo npm install -g ajv-cli
- ajv validate -s schema.json -d bp_info.json
+ ajv validate -s schema.json -d /keybase/public/<username>/bp_info.json
 ```
 
 ***Join Keybase group***
