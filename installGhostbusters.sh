@@ -57,8 +57,6 @@ PEER_KEYS='
 peer-key = <EOS-public-key>
 '
 
-GENESIS=''
-
 ### AUTO-GENERATED ###
 
 NODE_HTTP_SRV_ADDR="$NODE_NET_ADDR:$NODE_API_PORT"
@@ -256,7 +254,7 @@ if [[ ! -d $TESTNET_DIR ]]; then
 
     # genesis.json
 
-    echo -ne "$GENESIS" > $TESTNET_DIR/genesis.json
+    # echo -ne "$GENESIS" > $TESTNET_DIR/genesis.json
     
     # schema.json
 
@@ -270,8 +268,8 @@ if [[ ! -d $TESTNET_DIR ]]; then
     # sort_btc_block.sh
     
     echo "..:: Downloading sort_btc_block.sh ::..";
-    curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/sort_btc_block.sh > $TESTNET_DIR/sort_btc_block.sh
-    chmod u+x $TESTNET_DIR/sort_btc_block.sh
+    curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/sort_btc_block.sh > sort_btc_block.sh
+    chmod u+x sort_btc_block.sh
 
 
 # config.ini 
@@ -444,8 +442,8 @@ FINISHTEXT="\n.=================================================================
 FINISHTEXT+="|=================================================================================|\n"
 FINISHTEXT+="|˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙...::: INSTALLATION COMPLETED :::...˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙|\n"
 FINISHTEXT+="|˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙|\n"
-FINISHTEXT+="|˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙- Jungle testnet node Info -˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙|\n"
-FINISHTEXT+="| by CryptoLions.io ˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙|\n"
+FINISHTEXT+="|˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙- Ghostbusters testnet node Info -˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙|\n"
+FINISHTEXT+="| ˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙˙|\n"
 FINISHTEXT+="\_-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-_/\n"
 FINISHTEXT+="\n"
 FINISHTEXT+="\n"
