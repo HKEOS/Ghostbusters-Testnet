@@ -263,8 +263,8 @@ if [[ ! -d $TESTNET_DIR ]]; then
     # sort_btc_block.sh
     
     echo "..:: Downloading sort_btc_block.sh ::..";
-    curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/sort_btc_block.sh > sort_btc_block.sh
-    chmod u+x sort_btc_block.sh
+    curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/sort_btc_block.sh > $TESTNET_DIR/sort_btc_block.sh
+    chmod u+x $TESTNET_DIR/sort_btc_block.sh
 
 
 # config.ini 
