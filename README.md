@@ -96,6 +96,8 @@ run_keybase
  nano bp_info.json
  # add your bp info and save it!
  ```
+ **Note: You do not have to fill out your node's api_endpoint and p2p_endpoint in the json file to keep them secure**
+ 
  - Verify file on `https://[username].keybase.pub/bp_info.json`
  
  You can also verify using command line.
