@@ -106,17 +106,17 @@ run_keybase
  keybase signup
  ```
  - Save on KBFS:
+ `cd` to your `Ghostbusters` folder if you are not in there already.
  ```console
- cd /keybase/public/<username>
- curl -O https://raw.githubusercontent.com/eosrio/bp-info-standard/master/bp_info_sample.json > bp_info.json
  nano bp_info.json
- # add your bp info and save it!
+  # add your bp info and save it!
+ cp bp_info.json /keybase/public/<username>
  ```
  **Note:** You do not have to fill out your node's api_endpoint and p2p_endpoint-- this way, they can remain hidden.
  
- - Verify file on `https://<username>.keybase.pub/bp_info.json`
+ - Check that file is up on `https://<username>.keybase.pub/bp_info.json`
  
- You can also verify using command line.
+ You can verify that bp_info.json correctly follows the schema using command line.
  
  If npm is not installed:
  ```console
@@ -124,10 +124,10 @@ run_keybase
  curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
  sudo apt-get install -y nodejs
  ```
- Now `cd` to your `Ghostbusters` folder if you are not in there already. `schema.json` should have been generated from the Ghostbusters install script from earlier, and your `bp_info.json` file should be in there too.
+ `schema.json` should have been generated from the Ghostbusters install script from earlier, and your `bp_info.json` file should be in there too.
  ```console
  sudo npm install -g ajv-cli
- ajv validate -s schema.json -d /keybase/public/<username>/bp_info.json
+ ajv validate -s schema.json -d bp_info.json
 ```
 
 ### 5. Check scripts
@@ -141,9 +141,11 @@ If you were selected as the bios node, please follow instructions [here](https:/
 
 ### 7. Receive genesis file
 
-*Automated*
-
-***Further directions?***
+```console
+cd /path/to/Ghostbusters
+./sort_btc_block.sh
+```
+Your node should start automatically when you receive the genesis.json file.
 
 ### 8. Resync
 
