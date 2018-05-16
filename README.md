@@ -20,10 +20,19 @@ sudo nano /etc/wireguard/ghostbusters.conf
 PublicKey = <peer-public-key>
 AllowedIPs = 192.168.10.Y/32
 Endpoint = <peer-public-endpoint>:<peer-vpn-port>
+PersistentKeepAlive = 201
 
 # Save the file
 ```
-It is recommended that you use Keybase to share information between trusted peers. Both you and your peer must add each other to the Wireguard config.
+It is recommended that you use Keybase to share information between trusted peers. Both you and your peer must add each other to the Wireguard config. With your trusted peers, you should share:
+
+- Wireguard Public Key
+- VPN IP Address
+- Peer public endpoint (IP Address or domain of node)
+- VPN Port
+- HTTP/API Port
+- P2P Port
+- EOS Public Key
 
 Check firewall settings, and make sure that port 5555 is open. If not, you can use:
 ```console
