@@ -64,8 +64,8 @@ build_genesis()
 }
 
 GLOBAL_PATH=$(pwd)
-croncmd="bash $TESTNET_DIR/autolaunch.sh >> $TESTNET_DIR/autolaunch.log";
-cronjob="*/10 * * * * $croncmd";
+croncmd="bash $GLOBAL_PATH/autolaunch.sh >> $GLOBAL_PATH/autolaunch.log";
+cronjob="0,10,20,30,40,50 * * * * $croncmd";
 
 add_cronjob()
 {
@@ -220,7 +220,13 @@ else
 	wall -n "EOS Launch Time! $SELECTED_USER was chosen as bios node! - press enter to continue...";
 	echo "Waiting for genesis... 30s";
 	sleep 30;
+	while [[ ! -f /keybase/public/$SELECTED_USER/genesis.json ]]; do
+		echo -e "Genesis is not ready yet - please verify this url on your browser\n https://$SELECTED_USER.keybase.pub/genesis.json";
+		read -n 1 -s -r -p "Press any key when ready!";
+	done
 	cp /keybase/public/$SELECTED_USER/genesis.json genesis.json;
-	echo "Genesis ready! Restart the node!";
+	echo "Genesis ready! Node will start now...";
 	remove_cronjob;
+	bash start.sh
+	echo "Please verify logs on stderr.txt";
 fi
