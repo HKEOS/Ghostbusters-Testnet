@@ -13,7 +13,7 @@ build_genesis()
 {
 
 	if [[ ! -f ./cleos.sh ]]; then
-		echo "cleos.sh not found!";
+		echo "cleos.sh not found! Exiting...";
 		exit 1;
 	fi
 
@@ -61,6 +61,20 @@ build_genesis()
     }';
 
     echo "$genesis" > ./BiosNode/genesis.json;
+}
+
+GLOBAL_PATH=$(pwd)
+croncmd="$TESTNET_DIR/autolaunch.sh > $TESTNET_DIR/autolaunch.log 2>&1";
+cronjob="*/5 * * * * $croncmd";
+
+add_cronjob()
+{
+	( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
+}
+
+remove_cronjob()
+{
+	( crontab -l | grep -v -F "$croncmd" ) | crontab -
 }
 
 ## Check KBFS mount point
@@ -165,6 +179,7 @@ if (( $matched > 0 )); then
 		remaining_blocks=$(($TARGET_BLOCK - $BTC_HEAD2));
 		time_r=$(($remaining_blocks * 10));
 		echo "Not there yet! $remaining_blocks blocks remaining, about $time_r minutes...";
+		add_cronjob;
 		exit 1;
 	fi
 else
@@ -198,10 +213,12 @@ if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	echo "You have been chosen as bios!";
 	build_genesis;
 	cp ./BiosNode/genesis.json /keybase/public/$keybase_username/genesis.json;
+	remove_cronjob;
 else
 	echo "Selected User: $SELECTED_USER";
 	echo "Waiting for genesis... 30s";
 	sleep 30;
 	cp /keybase/public/$SELECTED_USER/genesis.json genesis.json;
 	echo "Genesis ready! Restart the node!";
+	remove_cronjob;
 fi
