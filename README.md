@@ -135,7 +135,7 @@ run_keybase
 `cd` into your Ghostbusters testnet folder, which was created from the install script.
 Try `cat config.ini`, and `cat cleos.sh` to check that all the information is correct.
 
-##### 6 Bios Node
+### 6 Bios Node
 
 If you were selected as the bios node, please follow instructions [here](https://github.com/jchung00/Ghostbusters-Testnet/blob/master/bios-instructions.md)
 
