@@ -51,13 +51,12 @@ curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/i
 
 ### 2. Fill out info in install script
 
-Edit the following information in the file:
-
 ```console
 nano installGhostbusters.sh
 ```
+Edit the following information in the file:
 
-***Will make a screenshot with inputs that need to be inserted in highlights***
+![gb-config](https://github.com/jchung00/Ghostbusters-Testnet/blob/master/gb-config.png)
 
 ### 3. Run the script
 
