@@ -67,6 +67,8 @@ sudo chmod u+x installGhostbusters.sh
 
 ### 4. Publishing BP info on Keybase
 
+**Note:** Skip parts that you have already completed.
+
 - Install keybase: https://keybase.io/docs/the_app/install_linux
  Ubuntu instructions
  ```console
