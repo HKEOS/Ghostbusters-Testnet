@@ -47,7 +47,14 @@ WALLET_PORT="<wallet-port>"
 
 ### PRE-DEFINED PEER LIST ###
 PEER_LIST='
-#p2p-peer-address = 127.0.0.1:44449                            
+#p2p-peer-address = 192.168.10.Y:9876
+p2p-peer-address = <vpn-ip-address>:<p2p-port>                         
+'
+
+### PRE-DEFINED PEER KEYS ###
+PEER_KEYS='
+#peer-key = EOS4tiVonwbmT6w5jZjxaWx8p1CkejsBtcwtn6YaqZRteKyYGQZAE
+peer-key = <EOS-public-key>
 '
 
 GENESIS=''
@@ -340,8 +347,6 @@ sync-fetch-span = 2000
 enable-stale-production = false
 required-participation = 33
 
-peer-key =
-
 plugin = eosio::chain_api_plugin
 plugin = eosio::history_plugin
 plugin = eosio::history_api_plugin
@@ -372,6 +377,10 @@ else
 fi
 
 echo "$PEER_LIST" >> $TESTNET_DIR/config.ini
+
+fi
+
+echo "$PEER_KEYS" >> $TESTNET_DIR/config.ini
 
 fi
 
