@@ -69,6 +69,8 @@ sudo chmod u+x installGhostbusters.sh
 
 **Note:** Skip parts that you have already completed.
 
+To begin with, join the eos_ghostbusters Keybase group.
+
 - Install keybase: https://keybase.io/docs/the_app/install_linux
  Ubuntu instructions
  ```console
@@ -114,8 +116,6 @@ run_keybase
  sudo npm install -g ajv-cli
  ajv validate -s schema.json -d /keybase/public/<username>/bp_info.json
 ```
-
-If you have not already done so, join the eos_ghostbusters Keybase group.
 
 ### 5. Check scripts
 
