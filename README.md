@@ -54,7 +54,7 @@ curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/i
 ```console
 nano installGhostbusters.sh
 ```
-Edit the following information in the file:
+Input your information for the highlighted fields shown below:
 
 ![gb-config](https://github.com/jchung00/Ghostbusters-Testnet/blob/master/gb-config.png)
 
