@@ -20,7 +20,7 @@ sudo nano /etc/wireguard/ghostbusters.conf
 PublicKey = <peer-public-key>
 AllowedIPs = 192.168.10.Y/32
 Endpoint = <peer-public-endpoint>:<peer-vpn-port>
-PersistentKeepAlive = 201
+PersistentKeepAlive = 20
 
 # Save the file
 ```
