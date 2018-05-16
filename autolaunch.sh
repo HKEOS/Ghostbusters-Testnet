@@ -211,11 +211,13 @@ SELECTED_USER=$(shuf -n 1 --random-source=<(get_seeded_random $BTC_HASH) users.t
 
 if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	echo "You have been chosen as bios!";
+	wall -n "EOS Launch Time: You have been chosen as bios!";
 	build_genesis;
 	cp ./BiosNode/genesis.json /keybase/public/$keybase_username/genesis.json;
 	remove_cronjob;
 else
 	echo "Selected User: $SELECTED_USER";
+	wall -n "EOS Launch Time! $SELECTED_USER was chosen as bios node!";
 	echo "Waiting for genesis... 30s";
 	sleep 30;
 	cp /keybase/public/$SELECTED_USER/genesis.json genesis.json;
