@@ -115,7 +115,7 @@ run_keybase
  ajv validate -s schema.json -d /keybase/public/<username>/bp_info.json
 ```
 
-***Join Keybase group***
+If you have not already done so, join the eos_ghostbusters Keybase group.
 
 ### 5. Check scripts
 
