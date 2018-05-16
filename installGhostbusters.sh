@@ -13,7 +13,7 @@ TAG="dawn-v4.0.0"
 ##### PARAMETERS TO BE MODIFIED ######
 
 #if empty - it will create folder, download sources and compile
-EOS_SOURCE_DIR="/opt/eos"
+EOS_SOURCE_DIR="/path/to/eos"
 TESTNET="Ghostbusters"
 
 NODE_API_PORT="<api-port>"
