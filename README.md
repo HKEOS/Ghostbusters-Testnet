@@ -39,7 +39,7 @@ Check firewall settings, and make sure that port 5555 is open. If not, you can u
 sudo ufw allow 5555
 ```
 
-Then, start Wireguard and check that it is working.
+Then, start Wireguard and check if it's working.
 
 ```console
 # Start wireguard
@@ -58,7 +58,7 @@ cd Ghostbusters
 curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/installGhostbusters.sh > installGhostbusters.sh
 ```
 
-### 2. Fill out info in install script
+### 2. Fill out your info in the install script
 
 ```console
 nano installGhostbusters.sh
@@ -67,7 +67,7 @@ Input your information for the highlighted fields shown below:
 
 ![gb-config](https://github.com/jchung00/Ghostbusters-Testnet/blob/master/gb-config.png)
 
-You should have received the p2p-peer-address and public keys of your trusted peers. Fill in the corresponding information for all of your peers in the section shown below:
+After you have received the **p2p-peer-address** and public keys of your trusted peers, fill in the corresponding information for all of your peers in the section shown below:
 
 ![gb-peers](https://github.com/jchung00/Ghostbusters-Testnet/blob/master/gb-peers.png)
 
@@ -82,7 +82,7 @@ sudo chmod u+x installGhostbusters.sh
 
 **Note:** Skip parts that you have already completed.
 
-To begin with, join the eos_ghostbusters Keybase group.
+Start by joining the eos_ghostbusters Keybase group.
 
 - Install keybase: https://keybase.io/docs/the_app/install_linux
  Ubuntu instructions
@@ -120,9 +120,8 @@ run_keybase
  
  If npm is not installed:
  ```console
- sudo apt-get update
- curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
- sudo apt-get install -y nodejs
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+sudo apt-get install -y nodejs
  ```
  `schema.json` should have been generated from the Ghostbusters install script from earlier, and your `bp_info.json` file should be in there too.
  ```console
@@ -139,15 +138,7 @@ Try `cat config.ini`, and `cat cleos.sh` to check that all the information is co
 
 If you were selected as the bios node, please follow instructions [here](https://github.com/jchung00/Ghostbusters-Testnet/blob/master/bios-instructions.md)
 
-### 7. Receive genesis file
-
-```console
-cd /path/to/Ghostbusters
-./sort_btc_block.sh
-```
-Your node should start automatically when you receive the genesis.json file.
-
-### 8. Resync
+### 7. Resync
 
 If at any point you need to restart your node:
 ```console
