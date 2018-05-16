@@ -43,7 +43,7 @@ PRODUCER_URL="https://<username>.keybase.pub/bp_info.json"
 
 ### WALLET INFO ###
 WALLET_HOST="127.0.0.1"
-WALLET_PORT="8887"
+WALLET_PORT="<wallet-port>"
 
 ### PRE-DEFINED PEER LIST ###
 PEER_LIST='
