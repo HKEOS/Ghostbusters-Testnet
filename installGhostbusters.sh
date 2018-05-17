@@ -254,20 +254,20 @@ if [[ ! -d $TESTNET_DIR ]]; then
     
     # schema.json
     echo "..:: Downloading schema.json ::..";
-    curl -O https://raw.githubusercontent.com/eosrio/bp-info-standard/master/schema.json > schema.json
+    curl https://raw.githubusercontent.com/eosrio/bp-info-standard/master/schema.json > schema.json
 
     # bp_info_sample.json
     echo "..:: Downloading bp_info_sample.json ::..";
-    curl -O https://raw.githubusercontent.com/eosrio/bp-info-standard/master/bp_info_sample.json > bp_info_sample.json
+    curl https://raw.githubusercontent.com/eosrio/bp-info-standard/master/bp_info_sample.json > bp_info_sample.json
     
     # autolaunch.sh
     echo "..:: Downloading autolaunch.sh ::..";
-    curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/autolaunch.sh > $TESTNET_DIR/autolaunch.sh
+    curl https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/autolaunch.sh > $TESTNET_DIR/autolaunch.sh
     chmod u+x $TESTNET_DIR/autolaunch.sh
     
     # setupAutoLaunch.sh
     echo "..:: Downloading setupAutoLaunch.sh ::..";
-    curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/setupAutoLaunch.sh > $TESTNET_DIR/setupAutoLaunch.sh
+    curl https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/setupAutoLaunch.sh > $TESTNET_DIR/setupAutoLaunch.sh
     chmod u+x $TESTNET_DIR/setupAutoLaunch.sh
     
 
