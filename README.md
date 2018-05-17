@@ -53,10 +53,8 @@ sudo wg show ghostbusters
 `cd` to your `opt` folder.
 
 ```console
-mkdir Ghostbusters
-cd Ghostbusters
-curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/setup.sh
-bash setup.sh
+mkdir Ghostbusters && cd Ghostbusters
+curl -s https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/setup.sh | bash -
 ```
 
 ### 2. Fill out your info in the install script
