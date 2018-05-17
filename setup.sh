@@ -1,12 +1,12 @@
 #!/bin/bash
 
 echo "Downloading latest install script...";
-curl -s -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/installGhostbusters.sh
+curl -s -O https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/installGhostbusters.sh
 chmod u+x installGhostbusters.sh
 
 if [[ ! -f ./params.sh ]]; then
   echo "Downloading sample params...";
-  curl -s -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/params.sh
+  curl -s -O https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/params.sh
   chmod u+x params.sh
 fi
 
