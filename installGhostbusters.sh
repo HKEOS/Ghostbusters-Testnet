@@ -65,7 +65,7 @@ TESTNET_DIR="$GLOBAL_PATH/$TESTNET";
 if [[ $EOS_SOURCE_DIR == "" ]]; then
 	EOS_SOURCE_DIR="$GLOBAL_PATH/eos-source"
 else
-	EOS_GIT_BRANCH=$(git -C /home/entropia/eos branch | grep '*' | cut -f 5 -d' ' | cut -f1 -d')');
+	EOS_GIT_BRANCH=$(git -C $EOS_SOURCE_DIR branch | grep '*' | cut -f 5 -d' ' | cut -f1 -d')');
 	echo "Source code at branch $EOS_GIT_BRANCH";
 	EOS_VERSION=$("$EOS_SOURCE_DIR/build/programs/nodeos/nodeos" --version)
 	echo "Current nodeos version: $EOS_VERSION";
