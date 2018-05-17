@@ -205,7 +205,7 @@ echo "Target hash = $BTC_HASH";
 
 keybase_username=$(keybase status | grep Username: | cut -f2- -d: | sed -e 's/^\s*//' -e '/^$/d');
 
-keybase team list-members eos_ghostbusters -j | grep username | cut -d'"' -f 4 | sort > users.txt;
+keybase team list-members eos_ghostbusters.bios_opt_in -j | grep username | cut -d'"' -f 4 | sort > users.txt;
 
 SELECTED_USER=$(shuf -n 1 --random-source=<(get_seeded_random $BTC_HASH) users.txt);
 
