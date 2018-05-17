@@ -64,11 +64,11 @@ nano params.sh
 ```
 Input your information for the highlighted fields shown below:
 
-![gb-config](https://github.com/jchung00/Ghostbusters-Testnet/blob/master/gb-config.png)
+![gb-config](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/gb-config.png)
 
 After you have received the **p2p-peer-address** and **public keys** of your trusted peers, fill in the corresponding information for all of your peers in the section shown below:
 
-![gb-peers](https://github.com/jchung00/Ghostbusters-Testnet/blob/master/gb-peers.png)
+![gb-peers](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/gb-peers.png)
 
 ### 3. Run the script
 
@@ -153,7 +153,7 @@ crontab -e
 
 ### 7. Bios Node
 
-If you were selected as the bios node, please follow instructions [here](https://github.com/jchung00/Ghostbusters-Testnet/blob/master/bios-instructions.md)
+If you were selected as the bios node, please follow instructions [here](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/bios-instructions.md)
 
 ### 8. Resync
 
