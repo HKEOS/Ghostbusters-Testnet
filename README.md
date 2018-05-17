@@ -54,7 +54,7 @@ sudo wg show ghostbusters
 
 ```console
 mkdir Ghostbusters && cd Ghostbusters
-curl -s https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/setup.sh | bash -
+curl -sL https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/setup.sh | bash -
 ```
 
 ### 2. Fill out your info in the install script
