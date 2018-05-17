@@ -261,7 +261,7 @@ if [[ ! -d $TESTNET_DIR ]]; then
     curl -O https://raw.githubusercontent.com/eosrio/bp-info-standard/master/bp_info_sample.json > bp_info_sample.json
     
     # autolaunch.sh
-    echo "..:: Downloading sort_btc_block.sh ::..";
+    echo "..:: Downloading autolaunch.sh ::..";
     curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/autolaunch.sh > $TESTNET_DIR/autolaunch.sh
     chmod u+x $TESTNET_DIR/autolaunch.sh
     
