@@ -1,12 +1,12 @@
 #!/bin/bash
 
 ##########################################
-## Created by 							            ##
-## Bohdan Kossak, CryptoLions.io 		    ##
-## 										                  ##
-## Edited for Ghostbusters Testnet by 	##
-## Igor Lins e Silva, EOS Rio 			    ##
-## Jae Chung, HKEOS  					          ##
+## Created by
+## Bohdan Kossak, CryptoLions.io
+##
+## Edited for Ghostbusters Testnet by
+## Igor Lins e Silva, EOS Rio
+## Jae Chung, HKEOS
 ##########################################
 
 TAG="DAWN-2018-05-16";
