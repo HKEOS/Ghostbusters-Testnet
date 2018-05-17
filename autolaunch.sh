@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## DEFINE TARGET BTC BLOCK
-TARGET_BLOCK=523030;
+TARGET_BLOCK=523069;
 
 get_seeded_random()
 {
