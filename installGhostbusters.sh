@@ -265,11 +265,10 @@ if [[ ! -d $TESTNET_DIR ]]; then
     curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/autolaunch.sh > $TESTNET_DIR/autolaunch.sh
     chmod u+x $TESTNET_DIR/autolaunch.sh
     
-    # Add cronjob
-    croncmd="bash $TESTNET_DIR/autolaunch.sh >> $TESTNET_DIR/autolaunch.log";
-    cronjob="0,10,20,30,40,50 * * * * $croncmd";
-    
-    ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
+    # setupAutoLaunch.sh
+    echo "..:: Downloading setupAutoLaunch.sh ::..";
+    curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/setupAutoLaunch.sh > $TESTNET_DIR/setupAutoLaunch.sh
+    chmod u+x $TESTNET_DIR/setupAutoLaunch.sh
     
 
 
