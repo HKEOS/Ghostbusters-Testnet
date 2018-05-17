@@ -1,9 +1,12 @@
 #!/bin/bash
 
 ###########################################################################
-# Created by
-# Bohdan Kossak, CryptoLions.io
-# Edited for Ghostbusters Testnet
+## Created by
+## Bohdan Kossak, CryptoLions.io
+##
+## Edited for Ghostbusters Testnet by
+## Igor Lins e Silva, EOS Rio
+## Jae Chung, HKEOS
 ###########################################################################
 
 GLOBAL_PATH=$(pwd) #GLOBAL PATH
