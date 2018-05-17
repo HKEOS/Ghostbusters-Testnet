@@ -1,6 +1,34 @@
 # Ghostbusters Testnet Instructions
 
-### 0. Wireguard VPN Setup
+### 0. Install Keybase
+
+**Note:** Skip parts that you have already completed.
+
+Start by joining the eos_ghostbusters Keybase group: https://keybase.io/team/eos_ghostbusters.
+
+- Install keybase: https://keybase.io/docs/the_app/install_linux
+ Ubuntu instructions
+ ```console
+# Install curl if required
+sudo apt install curl
+
+curl -O https://prerelease.keybase.io/keybase_amd64.deb
+# if you see an error about missing `libappindicator1`
+# from the next command, you can ignore it, as the
+# subsequent command corrects it
+sudo dpkg -i keybase_amd64.deb
+sudo apt-get install -f
+run_keybase
+ ```
+ - Login or signup:
+ ```console
+ # Login
+ keybase login
+ # Sign up
+ keybase signup
+ ```
+
+### 1. Wireguard VPN Setup
 
 ```console
 sudo add-apt-repository ppa:wireguard/wireguard
@@ -14,8 +42,11 @@ echo -e "ListenPort = 5555" >> ghostbusters.conf
 echo -e "Address = 192.168.10.X/24" >> ghostbusters.conf
 sudo cp ghostbusters.conf /etc/wireguard/.
 sudo nano /etc/wireguard/ghostbusters.conf
-# Add your trusted vpn peers by repeating the line below for each peer
 
+# You can input any number for "X" that hasn't been taken by another node.
+# Copy and paste VPN peers (Peer information will be provided for you through the Keybase group, encrypted for only other BPs to see)
+
+#Example of a peer
 [Peer]
 PublicKey = <peer-public-key>
 AllowedIPs = 192.168.10.Y/32
@@ -24,7 +55,7 @@ PersistentKeepAlive = 20
 
 # Save the file
 ```
-It is recommended that you use Keybase to share information between your 6-8 trusted peers. Both you and your peer must add each other to the Wireguard config. With your trusted peers, you should share the following information:
+It is recommended that you use Keybase when communicating information related to your node. You should share the following information with the Keybase group:
 
 - Wireguard Public Key
 - VPN IP Address
@@ -78,31 +109,6 @@ After you have received the **p2p-peer-address** and **public keys** of your tru
 
 ### 4. Publishing BP info on Keybase
 
-**Note:** Skip parts that you have already completed.
-
-Start by joining the eos_ghostbusters Keybase group.
-
-- Install keybase: https://keybase.io/docs/the_app/install_linux
- Ubuntu instructions
- ```console
-# Install curl if required
-sudo apt install curl
-
-curl -O https://prerelease.keybase.io/keybase_amd64.deb
-# if you see an error about missing `libappindicator1`
-# from the next command, you can ignore it, as the
-# subsequent command corrects it
-sudo dpkg -i keybase_amd64.deb
-sudo apt-get install -f
-run_keybase
- ```
- - Login or signup:
- ```console
- # Login
- keybase login
- # Sign up
- keybase signup
- ```
  - Save on KBFS:
  `cd` to your `Ghostbusters` folder if you are not in there already.
  ```console
@@ -110,7 +116,7 @@ run_keybase
   # add your bp info and save it!
  cp bp_info.json /keybase/public/<username>
  ```
- **Note:** You do not have to fill out your node's api_endpoint and p2p_endpoint-- this way, they can remain hidden.
+ **Note:** You do not have to fill out your BP node's api_endpoint and p2p_endpoint-- this way, they can remain hidden from public.
  
  - Check that file is up on `https://<username>.keybase.pub/bp_info.json`
  
