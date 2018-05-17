@@ -8,7 +8,7 @@
 
 GLOBAL_PATH=$(pwd) #GLOBAL PATH
 
-TAG="dawn-v4.0.0"
+TAG="DAWN-2018-05-16"
 TESTNET="Ghostbusters"
 
 ##### PARAMETERS TO BE MODIFIED ######
@@ -106,7 +106,7 @@ if [[ $EOS_SOURCE_DIR == "" ]]; then
     EOS_SOURCE_DIR="$GLOBAL_PATH/eos-source"
 else
     EOS_VERSION=$("$EOS_SOURCE_DIR/build/programs/nodeos/nodeos" --version)
-    EOS_TARGET_VERSION="2615709958";
+    EOS_TARGET_VERSION="2565193790";
     echo "Current nodeos version: $EOS_VERSION";
     if [[ "$EOS_VERSION" != "$EOS_TARGET_VERSION" ]]; then
      echo "Wrong version, $EOS_TARGET_VERSION required!";
