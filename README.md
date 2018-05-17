@@ -137,6 +137,9 @@ Try `cat config.ini`, and `cat cleos.sh` to check that all the information is co
 ```console
 sudo apt install jq
 
+# Make sure you don't have a genesis.json file on your public keybase folder...
+sudo rm /keybase/public/<username>/genesis.json
+
 # Test script execution manually
 ./autolaunch.sh
 
