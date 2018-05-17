@@ -79,7 +79,7 @@ sudo wg-quick up ghostbusters
 sudo wg show ghostbusters
 ```
 
-### 1. Setup
+### 2. Setup
 
 `cd` to your `opt` folder.
 
@@ -88,7 +88,7 @@ mkdir Ghostbusters && cd Ghostbusters
 curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
 ```
 
-### 2. Fill out your info in the install script
+### 3. Fill out your info in the install script
 
 ```console
 nano params.sh
@@ -103,13 +103,13 @@ After you have received the **p2p-peer-address** and **public keys** of your tru
 
 ![gb-peers](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/gb-peers.png)
 
-### 3. Run the script
+### 4. Run the script
 
 ```console
 ./installGhostbusters.sh
 ```
 
-### 4. Publishing BP info on Keybase
+### 5. Publishing BP info on Keybase
 
  - Save on KBFS:
  `cd` to your `Ghostbusters` folder if you are not in there already.
@@ -135,12 +135,12 @@ sudo apt-get install -y nodejs
  ajv validate -s schema.json -d bp_info.json
 ```
 
-### 5. Check scripts
+### 6. Check scripts
 
 `cd` into your Ghostbusters testnet folder, which was created from the install script.
 Try `cat config.ini`, and `cat cleos.sh` to check that all the information is correct.
 
-### 6. Setup Autolaunch
+### 7. Setup Autolaunch
 
 ```console
 sudo apt install jq
@@ -159,11 +159,11 @@ crontab -e
 ./setupAutoLaunch.sh
 ```
 
-### 7. Bios Node
+### 8. Bios Node
 
 If you were selected as the bios node, please follow instructions [here](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/bios-instructions.md)
 
-### 8. Resync
+### 9. Resync
 
 If at any point you need to restart your node:
 ```console
