@@ -106,7 +106,7 @@ signature='#!/bin/bash
 ##                                                   ##
 ## https://github.com/CryptoLions                    ##
 ## https://github.com/eosrio                         ##
-## https://github.com/jchung00/Ghostbusters-Testnet  ##
+## https://github.com/HKEOS/Ghostbusters-Testnet  ##
 ##                                                   ##
 #######################################################\n\n';
 
@@ -224,12 +224,12 @@ if [[ ! -d $TESTNET_DIR ]]; then
     
     # autolaunch.sh
     echo "..:: Downloading autolaunch.sh ::..";
-    curl https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/autolaunch.sh > $TESTNET_DIR/autolaunch.sh
+    curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/autolaunch.sh > $TESTNET_DIR/autolaunch.sh
     chmod u+x $TESTNET_DIR/autolaunch.sh
     
     # setupAutoLaunch.sh
     echo "..:: Downloading setupAutoLaunch.sh ::..";
-    curl https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/setupAutoLaunch.sh > $TESTNET_DIR/setupAutoLaunch.sh
+    curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setupAutoLaunch.sh > $TESTNET_DIR/setupAutoLaunch.sh
     chmod u+x $TESTNET_DIR/setupAutoLaunch.sh
     
 
