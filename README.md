@@ -97,6 +97,8 @@ Input your information for the highlighted fields shown below:
 
 ![gb-config](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/gb-config.png)
 
+**Note:** Producer name must be exactly **12 characters** long!
+
 After you have received the **p2p-peer-address** and **public keys** of your trusted peers, fill in the corresponding information for all of your peers in the section shown below:
 
 ![gb-peers](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/gb-peers.png)
