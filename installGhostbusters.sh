@@ -38,6 +38,10 @@ if [[ $ISBP == true ]]; then
 		echo "Please define a producer name!";
 		exit 1;
 	fi
+	if [[ ${#PRODUSER_NAME} != 12 ]]; then
+		echo "Producer name must be exactly 12 characters long!";
+		exit 1;
+	fi	
 	if [[ $AGENT_NAME == "<producer-name>" || $AGENT_NAME == "" ]]; then
 		echo "Please define an agent name!";
 		exit 1;
