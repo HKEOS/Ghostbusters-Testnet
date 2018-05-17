@@ -9,7 +9,7 @@
 GLOBAL_PATH=$(pwd) #GLOBAL PATH
 
 TAG="DAWN-2018-05-16"
-TESTNET="Ghostbusters"
+TESTNET="ghostbusters"
 
 ##### PARAMETERS TO BE MODIFIED ######
 
@@ -64,8 +64,11 @@ NODE_HTTP_SRV_ADDR="$NODE_NET_ADDR:$NODE_API_PORT"
 NODE_P2P_LST_ENDP="$NODE_NET_ADDR:$NODE_P2P_PORT"
 NODE_P2P_SRV_ADDR="$NODE_HOST:$NODE_P2P_PORT"
 NODE_HTTPS_SERVER_ADDR="$NODE_HOST:$NODE_SSL_PORT"
+if [[ $ISBP == true ]]; then
 TESTNET="$TESTNET-$PRODUSER_NAME"
-
+else
+TESTNET="$TESTNET-node"
+fi
 
 ######################################################################################################################################################
 echo -n $'\E[0;32m'
@@ -274,7 +277,7 @@ if [[ ! -d $TESTNET_DIR ]]; then
 
 # config.ini 
 echo -ne "\n\n..:: Creating config.ini ::..\n\n";
-if [[ $PRODUCER_PRIV_KEY -eq "" ]]; then 
+if [[ $ISBP == true && $PRODUCER_PRIV_KEY -eq "" ]]; then 
 	echo -n $'\E[0;33m'
 	echo "!!! PRIV KEY SECTION !!! You can enter your private key here and it will be imported in wallet and inserted in config.ini. I can skip this step (Enter) and do it manually before start"
 	echo -ne "PRIV KEY (Enter skip):"
@@ -282,13 +285,14 @@ if [[ $PRODUCER_PRIV_KEY -eq "" ]]; then
 	echo -n $'\E[0;37m'
 fi
 
-
-if [[ $PRODUCER_PRIV_KEY == "" ]]; then 
-	PRODUCER_PRIV_KEY=$PRODUCER_PRIV_KEY_DEF
-else 
-	if [[ ! -f $WALLET_DIR/default.wallet ]]; then
-     WALLET_LOG=$( $TESTNET_DIR/cleos.sh wallet create)
-     echo "$WALLET_LOG" > wallet_pass.txt
+if [[ $ISBP == true ]]; then
+	if [[ $PRODUCER_PRIV_KEY == "" ]]; then 
+		PRODUCER_PRIV_KEY=$PRODUCER_PRIV_KEY_DEF
+	else 
+		if [[ ! -f $WALLET_DIR/default.wallet ]]; then
+	     WALLET_LOG=$( $TESTNET_DIR/cleos.sh wallet create)
+	     echo "$WALLET_LOG" > wallet_pass.txt
+	 fi
  fi
 
  $TESTNET_DIR/cleos.sh wallet import $PRODUCER_PRIV_KEY	
