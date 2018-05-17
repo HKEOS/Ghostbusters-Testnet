@@ -143,7 +143,11 @@ sudo rm /keybase/public/<username>/genesis.json
 # Test script execution manually
 ./autolaunch.sh
 
-# Add to CRON
+# If the target BTC block was not reached at runtime,
+# it will schedule itself on CRON, please verify with
+crontab -e
+
+# Add to CRON (if required)
 ./setupAutoLaunch.sh
 ```
 
