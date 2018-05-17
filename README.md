@@ -55,8 +55,8 @@ sudo wg show ghostbusters
 ```console
 mkdir Ghostbusters
 cd Ghostbusters
-curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/params.sh
-curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/installGhostbusters.sh
+curl -O https://raw.githubusercontent.com/jchung00/Ghostbusters-Testnet/master/setup.sh
+bash setup.sh
 ```
 
 ### 2. Fill out your info in the install script
@@ -75,7 +75,6 @@ After you have received the **p2p-peer-address** and public keys of your trusted
 ### 3. Run the script
 
 ```console
-sudo chmod u+x installGhostbusters.sh params.sh
 ./installGhostbusters.sh
 ```
 
