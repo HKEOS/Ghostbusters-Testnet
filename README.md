@@ -70,6 +70,7 @@ curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/publish
 chmod u+x updatePeers.sh
 ./updatePeers.sh
 ```
+You can run updatePeers.sh again to update Wireguard config any time a new peer joins and publishes their peer info.
 
 Check firewall settings, and make sure that port 5555 is open. If not, you can use:
 ```console
