@@ -29,7 +29,7 @@ keybase sign -i "$1" --saltpack-version 2 -o "$keybaseUser".peer_info.signed
 
 echo "Done. File saved at $GLOBAL_PATH/$keybaseUser.peer_info.signed";
 
-openssl des3 -salt -in "$GLOBAL_PATH/$keybaseUser.peer_info.signed" -out "/keybase/team/eos_ghostbusters/mesh/$keybaseUser.peer_info.signed" -pass pass:ghostbusters
+openssl des3 -salt -in "$GLOBAL_PATH/$keybaseUser.peer_info.signed" -out "~/kbfs/team/eos_ghostbusters/mesh/$keybaseUser.peer_info.signed" -pass pass:ghostbusters
 
 
 
