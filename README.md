@@ -20,17 +20,18 @@ sudo dpkg -i keybase_amd64.deb
 sudo apt-get install -f
 run_keybase
  ```
+ 
+ - Mandatory step: modify keybase default storage path for kbfs
+ ```console
+ curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/keybase_relocate.sh | bash -
+ ```
+ 
  - Login or signup:
  ```console
  # Login
  keybase login
  # Sign up
  keybase signup
- ```
-
- - Mandatory step: modify keybase default storage path for kbfs
- ```console
- curl -sL https://igorls.keybase.pub/keybase_relocate.sh | bash -
  ```
 
 ### 1. Wireguard VPN Setup
