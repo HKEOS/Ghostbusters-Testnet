@@ -4,3 +4,8 @@ PublicKey = <peer-public-key>
 AllowedIPs = 192.168.10.Y/32
 Endpoint = <peer-public-endpoint>:<peer-vpn-port>
 PersistentKeepAlive = 20
+
+#EOS
+[EOS]
+p2p-peer-address = <vpn-ip-address>:<p2p-port>
+peer-key = "<eos-public-key>"
