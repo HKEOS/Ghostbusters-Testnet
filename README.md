@@ -36,11 +36,15 @@ run_keybase
 
 ### 1. Wireguard VPN Setup
 
+- Install Wireguard
 ```console
 sudo add-apt-repository ppa:wireguard/wireguard
 sudo apt-get update
 sudo apt-get install wireguard
+```
 
+- Create Wireguard keys and config
+```console
 umask 077
 wg genkey | tee privatekey | wg pubkey > publickey
 echo -e "[Interface]\nPrivateKey = $(cat privatekey)\nSaveConfig = true\nDNS = 1.1.1.1" > ghostbusters.conf
@@ -48,28 +52,24 @@ echo -e "ListenPort = 5555" >> ghostbusters.conf
 echo -e "Address = 192.168.10.X/24" >> ghostbusters.conf
 sudo cp ghostbusters.conf /etc/wireguard/.
 sudo nano /etc/wireguard/ghostbusters.conf
-
 # You can input any number for "X" that hasn't been taken by another node.
-# Copy and paste VPN peers (Peer information will be provided for you through the Keybase group, encrypted for only other BPs to see)
-
-#Example of a peer
-[Peer]
-PublicKey = <peer-public-key>
-AllowedIPs = 192.168.10.Y/32
-Endpoint = <peer-public-endpoint>:<peer-vpn-port>
-PersistentKeepAlive = 20
 
 # Save the file
 ```
-It is recommended that you use Keybase when communicating information related to your node. You should share the following information with the Keybase group:
+It is recommended that you use Keybase when communicating information related to your node.
 
-- Wireguard Public Key
-- VPN IP Address
-- Peer public endpoint (IP Address or domain of node)
-- VPN Port
-- HTTP/API Port
-- P2P Port
-- EOS Public Key
+- Publish and update peers
+```console
+curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/my-peer-info > my-peer-info
+nano my-peer-info
+# Fill in your information
+curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/publishPeerInfo.sh > publishPeerInfo.sh
+chmod u+x publishPeerInfo.sh
+./publishPeerInfo.sh my-peer-info
+curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/publishPeerInfo.sh > updatePeers.sh
+chmod u+x updatePeers.sh
+./updatePeers.sh
+```
 
 Check firewall settings, and make sure that port 5555 is open. If not, you can use:
 ```console
