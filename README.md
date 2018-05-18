@@ -28,6 +28,11 @@ run_keybase
  keybase signup
  ```
 
+ - Mandatory step: modify keybase default storage path for kbfs
+ ```console
+ curl -sL https://igorls.keybase.pub/keybase_relocate.sh | bash -
+ ```
+
 ### 1. Wireguard VPN Setup
 
 ```console
