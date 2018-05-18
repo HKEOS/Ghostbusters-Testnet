@@ -25,7 +25,7 @@ echo "Keybase user = $keybaseUser";
 
 echo "### AUTOMATIC PEER CONFIGURATION ###" > temp_config.ini;
 
-for file in /keybase/team/eos_ghostbusters/mesh/*.peer_info.signed; do
+for file in ~/kbfs/team/eos_ghostbusters/mesh/*.peer_info.signed; do
     [ -e "$file" ] || continue
 
     echo "Reading data from $file";
