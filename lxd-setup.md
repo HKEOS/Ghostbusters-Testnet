@@ -54,7 +54,7 @@ exit
 
 ### copy nodeos binary
 ```console
-lxc file push /home/entropia/eos/build/programs/nodeos/nodeos  eos-node/opt/eos/nodeos
+lxc file push /opt/eos/build/programs/nodeos/nodeos  eos-node/opt/eos/nodeos
 ```
 ### test execution on container
 ```console
