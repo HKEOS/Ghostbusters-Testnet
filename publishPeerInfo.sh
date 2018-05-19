@@ -1,5 +1,13 @@
 #!/bin/bash
 GLOBAL_PATH=$(pwd)
+if [[ $1 == "" ]]; then
+	echo "Please provide the input peer_info file!";
+	exit 1;
+fi
+if [[ $2 == "" ]]; then
+	echo "Please provide the password";
+	exit 1;
+fi
 ## Check KBFS mount point
 echo
 echo "--------------- VERIFYING KEYBASE FILE SYSTEM ---------------";
