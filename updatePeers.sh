@@ -1,5 +1,9 @@
 #!/bin/bash
 GLOBAL_PATH=$(pwd)
+if [[ $1 == "" ]]; then
+	echo "Please provide the password";
+	exit 1;
+fi
 ## Check KBFS mount point
 echo
 echo "--------------- VERIFYING KEYBASE FILE SYSTEM ---------------";
