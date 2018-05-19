@@ -9,8 +9,8 @@
 ## Jae Chung, HKEOS
 ##########################################
 
-TAG="DAWN-2018-05-16";
-EOS_TARGET_VERSION="2565193790";
+TAG="dawn-v4.1.0";
+EOS_TARGET_VERSION="3449264167";
 TESTNET="ghostbusters";
 
 ##### PARAMETERS TO BE MODIFIED ######

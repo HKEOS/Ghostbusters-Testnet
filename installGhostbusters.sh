@@ -16,7 +16,7 @@ NODE_P2P_LST_ENDP="$NODE_NET_ADDR:$NODE_P2P_PORT"
 NODE_P2P_SRV_ADDR="$NODE_HOST:$NODE_P2P_PORT"
 NODE_HTTPS_SERVER_ADDR="$NODE_HOST:$NODE_SSL_PORT"
 if [[ $ISBP == true ]]; then
-	TESTNET="$TESTNET-$PRODUSER_NAME"
+	TESTNET="$TESTNET-$PRODUCER_NAME"
 else
 	TESTNET="$TESTNET-node"
 fi
@@ -34,11 +34,11 @@ echo -n $'\E[0;37m'
 # Validations
 
 if [[ $ISBP == true ]]; then
-	if [[ $PRODUSER_NAME == "<producer-name>" || $PRODUSER_NAME == "" ]]; then
+	if [[ $PRODUCER_NAME == "<producer-name>" || $PRODUCER_NAME == "" ]]; then
 		echo "Please define a producer name!";
 		exit 1;
 	fi
-	if [[ ${#PRODUSER_NAME} != 12 ]]; then
+	if [[ ${#PRODUCER_NAME} != 12 ]]; then
 		echo "Producer name must be exactly 12 characters long!";
 		exit 1;
 	fi	
@@ -321,7 +321,7 @@ if [[ $ISBP == true ]]; then
 	echo '
 	plugin = eosio::producer_plugin
 	private-key = ["'$PRODUCER_PUB_KEY'","'$PRODUCER_PRIV_KEY'"]
-	producer-name = '$PRODUSER_NAME'
+	producer-name = '$PRODUCER_NAME'
 	peer-private-key = ["'$PRODUCER_PUB_KEY'","'$PRODUCER_PRIV_KEY'"]
 	
 	' >> $TESTNET_DIR/config.ini
@@ -330,7 +330,7 @@ else
 	#plugin = eosio::producer_plugin
 	#private-key = ["'$PRODUCER_PUB_KEY'","'$PRODUCER_PRIV_KEY'"]
 	#peer-private-key = ["'$PRODUCER_PUB_KEY'","'$PRODUCER_PRIV_KEY'"]
-	#producer-name = '$PRODUSER_NAME'
+	#producer-name = '$PRODUCER_NAME'
 	
 	' >> $TESTNET_DIR/config.ini
 fi
@@ -344,7 +344,7 @@ fi
 echo '..:: Creating your registerProducer.sh ::..'
 
 echo -ne "$signature" > $TESTNET_DIR/bp01_registerProducer.sh
-echo "./cleos.sh system regproducer $PRODUSER_NAME $PRODUCER_PUB_KEY \"$PRODUCER_URL\" -p $PRODUSER_NAME" >> $TESTNET_DIR/bp01_registerProducer.sh
+echo "./cleos.sh system regproducer $PRODUCER_NAME $PRODUCER_PUB_KEY \"$PRODUCER_URL\" -p $PRODUCER_NAME" >> $TESTNET_DIR/bp01_registerProducer.sh
 chmod u+x $TESTNET_DIR/bp01_registerProducer.sh
 
 # UnRegister Producer
@@ -352,7 +352,7 @@ chmod u+x $TESTNET_DIR/bp01_registerProducer.sh
 echo '..:: Creating your unRegisterProducer.sh ::..'
 
 echo -ne "$signature" > $TESTNET_DIR/bp06_unRegisterProducer.sh
-echo "./cleos.sh system unregprod $PRODUSER_NAME -p $PRODUSER_NAME" >> $TESTNET_DIR/bp06_unRegisterProducer.sh
+echo "./cleos.sh system unregprod $PRODUCER_NAME -p $PRODUCER_NAME" >> $TESTNET_DIR/bp06_unRegisterProducer.sh
 chmod u+x $TESTNET_DIR/bp06_unRegisterProducer.sh
 
 
@@ -360,8 +360,8 @@ chmod u+x $TESTNET_DIR/bp06_unRegisterProducer.sh
 echo '..:: Creating Stake script  stakeTokens.sh ::..'
 
 echo -ne "$signature" > $TESTNET_DIR/bp02_stakeTokens.sh
-echo "#./cleos.sh system delegatebw $PRODUSER_NAME $PRODUSER_NAME \"1000.0000 EOS\" \"1000.0000 EOS\" -p $PRODUSER_NAME" >> $TESTNET_DIR/bp02_stakeTokens.sh
-echo "./cleos.sh push action eosio delegatebw '{\"from\":\"$PRODUSER_NAME\", \"receiver\":\"$PRODUSER_NAME\", \"stake_net_quantity\": \"1000.0000 EOS\", \"stake_cpu_quantity\": \"1000.0000 EOS\", \"transfer\": true}' -p $PRODUSER_NAME" >> $TESTNET_DIR/bp02_stakeTokens.sh
+echo "#./cleos.sh system delegatebw $PRODUCER_NAME $PRODUCER_NAME \"1000.0000 EOS\" \"1000.0000 EOS\" -p $PRODUCER_NAME" >> $TESTNET_DIR/bp02_stakeTokens.sh
+echo "./cleos.sh push action eosio delegatebw '{\"from\":\"$PRODUCER_NAME\", \"receiver\":\"$PRODUCER_NAME\", \"stake_net_quantity\": \"1000.0000 EOS\", \"stake_cpu_quantity\": \"1000.0000 EOS\", \"transfer\": true}' -p $PRODUCER_NAME" >> $TESTNET_DIR/bp02_stakeTokens.sh
 
 chmod u+x $TESTNET_DIR/bp02_stakeTokens.sh
 
@@ -369,7 +369,7 @@ chmod u+x $TESTNET_DIR/bp02_stakeTokens.sh
 echo '..:: Creating Unstake script  unStakeTokens.sh ::..'
 
 echo -ne "$signature" > $TESTNET_DIR/bp05_unStakeTokens.sh
-echo "./cleos.sh system undelegatebw $PRODUSER_NAME $PRODUSER_NAME \"1000.0000 EOS\" \"1000.0000 EOS\" -p $PRODUSER_NAME" >> $TESTNET_DIR/bp05_unStakeTokens.sh
+echo "./cleos.sh system undelegatebw $PRODUCER_NAME $PRODUCER_NAME \"1000.0000 EOS\" \"1000.0000 EOS\" -p $PRODUCER_NAME" >> $TESTNET_DIR/bp05_unStakeTokens.sh
 chmod u+x $TESTNET_DIR/bp05_unStakeTokens.sh
 
 
@@ -377,15 +377,15 @@ chmod u+x $TESTNET_DIR/bp05_unStakeTokens.sh
 echo '..:: Creating Vote script  voteProducer.sh ::..'
 
 echo -ne "$signature" > $TESTNET_DIR/bp03_voteProducer.sh
-echo "./cleos.sh system voteproducer prods $PRODUSER_NAME $PRODUSER_NAME -p $PRODUSER_NAME" >> $TESTNET_DIR/bp03_voteProducer.sh
-echo "#./cleos.sh system voteproducer prods $PRODUSER_NAME $PRODUSER_NAME tiger lion -p $PRODUSER_NAME" >> $TESTNET_DIR/bp03_voteProducer.sh
+echo "./cleos.sh system voteproducer prods $PRODUCER_NAME $PRODUCER_NAME -p $PRODUCER_NAME" >> $TESTNET_DIR/bp03_voteProducer.sh
+echo "#./cleos.sh system voteproducer prods $PRODUCER_NAME $PRODUCER_NAME tiger lion -p $PRODUCER_NAME" >> $TESTNET_DIR/bp03_voteProducer.sh
 chmod u+x $TESTNET_DIR/bp03_voteProducer.sh
 
 # Claim rewards
 echo '..:: Creating ClaimReward script claimReward.sh ::..'
 
 echo -ne "$signature" > $TESTNET_DIR/bp04_claimReward.sh
-echo "./cleos.sh system claimrewards $PRODUSER_NAME -p $PRODUSER_NAME" >> $TESTNET_DIR/bp04_claimReward.sh
+echo "./cleos.sh system claimrewards $PRODUCER_NAME -p $PRODUCER_NAME" >> $TESTNET_DIR/bp04_claimReward.sh
 chmod u+x $TESTNET_DIR/bp04_claimReward.sh
 
 # FINISH
