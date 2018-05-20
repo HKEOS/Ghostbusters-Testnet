@@ -35,6 +35,8 @@ if [[ $1 == "lxd" ]]; then
 else
 	LXD_MODE=false;
 	WG_DATA=$(sudo cat /etc/wireguard/ghostbusters.conf)
+	WG_ADDR=$(echo "$WG_DATA" | grep "Address" | cut -f2 -d"=" | sed -e 's/^\s*//' -e '/^$/d' | cut -f1 -d'/')
+	echo "Wireguard: $WG_ADDR";
 	PVT_KEY=$(echo "$WG_DATA" | grep "PrivateKey" | cut -f2 -d"=" | sed -e 's/^\s*//' -e '/^$/d')"=";
 	WG_PUB_KEY=$(echo "$PVT_KEY" | wg pubkey);
 fi
@@ -72,13 +74,17 @@ add_section()
 add_eos_line()
 {
 	NEW_PUB_KEY=$(echo "$line" | cut -f3 -d" ")
-	echo $line;
-	echo $NEW_PUB_KEY;
-	echo $EOS_PUB_KEY;
-	if [ "$NEW_PUB_KEY" = "$EOS_PUB_KEY" ]; then
-		echo -e "\nMY KEYS ... Skipping \n";
-	else
-		if [[ $line == "peer-key"* ]] || [[ $line == "p2p-peer-address"* ]]; then
+	if [[ $line == "peer-key"* ]]; then
+		NEW_PUB_KEY=$(echo "$line" | cut -f3 -d" ")
+		if [[ "$NEW_PUB_KEY" != "$EOS_PUB_KEY" ]]; then
+			echo "$line" >> config.ini.temp;
+		fi
+	fi
+
+	if [[ $line == "p2p-peer-address"* ]]; then
+		EOS_ADDR=$(echo "$line" | cut -f3 -d " " |cut -f1 -d":");
+		echo $EOS_ADDR;
+		if [[ "$WG_ADDR" != "$EOS_ADDR" ]]; then
 			echo "$line" >> config.ini.temp;
 		fi
 	fi
@@ -161,10 +167,13 @@ cat base_config.ini > config.ini
 echo -e "\n\n### ----- AUTO GENERATED PEER INFO ----- ###\n" >> config.ini;
 cat autoPeers >> config.ini
 rm autoPeers config.ini.temp;
-lxc file push config.ini eos-node/home/eos/gb/config.ini;
+
+if [[ $LXD_MODE == true ]]; then
+	lxc file push config.ini eos-node/home/eos/gb/config.ini;
+else
+	cp config.ini ghostbusters-*/config.ini;
+fi
 
 echo -e "\n Update finished!\nWG Peers: $wgPeerCount \nEOS Peers: $eosPeerCount";
-
-# TODO: Copy config.ini to the required folder
 
 # TODO: Call start.sh to restart the node
