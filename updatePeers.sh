@@ -128,3 +128,7 @@ cat autoPeers >> config.ini
 rm autoPeers;
 
 echo -e "\n Update finished!\nWG Peers: $wgPeerCount \nEOS Peers: $eosPeerCount";
+
+# TODO: Copy config.ini to the required folder
+
+# TODO: Call start.sh to restart the node
