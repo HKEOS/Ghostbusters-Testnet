@@ -33,6 +33,9 @@ add_section()
 		echo -e "\n Injecting wg peer with:\n >> PublicKey: $publickey\n >> Endpoint: $endpoint\n >> AllowedIPs: $allowedips\n >> PKA: $persistentkeepalive\n";
 		sudo wg set ghostbusters peer "$publickey=" endpoint "$endpoint" allowed-ips "$allowedips" persistent-keepalive "$persistentkeepalive";
 		((wgPeerCount++))
+		publickey=""
+		endpoint=""
+		allowedips=""
 	fi
 	if [[ $section == "eos" ]]; then
 		((eosPeerCount++))
@@ -43,12 +46,18 @@ add_section()
 add_eos_line()
 {
 	if [[ $line == "peer-key"* ]] || [[ $line == "p2p-peer-address"* ]]; then
-		echo "ADD EOS LINE";
 		echo "$line" >> config.ini.temp;
 	fi
 }
 
-for file in ~/kbfs/team/eos_ghostbusters/mesh/*.peer_info.signed; do
+if [[ ! -f /etc/wireguard/ghostbusters.conf ]]; then
+	echo "Configuration file not found! Please add your interface info to /etc/wireguard/ghostbusters.conf";
+	exit 1;
+else
+	sudo wg-quick up ghostbusters
+fi
+
+for file in $KBFS_MOUNT/team/eos_ghostbusters/mesh/*.peer_info.signed; do
 	[ -e "$file" ] || continue
 	echo -e "\n";
 	echo "Reading data from $file";
