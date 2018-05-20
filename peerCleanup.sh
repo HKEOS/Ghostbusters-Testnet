@@ -76,4 +76,6 @@ fi
 
 done < peers.temp
 
+rm peers.temp
+
 sudo wg show ghostbusters
