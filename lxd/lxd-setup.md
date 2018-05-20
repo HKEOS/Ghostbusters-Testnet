@@ -1,4 +1,4 @@
-# LXD Setup Guide
+# LXD Setup Guide - Building the Container
 
 ### LXD Setup on Dawn v4.1
 
@@ -55,6 +55,7 @@ exit
 ### copy nodeos binary
 ```console
 lxc file push /opt/eos/build/programs/nodeos/nodeos  eos-node/opt/eos/nodeos
+lxc file push /opt/eos/build/programs/cleos/cleos  eos-node/opt/eos/cleos
 ```
 ### test execution on container
 ```console
