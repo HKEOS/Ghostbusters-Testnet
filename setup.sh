@@ -16,10 +16,15 @@ echo "Downloading latest peerCleanup script...";
 curl -s -O https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/peerCleanup.sh
 chmod u+x peerCleanup.sh
 
+if [[ ! -f ./my-peer-info ]]; then
+	echo "Downloading my-peer-info sample";
+	curl -s -O https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/my-peer-info
+fi
+
 if [[ ! -f ./params.sh ]]; then
-  echo "Downloading sample params...";
-  curl -s -O https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/params.sh
-  chmod u+x params.sh
+	echo "Downloading sample params...";
+	curl -s -O https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/params.sh
+	chmod u+x params.sh
 fi
 
 echo "Scripts updated. Verify information on params.sh and execute ./installGhostbusters.sh";

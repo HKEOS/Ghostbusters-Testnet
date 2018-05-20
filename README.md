@@ -60,17 +60,28 @@ sudo nano /etc/wireguard/ghostbusters.conf
 ```
 It is recommended that you use Keybase when communicating information related to your node.
 
+### 2. Setup
+
+`cd` to your `opt` folder.
+
+```console
+mkdir Ghostbusters && cd Ghostbusters
+curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
+```
+
 - Publish and update peers
 ```console
-curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/my-peer-info > my-peer-info
 nano my-peer-info
 # Fill in your information
-curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/publishPeerInfo.sh > publishPeerInfo.sh
-chmod u+x publishPeerInfo.sh
+
 ./publishPeerInfo.sh my-peer-info
-curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/updatePeers.sh > updatePeers.sh
-chmod u+x updatePeers.sh
+
 ./updatePeers.sh
+
+# If you want to cleanup dead peers, run:
+./peerCleanup.sh remove strict # removes all even if just wg is down
+./peerCleanup.sh remove # removes just completely offline host
+./peerCleanup.sh # debug mode, don't remove
 ```
 You can run updatePeers.sh again to update Wireguard config any time a new peer joins and publishes their peer info.
 
@@ -86,15 +97,6 @@ Then, start Wireguard and check if it's working.
 sudo wg-quick up ghostbusters
 # Test configuration
 sudo wg show ghostbusters
-```
-
-### 2. Setup
-
-`cd` to your `opt` folder.
-
-```console
-mkdir Ghostbusters && cd Ghostbusters
-curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
 ```
 
 ### 3. Fill out your info in the install script
