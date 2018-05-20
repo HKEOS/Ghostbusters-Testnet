@@ -53,6 +53,8 @@ echo -e "Address = 192.168.100.X/22" >> ghostbusters.conf
 sudo cp ghostbusters.conf /etc/wireguard/.
 sudo nano /etc/wireguard/ghostbusters.conf
 # You can input any number for "X" that hasn't been taken by another node.
+# X Can be any integer between 0 and 255, inclusive.
+# The full range is 192.168.100.0 to 192.168.103.255
 
 # Save the file
 ```
@@ -66,7 +68,7 @@ nano my-peer-info
 curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/publishPeerInfo.sh > publishPeerInfo.sh
 chmod u+x publishPeerInfo.sh
 ./publishPeerInfo.sh my-peer-info
-curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/publishPeerInfo.sh > updatePeers.sh
+curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/updatePeers.sh > updatePeers.sh
 chmod u+x updatePeers.sh
 ./updatePeers.sh
 ```
