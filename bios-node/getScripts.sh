@@ -1,7 +1,7 @@
 #!/bin/bash
 
-svn export https://github.com/HKEOS/Ghostbusters-Testnet/trunk/bios-node bios-scripts
+svn export https://github.com/HKEOS/Ghostbusters-Testnet/trunk/bios-node bios-files
 
-for filename in ./bios-scripts/*.sh; do
+for filename in ./bios-files/*.sh; do
   chmod u+x "$filename"
 done
