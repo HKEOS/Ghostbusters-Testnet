@@ -1,9 +1,5 @@
 #!/bin/bash
 GLOBAL_PATH=$(pwd)
-if [[ $1 == "" ]]; then
-	echo "Please provide the password";
-	exit 1;
-fi
 ## Check KBFS mount point
 echo
 echo "--------------- VERIFYING KEYBASE FILE SYSTEM ---------------";
@@ -24,10 +20,10 @@ echo "### AUTOMATIC PEER CONFIGURATION ###" > temp_config.ini;
 for file in ~/kbfs/team/eos_ghostbusters/mesh/*.peer_info.signed; do
 	[ -e "$file" ] || continue
 	echo "Reading data from $file";
-	kbuser=$(echo "$file" | cut -f1 -d'.' | cut -f6 -d'/');
+	kbuser=$(echo "$file" | cut -f1 -d'.' | cut -f8 -d'/');
 	if [[ $myKeybaseUser != $kbuser ]]; then
 		echo "Verifying signature from $kbuser";
-		openssl des3 -d -in "$file" -pass pass:"$1" | keybase verify -S "$kbuser" &>output
+		keybase verify -S "$kbuser" "$file" &>output
 		out=$(<output)
 		err=$(echo "$out" | grep "ERR");
 		if [[ "$err" == "" ]]; then
