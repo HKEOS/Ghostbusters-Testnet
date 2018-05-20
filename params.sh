@@ -41,7 +41,7 @@ ISBP=true
 PRODUCER_PUB_KEY="<EOS-public-key>"
 PRODUCER_PRIV_KEY="";
 ## PRODUCER NAME MUST HAVE 12 CHARS!
-PRODUSER_NAME="<producer-name>"
+PRODUCER_NAME="<producer-name>"
 
 ### STANDARD BLOCK PRODUCER INFO - according to https://github.com/eosrio/bp-info-standard
 ### Replace username with your keybase username
