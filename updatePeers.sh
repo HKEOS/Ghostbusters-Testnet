@@ -23,7 +23,7 @@ for file in ~/kbfs/team/eos_ghostbusters/mesh/*.peer_info.signed; do
 	kbuser=$(echo "$file" | cut -f1 -d'.' | cut -f8 -d'/');
 	if [[ $myKeybaseUser != $kbuser ]]; then
 		echo "Verifying signature from $kbuser";
-		keybase verify -S "$kbuser" "$file" &>output
+		cat "$file" | keybase verify -S "$kbuser" &>output
 		out=$(<output)
 		err=$(echo "$out" | grep "ERR");
 		if [[ "$err" == "" ]]; then
