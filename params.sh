@@ -54,12 +54,12 @@ WALLET_PORT="7777"
 ### PRE-DEFINED PEER LIST ###
 PEER_LIST='
 # p2p-peer-address = 192.168.10.Y:9876
-p2p-peer-address = <vpn-ip-address>:<p2p-port>                         
+# p2p-peer-address = <vpn-ip-address>:<p2p-port>                         
 '
 
 ### PRE-DEFINED PEER KEYS ###
 PEER_KEYS='
 # peer-key = "EOS4tiVonwbmT6w5jZjxaWx8p1CkejsBtcwtn6YaqZRteKyYGQZAE"
-peer-key = "<EOS-public-key>"
+# peer-key = "<EOS-public-key>"
 '
 echo "Configuration done!";
