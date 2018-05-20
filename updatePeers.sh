@@ -46,7 +46,7 @@ if [[ ! -f base_config.ini ]]; then
 	exit 1
 else
 	EOS_PUB_KEY=$(cat base_config.ini | grep "peer-private-key" | cut -f3 -d' ' | sed 's/\[//' | cut -f1 -d',');
-	echo "Current Public Key: $EOS_PUB_KEY";
+	echo -e "\nCurrent Public Key: $EOS_PUB_KEY\n";
 fi
 
 add_section()
@@ -83,7 +83,6 @@ add_eos_line()
 
 	if [[ $line == "p2p-peer-address"* ]]; then
 		EOS_ADDR=$(echo "$line" | cut -f3 -d " " |cut -f1 -d":");
-		echo $EOS_ADDR;
 		if [[ "$WG_ADDR" != "$EOS_ADDR" ]]; then
 			echo "$line" >> config.ini.temp;
 		fi
