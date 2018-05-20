@@ -4,10 +4,6 @@ if [[ $1 == "" ]]; then
 	echo "Please provide the input peer_info file!";
 	exit 1;
 fi
-if [[ $2 == "" ]]; then
-	echo "Please provide the password";
-	exit 1;
-fi
 ## Check KBFS mount point
 echo
 echo "--------------- VERIFYING KEYBASE FILE SYSTEM ---------------";
@@ -25,6 +21,5 @@ fi
 keybaseUser=$(keybase status | grep Username: | cut -f2- -d: | sed -e 's/^\s*//' -e '/^$/d');
 echo "Keybase user = $keybaseUser";
 echo "Signing config file...";
-keybase sign -i "$1" --saltpack-version 2 -o "$keybaseUser".peer_info.signed
+keybase sign -i "$1" --saltpack-version 2 -o ~/kbfs/team/eos_ghostbusters/mesh/$keybaseUser.peer_info.signed
 echo "Done. File saved at $GLOBAL_PATH/$keybaseUser.peer_info.signed";
-openssl des3 -salt -in "$GLOBAL_PATH/$keybaseUser.peer_info.signed" -out ~/kbfs/team/eos_ghostbusters/mesh/$keybaseUser.peer_info.signed -pass pass:"$2"
