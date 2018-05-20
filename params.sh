@@ -38,7 +38,7 @@ AGENT_NAME="<agent-name>"
 ISBP=true
 
 ### PRODUCER INFO ###
-PRODUCER_PUB_KEY="<pub-key>"
+PRODUCER_PUB_KEY="<EOS-public-key>"
 PRODUCER_PRIV_KEY="";
 ## PRODUCER NAME MUST HAVE 12 CHARS!
 PRODUSER_NAME="<producer-name>"
