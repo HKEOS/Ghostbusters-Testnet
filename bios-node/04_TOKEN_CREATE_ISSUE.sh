@@ -1,7 +1,7 @@
 #!/bin/bash
 ################################################################################
 #
-# Scrip Created by http://CryptoLions.io
+# Script Created by http://CryptoLions.io
 # Edited for Ghostbusters Testnet
 #
 ################################################################################
