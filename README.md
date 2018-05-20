@@ -164,7 +164,7 @@ crontab -e
 
 ### 8. Bios Node
 
-If you were selected as the bios node, please follow instructions [here](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/bios-instructions.md)
+If you were selected as the bios node, please follow instructions [here](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/bios-node/bios-instructions.md)
 
 ### 9. Resync
 
