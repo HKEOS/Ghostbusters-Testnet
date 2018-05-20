@@ -10,6 +10,8 @@ nano start.sh
 #Add /BiosNode at the end of DATADIR
 nano stop.sh
 #Add /BiosNode at the end of DIR
+nano config.ini
+# Set enable-stale-production to true
 ```
 
 ### Download bios-scripts
