@@ -215,6 +215,9 @@ if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	build_genesis;
 	cp ./genesis.json ./BiosNode/genesis.json
 	cp ./genesis.json /keybase/public/$keybase_username/genesis.json;
+	cp ./cleos.sh ./BiosNode/cleos.sh
+	cp ./cleos.sh ./BiosNode/start.sh
+	cp ./cleos.sh ./BiosNode/stop.sh
 	remove_cronjob;
 else
 	echo "Selected User: $SELECTED_USER";
