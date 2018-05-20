@@ -22,7 +22,7 @@ myKeybaseUser=$(keybase status | grep Username: | cut -f2- -d: | sed -e 's/^\s*/
 
 echo "Keybase user = $myKeybaseUser";
 
-echo "### AUTOMATIC PEER CONFIGURATION ###" > config.ini.temp;
+echo "" > config.ini.temp;
 
 wgPeerCount=0;
 eosPeerCount=0;
@@ -120,5 +120,11 @@ sudo wg show ghostbusters;
 
 echo -e "\n-------- EOS CONFIG DATA ---------";
 
-cat config.ini.temp;
-echo -e "\nWG Peers: $wgPeerCount \nEOS Peers: $eosPeerCount";
+sort config.ini.temp | uniq > autoPeers;
+cat autoPeers;
+cat base_config.ini > config.ini
+echo -e "\n\n### ----- AUTO GENERATED PEER INFO ----- ###\n" >> config.ini;
+cat autoPeers >> config.ini
+rm autoPeers;
+
+echo -e "\n Update finished!\nWG Peers: $wgPeerCount \nEOS Peers: $eosPeerCount";
