@@ -49,7 +49,7 @@ umask 077
 wg genkey | tee privatekey | wg pubkey > publickey
 echo -e "[Interface]\nPrivateKey = $(cat privatekey)\nSaveConfig = true\nDNS = 1.1.1.1" > ghostbusters.conf
 echo -e "ListenPort = 5555" >> ghostbusters.conf
-echo -e "Address = 192.168.10.X/24" >> ghostbusters.conf
+echo -e "Address = 192.168.100.X/22" >> ghostbusters.conf
 sudo cp ghostbusters.conf /etc/wireguard/.
 sudo nano /etc/wireguard/ghostbusters.conf
 # You can input any number for "X" that hasn't been taken by another node.
