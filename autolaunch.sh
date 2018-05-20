@@ -27,6 +27,7 @@ build_genesis()
     ## Create folder for bios node
     mkdir -p BiosNode;
     cp config.ini ./BiosNode/config.ini;
+    cp bios_keys ./BiosNode/bios_keys;
 
     genesis='{
     	"initial_timestamp": "'$(date -I)'T'$(date +"%H:%M")':00.000",
@@ -216,8 +217,8 @@ if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	cp ./genesis.json ./BiosNode/genesis.json
 	cp ./genesis.json /keybase/public/$keybase_username/genesis.json;
 	cp ./cleos.sh ./BiosNode/cleos.sh
-	cp ./cleos.sh ./BiosNode/start.sh
-	cp ./cleos.sh ./BiosNode/stop.sh
+	cp ./start.sh ./BiosNode/start.sh
+	cp ./stop.sh ./BiosNode/stop.sh
 	remove_cronjob;
 else
 	echo "Selected User: $SELECTED_USER";
