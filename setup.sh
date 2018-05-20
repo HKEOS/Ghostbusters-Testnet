@@ -12,6 +12,10 @@ echo "Downloading latest updatePeers script...";
 curl -s -O https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/updatePeers.sh
 chmod u+x updatePeers.sh
 
+echo "Downloading latest peerCleanup script...";
+curl -s -O https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/peerCleanup.sh
+chmod u+x peerCleanup.sh
+
 if [[ ! -f ./params.sh ]]; then
   echo "Downloading sample params...";
   curl -s -O https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/params.sh
