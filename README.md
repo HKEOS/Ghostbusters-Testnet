@@ -65,10 +65,10 @@ nano my-peer-info
 # Fill in your information
 curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/publishPeerInfo.sh > publishPeerInfo.sh
 chmod u+x publishPeerInfo.sh
-./publishPeerInfo.sh my-peer-info
+./publishPeerInfo.sh my-peer-info <password>
 curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/publishPeerInfo.sh > updatePeers.sh
 chmod u+x updatePeers.sh
-./updatePeers.sh
+./updatePeers.sh <password>
 ```
 You can run updatePeers.sh again to update Wireguard config any time a new peer joins and publishes their peer info.
 
