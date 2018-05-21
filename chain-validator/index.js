@@ -30,7 +30,7 @@ function initEOSJS() {
         // Get last irreversible block
         const lib_num = result['last_irreversible_block_num'];
 
-        bar = new ProgressBar('  downloading [:bar] :rate/bps :percent :etas', {
+        bar = new ProgressBar('  reading blocks [:bar] :rate/bps :percent :etas', {
             complete: '=',
             incomplete: ' ',
             width: 100,
