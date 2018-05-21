@@ -74,27 +74,52 @@ choose_action() {
 	done
 }
 
+echoParam()
+{
+	FIELD=$1;
+	VALUE=$2;
+	NET_ADDR=$3
+	lineData=$(case "$FIELD" in
+		"IP" ) echo "AllowedIPs = $VALUE/32"
+			;;
+		"PublicKey" ) echo "PublicKey = $VALUE="
+			;;
+		"Endpoint" ) echo "Endpoint = $VALUE"
+			;;
+		"PKA" ) echo "PersistentKeepAlive = $VALUE"
+			;;
+		"PUB" ) echo "peer-key = $VALUE"
+			;;
+		"P2P" ) echo "p2p-peer-address = $NET_ADDR:$VALUE"
+			;;
+	esac)
+	echo "$lineData" >> my-peer-info;
+}
+
 convert() {
 	current_peer=0;
 	current_cat="";
 	while read line; do
 		if [[ $line != "" ]] && [[ $line != \#* ]]; then
 			key=$(echo "$line" | cut -f1 -d'=');
-			value=$(echo "$line" | cut -f2 -d'=');
+			value=$(echo "$line" | cut -f2 -d'=' | sed -e 's/^"//' -e 's/"$//');
 			cat=$(echo "$key" | cut -f1 -d'_');
 			pos=$(echo "$key" | cut -f2 -d'_');
 			field=$(echo "$key" | cut -f3 -d'_');
 			if [[ $cat != $current_cat ]] || (( pos != current_peer)); then
+				if (( pos != current_peer)); then
+					NET_IP="$value";
+				fi
 				current_peer="$pos";
 				current_cat="$cat";
 				if [[ $cat == "EOS" ]]; then
-					echo "[EOS]";
+					echo -e "\n[EOS]" >> my-peer-info;
 				fi
 				if [[ $cat == "WG" ]]; then
-					echo "[Peer]";
+					echo -e "\n[Peer]" >> my-peer-info;
 				fi
 			fi
-			echo "[$cat : $pos] - $field = $value";
+			echoParam "$field" "$value" "$NET_IP";
 		fi
 	done < peerInfo.temp
 }
@@ -106,6 +131,7 @@ save() {
 		echo -e "\nWriting to file...";
 
 		echo -e "\n------- START -------\n";
+		echo "## Created with interactivePublish.sh" > my-peer-info;
 		convert;
 		echo -e "\n------- END ---------"
 	else
@@ -129,8 +155,6 @@ wg_ip() {
 				exit 1;
 			else
 				declare "$varname"="$REPLY";
-				echo "$varname";
-				echo "${!varname}";
 				# ls ~/kbfs/team/eos_ghostbusters/ip_list/ | grep $WG_IP
 				echo "$varname=\"${!varname}\"" >> peerInfo.temp;
 			fi 
@@ -150,8 +174,6 @@ wg_pubkey() {
 			exit 1;
 		else
 			declare "$varname"="$REPLY";
-			echo "$varname";
-			echo "${!varname}";
 			echo "$varname=\"${!varname}\"" >> peerInfo.temp;
 		fi 
 	fi
@@ -166,8 +188,6 @@ wg_endpoint() {
 			exit 1;
 		else
 			declare "$varname"="$REPLY";
-			echo "$varname";
-			echo "${!varname}";
 			echo "$varname=\"${!varname}\"" >> peerInfo.temp;
 		fi 
 	fi
@@ -182,8 +202,36 @@ wg_pka() {
 			declare "$varname"="20";
 		else
 			declare "$varname"="$REPLY";
-			echo "$varname";
-			echo "${!varname}";
+		fi 
+		echo "$varname=\"${!varname}\"" >> peerInfo.temp;
+	fi
+}
+
+eos_pubkey() {
+	varname='EOS_'$np'_PUB'
+	if [[ "${!varname}" == "" || $new == true ]]; then
+		echo -e " > Peer $np - EOS Public Key: \c"
+		read
+		if [[ "$REPLY" = "" ]]; then
+			echo "Please provide a EOS public key!";
+			eos_pubkey;
+		else
+			declare "$varname"="$REPLY";
+		fi 
+		echo "$varname=\"${!varname}\"" >> peerInfo.temp;
+	fi
+}
+
+eos_port() {
+	varname='EOS_'$np'_P2P'
+	if [[ "${!varname}" == "" || $new == true ]]; then
+		echo -e " > Peer $np - EOS P2P port: \c"
+		read
+		if [[ "$REPLY" = "" ]]; then
+			echo "Please provide a EOS P2P port!";
+			eos_port;
+		else
+			declare "$varname"="$REPLY";
 		fi 
 		echo "$varname=\"${!varname}\"" >> peerInfo.temp;
 	fi
@@ -198,6 +246,9 @@ new_peer() {
 	wg_endpoint;
 	wg_pka;
 	# EOS data
+	eos_pubkey;
+	eos_port;
+	
 	choose_action;
 }
 
