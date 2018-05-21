@@ -88,7 +88,7 @@ echoParam()
 			;;
 		"PKA" ) echo "PersistentKeepAlive = $VALUE"
 			;;
-		"PUB" ) echo "peer-key = $VALUE"
+		"PUB" ) echo "peer-key = \"$VALUE\""
 			;;
 		"P2P" ) echo "p2p-peer-address = $NET_ADDR:$VALUE"
 			;;
