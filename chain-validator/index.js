@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Eos = require('eosjs');
+const ProgressBar = require('progress');
 let eos = null;
+let bar = null;
 mongoose.connect('mongodb://localhost/eos_mainnet');
 const db = mongoose.connection;
 db.on('error', (err) => {
@@ -22,10 +24,18 @@ function initEOSJS() {
         sign: false
     };
     eos = Eos.Localnet(config);
+
     eos.getInfo({}).then(result => {
         console.log(result);
         // Get last irreversible block
         const lib_num = result['last_irreversible_block_num'];
+
+        bar = new ProgressBar('  downloading [:bar] :rate/bps :percent :etas', {
+            complete: '=',
+            incomplete: ' ',
+            width: 100,
+            total: lib_num
+        });
         fetchBlockRecursively(lib_num);
     });
 }
@@ -35,8 +45,9 @@ function fetchBlockRecursively(blk) {
         block_num_or_id: blk
     }).then((result) => {
         // console.log(result);
-        console.log(result['timestamp'] + " | " + result['block_num']);
+        // console.log(result['timestamp'] + " | " + result['block_num']);
         if (result['block_num'] > 1) {
+            bar.tick(1);
             fetchBlockRecursively(result['previous'])
         }
     });
