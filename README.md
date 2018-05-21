@@ -72,16 +72,9 @@ curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/set
 - Publish and update peers
 ```console
 nano my-peer-info
-# Fill in your information
+ ## Fill in your information
 
 ./publishPeerInfo.sh my-peer-info
-
-./updatePeers.sh
-
-# If you want to cleanup dead peers, run:
-./peerCleanup.sh remove strict # removes all even if just wg is down
-./peerCleanup.sh remove # removes just completely offline host
-./peerCleanup.sh # debug mode, don't remove
 ```
 You can run updatePeers.sh again to update Wireguard config any time a new peer joins and publishes their peer info.
 
@@ -114,6 +107,13 @@ Input your information for the highlighted fields shown below:
 
 ```console
 ./installGhostbusters.sh
+
+./updatePeers.sh
+
+ ## If you want to cleanup dead peers, run:
+./peerCleanup.sh remove strict # removes all even if just wg is down
+./peerCleanup.sh remove # removes just completely offline host
+./peerCleanup.sh # debug mode, don't remove
 ```
 
 ### 5. Publishing BP info on Keybase
@@ -129,7 +129,9 @@ Input your information for the highlighted fields shown below:
  
  - Check that file is up on `https://<username>.keybase.pub/bp_info.json`
  
- You can verify that bp_info.json correctly follows the schema using command line.
+#### 5.1 BP Info verification (optional)
+
+ You can verify that bp_info.json correctly follows the schema using command line. We recommend ajv-cli for the job.
  
  If npm is not installed:
  ```console

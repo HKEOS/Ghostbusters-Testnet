@@ -34,6 +34,10 @@ SSL_CERT_FILE="/path/to/certificate-chain"
 ### Node Agent Name
 AGENT_NAME="<agent-name>"
 
+### Peer Credentials (if blank will be equal to the produecer keys)
+PEER_PUB_KEY=""
+PEER_PRIV_KEY=""
+
 ### IS A BLOCK PRODUCER ? ###
 ISBP=true
 
