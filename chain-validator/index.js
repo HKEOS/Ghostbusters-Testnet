@@ -1,14 +1,4 @@
-const mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
-mongoose.Promise = require('bluebird');
-
-const BlockSchema = new Schema({
-    blk_id: {type: String, unique: true},
-    prev_id: String,
-    blk_num: Number
-});
-
-const Block = mongoose.model('block', BlockSchema);
+const cp = require('child_process');
 
 const Eos = require('eosjs');
 const ProgressBar = require('progress');
@@ -17,30 +7,11 @@ let bar = null;
 const chunks = [];
 let totalBlocks = null;
 let processedBlocks = 0;
-mongoose.connect('mongodb://localhost/eos_mainnet');
-const db = mongoose.connection;
-db.on('error', (err) => {
-    console.log(err);
-    process.exit(1);
-});
-db.once('open', () => {
-    console.log('DB connection ready!');
-    initEOSJS();
-});
 
-function findLastInserted(current, limit) {
-    console.log('Searching for lower number inserted...');
-    const query = Block.find({blk_num: {"$lt": current, "$gt": limit}}).sort({blk_num: 1}).limit(1);
-    query.exec().then((data) => {
-        bar.interrupt("Recovered at block -> " + data[0]['blk_num']);
-        fetchBlockRecursively(data[0]['blk_num'] - 1, limit);
-    }).catch((err) => {
-        console.error(err);
-    });
-}
+initEOSJS();
 
 function initEOSJS() {
-    config = {
+    const config = {
         keyProvider: [],
         httpEndpoint: 'http://aurora.eosrio.io:28888',
         expireInSeconds: 60,
@@ -49,13 +20,12 @@ function initEOSJS() {
         sign: false
     };
     eos = Eos.Localnet(config);
-
-    eos.getInfo({}).then(result => {
+    eos['getInfo']({}).then(result => {
         // Get last irreversible block
         const lib_num = result['last_irreversible_block_num'];
         console.log('Starting at block: ' + lib_num);
 
-        const chunkSize = 100000;
+        const chunkSize = 70000;
         let b = lib_num;
         totalBlocks = lib_num;
         while (b > 1) {
@@ -78,36 +48,33 @@ function initEOSJS() {
             width: 40,
             total: lib_num
         });
-        chunks.forEach((chunk, index) => {
-            fetchBlockRecursively(chunk.high_block, chunk.low_block, index);
-        });
-    });
-}
 
-function fetchBlockRecursively(blk, limit, idx) {
-    eos.getBlock({
-        block_num_or_id: blk
-    }).then((result) => {
-        // console.log(result['timestamp'] + " | " + result['block_num']);
-        processedBlocks++;
-        bar.tick(1, {
-            curr: processedBlocks
-        });
-        new Block({
-            blk_id: result['id'],
-            prev_id: result['previous'],
-            blk_num: result['block_num']
-        }).save().then(() => {
-            if (result['block_num'] > limit) {
-                processedBlocks++;
-                fetchBlockRecursively(result['previous'], limit, idx)
-            } else {
-                console.log('Process reached limit');
-                chunks[idx]['low_id'] = result['id'];
-            }
-        }).catch(() => {
-            console.log('Duplicate found...');
-            findLastInserted(result['block_num'], limit)
+        console.log("Starting " + chunks.length + " instances!");
+        chunks.forEach((chunk, index) => {
+            setTimeout(() => {
+                const subNode = cp.fork(`${__dirname}/worker.js`);
+                subNode.on('message', (msg) => {
+                    if (msg.status === "end") {
+                        chunk['low_id'] = msg['data']['id'];
+                    }
+                    if (msg.status === "recover") {
+                        bar.interrupt("Recovered at block -> " + msg.data['blk_num']);
+                    }
+                    if (msg.status === "block") {
+                        processedBlocks++;
+                        bar.tick(1, {
+                            curr: processedBlocks
+                        });
+                    }
+                    if (msg.status === "ready") {
+                        subNode.send({
+                            high: chunk.high_block,
+                            low: chunk.low_block,
+                            index: index
+                        });
+                    }
+                });
+            }, index * 100);
         });
     });
 }
