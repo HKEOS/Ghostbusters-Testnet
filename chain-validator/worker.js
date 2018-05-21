@@ -11,8 +11,7 @@ const config = {
     sign: false
 };
 const eos = Eos.Localnet(config);
-let tempBlocks = 0;
-mongoose.connect('mongodb://localhost/eos_mainnet').then(() => {
+mongoose.connect('mongodb://localhost/eos2').then(() => {
     process.send({
         status: 'ready'
     });
@@ -25,6 +24,8 @@ const BlockSchema = new Schema({
     blk_num: Number
 });
 const Block = mongoose.model('block', BlockSchema);
+
+let tempBlocks = 0;
 function fetchBlockRecursively(blk, limit, idx) {
     eos['getBlock']({
         block_num_or_id: blk
