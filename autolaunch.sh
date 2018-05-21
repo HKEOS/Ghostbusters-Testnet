@@ -3,6 +3,19 @@
 ## DEFINE TARGET BTC BLOCK
 TARGET_BLOCK=523069;
 
+if ! which keybase > /dev/null; then
+   echo -e "Keybase not installed. Exiting..."
+   exit 1;
+fi
+
+if ! which jq > /dev/null; then
+   echo -e "jq not found! Install? (y/n) \c"
+   read
+   if "$REPLY" = "y"; then
+      sudo apt install jq
+   fi
+fi
+
 get_seeded_random()
 {
 	seed="$1"
@@ -80,7 +93,7 @@ remove_cronjob()
 
 ## Check KBFS mount point
 echo -e "--------------- VERIFYING KEYBASE FILE SYSTEM ---------------\n";
-KBFS_MOUNT=$(keybase status | grep mount | cut -f 2 -d:);
+KBFS_MOUNT=$(keybase status | grep mount | cut -f 2 -d: | sed -e 's/^\s*//' -e '/^$/d');
 
 ## Restart Keybase if needed
 if [ -d "$KBFS_MOUNT" ]; then
@@ -215,7 +228,7 @@ if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	wall "EOS Launch Time: You have been chosen as bios! - press enter to continue...";
 	build_genesis;
 	cp ./genesis.json ./BiosNode/genesis.json
-	cp ./genesis.json /keybase/public/$keybase_username/genesis.json;
+	cp ./genesis.json $KBFS_MOUNT/public/$keybase_username/genesis.json;
 	cp ./cleos.sh ./BiosNode/cleos.sh
 	cp ./start.sh ./BiosNode/start.sh
 	cp ./stop.sh ./BiosNode/stop.sh
@@ -225,11 +238,11 @@ else
 	wall "EOS Launch Time! $SELECTED_USER was chosen as bios node! - press enter to continue...";
 	echo "Waiting for genesis... 30s";
 	sleep 30;
-	while [[ ! -f /keybase/public/$SELECTED_USER/genesis.json ]]; do
+	while [[ ! -f $KBFS_MOUNT/public/$SELECTED_USER/genesis.json ]]; do
 		echo -e "Genesis is not ready yet - please verify this url on your browser\n https://$SELECTED_USER.keybase.pub/genesis.json";
 		read -n 1 -s -r -p "Press any key when ready!";
 	done
-	cp /keybase/public/$SELECTED_USER/genesis.json genesis.json;
+	cp $KBFS_MOUNT/public/$SELECTED_USER/genesis.json genesis.json;
 	echo "Genesis ready! Node will start now...";
 	remove_cronjob;
 	bash start.sh

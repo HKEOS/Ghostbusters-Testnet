@@ -106,11 +106,15 @@ Input your information for the highlighted fields shown below:
 ### 4. Run the script
 
 ```console
+ # Run testnet installation script
 ./installGhostbusters.sh
 
+ # update peers on the base config.ini
 ./updatePeers.sh
+./updatePeers.sh - restart # will reload nodeos after update
+./updatePeers.sh lxd restart # will reload nodeos on lxd after update
 
- ## If you want to cleanup dead peers, run:
+ ## If you want to cleanup dead peers (wg only), run:
 ./peerCleanup.sh remove strict # removes all even if just wg is down
 ./peerCleanup.sh remove # removes just completely offline host
 ./peerCleanup.sh # debug mode, don't remove

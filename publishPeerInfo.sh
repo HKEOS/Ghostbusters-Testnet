@@ -6,6 +6,12 @@ if [[ $1 == "" ]]; then
         echo
         exit 1;
 fi
+
+if ! which keybase > /dev/null; then
+   echo -e "Keybase not installed. Exiting..."
+   exit 1;
+fi
+
 ## Check KBFS mount point
 echo
 echo "--------------- VERIFYING KEYBASE FILE SYSTEM ---------------";

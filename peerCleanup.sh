@@ -2,8 +2,15 @@
 
 sudo wg show ghostbusters | grep -A 2 "peer: " > peers.temp
 
-cmd="$1"
+if ! which fping > /dev/null; then
+   echo -e "fping not found! Install? (y/n) \c"
+   read
+   if "$REPLY" = "y"; then
+      sudo apt install fping
+   fi
+fi
 
+cmd="$1"
 strict="$2"
 
 if [[ $cmd == "remove" ]]; then
