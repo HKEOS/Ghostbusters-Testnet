@@ -177,12 +177,12 @@ fi
 
 echo -e "\n Update finished!\nWG Peers: $wgPeerCount \nEOS Peers: $eosPeerCount";
 
-if [[ $1 == "restart" ]]; then
+if [[ $2 == "restart" ]]; then
 	if [[ $LXD_MODE == true ]]; then
-		# Restart LXD Node
+		echo -e "\nRestarting nodeos on lxd... \n";
 	else
-		# Restart Standard Node
 		echo -e "\nRestarting nodeos... \n";
 		./$TESTNET_DIR/start.sh
+		tail -f ./$TESTNET_DIR/stderr.txt
 	fi
 fi
