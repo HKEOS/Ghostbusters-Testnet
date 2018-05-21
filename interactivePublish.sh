@@ -133,9 +133,21 @@ save() {
 		echo -e "\n------- START -------\n";
 		echo "## Created with interactivePublish.sh" > my-peer-info;
 		convert;
+		cat my-peer-info;
+		publish;
 		echo -e "\n------- END ---------"
 	else
 		echo "my-peer-info wasn't touched!";
+	fi
+}
+
+publish() {
+	echo -e " > Do you want to publish now using keybase? [y/n] \c"
+	read
+	if [[ "$REPLY" = "y" || "$REPLY" = "" ]]; then
+		./publishPeerInfo.sh my-peer-info;
+	else
+		echo "my-peer-info saved. You will have to publish later...";
 	fi
 }
 
