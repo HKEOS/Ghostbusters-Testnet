@@ -1,5 +1,6 @@
 const cp = require('child_process');
-
+const os = require('os'),
+    cpuCount = os.cpus().length;
 const Eos = require('eosjs');
 const ProgressBar = require('progress');
 let eos = null;
@@ -25,7 +26,7 @@ function initEOSJS() {
         const lib_num = result['last_irreversible_block_num'];
         console.log('Starting at block: ' + lib_num);
 
-        const chunkSize = 70000;
+        const chunkSize = Math.floor(lib_num / cpuCount);
         let b = lib_num;
         totalBlocks = lib_num;
         while (b > 1) {
@@ -45,11 +46,10 @@ function initEOSJS() {
         bar = new ProgressBar('  reading blocks [:curr/:total] [:bar] :rate/bps :percent :etas', {
             complete: '=',
             incomplete: ' ',
-            width: 40,
+            width: 50,
             total: lib_num
         });
 
-        console.log("Starting " + chunks.length + " instances!");
         chunks.forEach((chunk, index) => {
             setTimeout(() => {
                 const subNode = cp.fork(`${__dirname}/worker.js`);
@@ -61,8 +61,8 @@ function initEOSJS() {
                         bar.interrupt("Recovered at block -> " + msg.data['blk_num']);
                     }
                     if (msg.status === "block") {
-                        processedBlocks++;
-                        bar.tick(1, {
+                        processedBlocks = processedBlocks + msg.count;
+                        bar.tick(msg.count, {
                             curr: processedBlocks
                         });
                     }
