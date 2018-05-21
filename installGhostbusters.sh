@@ -325,13 +325,13 @@ agent-name = '$AGENT_NAME'
 echo 'peer-private-key = ["'$PEER_PUB_KEY'","'$PEER_PRIV_KEY'"]' >> $BASE_CONFIG;
 
 if [[ $ISBP == true ]]; then
-	echo 'plugin = eosio::producer_plugin' >> $BASE_CONFIG;
 	echo 'private-key = ["'$PRODUCER_PUB_KEY'","'$PRODUCER_PRIV_KEY'"]' >> $BASE_CONFIG;
 	echo 'producer-name = $PRODUCER_NAME' >> $BASE_CONFIG;
+	echo 'plugin = eosio::producer_plugin' >> $BASE_CONFIG;
 else
-	echo '# plugin = eosio::producer_plugin' >> $BASE_CONFIG;
 	echo '# private-key = ["'$PRODUCER_PUB_KEY'","'$PRODUCER_PRIV_KEY'"]' >> $BASE_CONFIG;
 	echo '# producer-name = $PRODUCER_NAME' >> $BASE_CONFIG;
+	echo '# plugin = eosio::producer_plugin' >> $BASE_CONFIG;
 fi
 echo "$PEER_LIST" >> $BASE_CONFIG
 echo "$PEER_KEYS" >> $BASE_CONFIG
