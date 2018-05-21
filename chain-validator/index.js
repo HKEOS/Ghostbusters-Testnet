@@ -27,10 +27,10 @@ db.once('open', () => {
 
 function findLastInserted(current) {
     console.log('Searching for lower number inserted...');
-    const query = Block.find({blk_num: {"$lt": current + 1}}).sort({blk_num: 1}).limit(1);
+    const query = Block.find({blk_num: {"$lt": current}}).sort({blk_num: 1}).limit(1);
     query.exec().then((data) => {
         bar.interrupt("Recovered at block -> " + data[0]['blk_num']);
-        fetchBlockRecursively(data[0]['blk_num']);
+        fetchBlockRecursively(data[0]['blk_num'] - 1);
     }).catch((err) => {
         console.error(err);
     });
