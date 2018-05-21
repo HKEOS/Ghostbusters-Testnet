@@ -21,9 +21,9 @@ EOS_SOURCE_DIR="/path/to/eos"
 # Node port definitions (avoid ports below 1024 - you shouldn't run as root)
 NODE_API_PORT="<api-port>"
 NODE_P2P_PORT="<p2p-port>"
-# Network address, usually 0.0.0.0
+# Network address (Wireguard private IP)
 NODE_NET_ADDR="<net-addr>"
-# Externally accessible node address
+# Externally accessible node address (Wireguard private IP)
 NODE_HOST="<server-address>"
 
 # HTTPS Settings - Leave port blank to disable
