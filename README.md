@@ -40,7 +40,7 @@ run_keybase
 ```console
 sudo add-apt-repository ppa:wireguard/wireguard
 sudo apt-get update
-sudo apt-get install wireguard
+sudo apt-get install wireguard resolvconf
 ```
 
 - Create Wireguard keys and config
