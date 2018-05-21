@@ -16,6 +16,10 @@ echo "Downloading latest peerCleanup script...";
 curl -s -O https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/peerCleanup.sh
 chmod u+x peerCleanup.sh
 
+echo "Downloading latest interactivePublish script...";
+curl -s -O https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/interactivePublish.sh
+chmod u+x interactivePublish.sh
+
 if [[ ! -f ./my-peer-info ]]; then
 	echo "Downloading my-peer-info sample";
 	curl -s -O https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/my-peer-info
