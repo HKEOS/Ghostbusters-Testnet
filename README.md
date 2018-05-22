@@ -66,7 +66,8 @@ echo -e "ListenPort = 5555" >> ghostbusters.conf
 echo -e "Address = 192.168.100.X/22" >> ghostbusters.conf
 sudo cp ghostbusters.conf /etc/wireguard/.
 ```
-Selecting your Wireguard IP
+
+- Selecting your Wireguard IP
 
 Your Wireguard IP address should be within the range of 192.168.100.X to 192.168.103.X, where X is between 0 and 255, inclusive.
 You can input any number for "X" in `ghostbusters.conf` that hasn't been taken by another node. To find which IPs have been taken:
