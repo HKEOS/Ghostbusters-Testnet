@@ -4,6 +4,7 @@
 LAUNCH_DATA=$(curl -sL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/launch_data.json);
 
 TARGET_BLOCK=$(echo "$LAUNCH_DATA" | jq -r .btc_block);
+
 CHAIN_ID=$(echo "$LAUNCH_DATA" | jq -r .initial_chain_id);
 
 CURRENT_BLK=$(curl -sL -H 'Cache-Control: no-cache' https://blockchain.info/latestblock | jq .height);
@@ -268,7 +269,16 @@ while read line; do
 	echo "$line :: $stat";
 done < users.txt
 
+send_message() {
+	user="$1";
+	json=$(echo '{"method": "send", "params": {"options": {"channel": {"name": "eos_ghostbusters", "members_type": "team", "topic_name": "general"}, "message": {"body": "[Automatic Message] Ghostbusters Launch Time! $user was selected as bios! Everybody get ready!"}}}}');
+	echo "$json" | keybase chat api
+}
+
+
 SELECTED_USER=$(shuf -n 1 --random-source=<(get_seeded_random $BTC_HASH) bios_list.txt);
+
+send_message "$SELECTED_USER";
 
 if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	echo "You have been chosen as bios!";
