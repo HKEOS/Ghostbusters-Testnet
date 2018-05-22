@@ -318,7 +318,6 @@ else
 	sleep 15;
 	if [[ ! -f $KBFS_MOUNT/public/$SELECTED_USER/genesis.json ]]; then
 		echo -e "Genesis is not ready yet - please verify this url on your browser\n https://$SELECTED_USER.keybase.pub/genesis.json";
-		read -n 1 -s -r -p "Press any key when ready!";
 	fi
 	cp $KBFS_MOUNT/public/$SELECTED_USER/genesis.json genesis.json;
 	echo "Genesis ready! Node will start now...";
