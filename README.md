@@ -116,13 +116,15 @@ Input your information for the highlighted fields shown below:
 
  # update peers on the base config.ini
 ./updatePeers.sh
+
+# other options for updatePeers.sh
 ./updatePeers.sh - restart # will reload nodeos after update
 ./updatePeers.sh lxd restart # will reload nodeos on lxd after update
 
  ## If you want to cleanup dead peers (wg only), run:
 ./peerCleanup.sh remove strict # removes all even if just wg is down
 ./peerCleanup.sh remove # removes just completely offline host
-./peerCleanup.sh # debug mode, don't remove
+./peerCleanup.sh # debug mode, doesn't actually remove peers
 ```
 
 ### 5. Publishing BP info on Keybase
@@ -163,10 +165,7 @@ Try `cat config.ini`, and `cat cleos.sh` to check that all the information is co
 ```console
 sudo apt install jq
 
-# Make sure you don't have a genesis.json file on your public keybase folder...
-sudo rm /keybase/public/<username>/genesis.json
-
-# Test script execution manually
+# Run autolaunch, answer questions prompted by script
 ./autolaunch.sh
 
 # If the target BTC block was not reached at runtime,
@@ -187,4 +186,8 @@ If at any point you need to restart your node:
 ```console
 ./start.sh
 tail -F stderr.txt
+```
+Or you can update your peers and restart at the same time:
+```console
+./updatePeers - restart
 ```
