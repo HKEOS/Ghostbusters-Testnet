@@ -1,11 +1,30 @@
 #!/bin/bash
+
+echo
+echo "Verifying kbfs...";
+echo
+
+KBFS_MOUNT=$(keybase status | grep mount | cut -f 2 -d: | sed -e 's/^\s*//' -e '/^$/d');
+
+## Restart Keybase if needed
+
+if [ ! -d "$KBFS_MOUNT" ]; then
+	echo "KBFS is not running!";
+	run_keybase
+	sleep 3
+else
+	echo "KBFS mount point: $KBFS_MOUNT";
+fi
+
 np=1;
 echo -e "\n\n----- >> Interactive peer info builder << ------\n";
 
 if [[ $1 != "new" ]]; then
 	if [[ -f ./peerInfo.temp ]]; then
+		echo -e '\nCached data on peerInfo.temp\n'
 		source peerInfo.temp;
 		cat peerInfo.temp | grep "_$np_";
+		echo -e '\nEnd of cached data.\n\n';
 	else
 		echo -e "## Temp settings" > peerInfo.temp;
 	fi
@@ -125,6 +144,7 @@ convert() {
 }
 
 save() {
+	echo
 	echo -e " > Do you want to save your settings? [y/n] \c"
 	read
 	if [[ "$REPLY" = "y" || "$REPLY" = "" ]]; then
@@ -142,6 +162,7 @@ save() {
 }
 
 publish() {
+	echo
 	echo -e " > Do you want to publish now using keybase? [y/n] \c"
 	read
 	if [[ "$REPLY" = "y" || "$REPLY" = "" ]]; then
@@ -152,6 +173,7 @@ publish() {
 }
 
 edit_wg() {
+	echo
 	echo -e " > WG Peer $np ip address [192.168.100.0 to 192.168.103.255]\n Current value: ${var[WG_IP_$np]} \c"
 	read
 	let "WG_IP_$np"="$REPLY";
@@ -169,7 +191,7 @@ wg_ip() {
 				declare "$varname"="$REPLY";
 				# ls ~/kbfs/team/eos_ghostbusters/ip_list/ | grep $WG_IP
 				echo "$varname=\"${!varname}\"" >> peerInfo.temp;
-			fi 
+			fi
 		else
 			echo -e "\n Invalid IP Address: $REPLY \n"
 			wg_ip;
@@ -187,7 +209,7 @@ wg_pubkey() {
 		else
 			declare "$varname"="$REPLY";
 			echo "$varname=\"${!varname}\"" >> peerInfo.temp;
-		fi 
+		fi
 	fi
 }
 
@@ -201,7 +223,7 @@ wg_endpoint() {
 		else
 			declare "$varname"="$REPLY";
 			echo "$varname=\"${!varname}\"" >> peerInfo.temp;
-		fi 
+		fi
 	fi
 }
 
@@ -214,7 +236,7 @@ wg_pka() {
 			declare "$varname"="20";
 		else
 			declare "$varname"="$REPLY";
-		fi 
+		fi
 		echo "$varname=\"${!varname}\"" >> peerInfo.temp;
 	fi
 }
@@ -229,7 +251,7 @@ eos_pubkey() {
 			eos_pubkey;
 		else
 			declare "$varname"="$REPLY";
-		fi 
+		fi
 		echo "$varname=\"${!varname}\"" >> peerInfo.temp;
 	fi
 }
@@ -244,7 +266,7 @@ eos_port() {
 			eos_port;
 		else
 			declare "$varname"="$REPLY";
-		fi 
+		fi
 		echo "$varname=\"${!varname}\"" >> peerInfo.temp;
 	fi
 }
@@ -260,8 +282,69 @@ new_peer() {
 	# EOS data
 	eos_pubkey;
 	eos_port;
-	
 	choose_action;
 }
+
+check_ip() {
+	echo -e "\n Checking for reserved address: $1 ...\n";
+	for f in $KBFS_MOUNT/team/eos_ghostbusters/ip_list/*$1; do
+		if [ -e "$f" ]; then
+			ip_valid=false;
+			echo " > !! $1 is not available, please select another";
+		else
+			ip_valid=true;
+			echo -e " > Please inform you producer name (12-char) in order to reserve the address: \c";
+			read
+			bpname="$REPLY";
+			touch "$KBFS_MOUNT/team/eos_ghostbusters/ip_list/$bpname@$1"
+			echo " > Address reserved!";
+		fi
+		break
+	done
+}
+
+ask_ip() {
+	echo
+	echo -e " > Wireguard internal IP Address? [range: 192.168.100.0 to 192.168.103.255]: \c"
+	read
+	WG_INTERFACE="$REPLY";
+	check_ip "$WG_INTERFACE"
+	if [[ "$ip_valid" == false ]]; then
+		ask_ip;
+	else
+		echo -e "Address = $WG_INTERFACE/22" >> ghostbusters.conf
+	fi
+}
+
+## Wireguard setup
+echo -e " > Do you want to setup Wireguard now? [y/n]: \c"
+read
+if [[ "$REPLY" = "y" || "$REPLY" = "" ]]; then
+	umask 077
+	wg genkey | tee wg_privatekey.txt | wg pubkey > wg_publickey.txt
+	echo
+	echo "Your private key is located in the wg_privatekey.txt";
+	PVT_KEY=$(cat wg_privatekey.txt);
+	PUB_KEY=$(cat wg_publickey.txt);
+	echo
+	echo "Here is your public key: [$PUB_KEY] ... It was also saved on wg_pubkey.txt for convenience.";
+	echo -e "[Interface]\nPrivateKey = $(cat privatekey)\nSaveConfig = true\nDNS = 1.1.1.1" > ghostbusters.conf;
+	echo
+	echo -e " > Please define your Wiregaurd port? [default=5555]: \c"
+	read
+	WG_PORT="$REPLY";
+	if [[ "$WG_PORT" == "" ]]; then
+		WG_PORT=5555;
+	fi
+	echo -e "ListenPort = $WG_PORT" >> ghostbusters.conf;
+	ask_ip;
+	sudo ip link del dev ghostbusters
+	sudo cp ghostbusters.conf /etc/wireguard/.
+	sudo wg-quick up ghostbusters
+
+	echo -e "\n\n ------------- CURRENT CONFIGURATION -------------- \n";
+	sudo wg show ghostbusters
+	echo -e "\n\n -------------------------------------------------- \n";
+fi
 
 choose_action;
