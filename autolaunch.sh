@@ -1,5 +1,7 @@
 #!/bin/bash
 
+PATH="/bin:/sbin:/usr/bin:/usr/sbin"
+
 ## DEFINE TARGET BTC BLOCK
 LAUNCH_DATA=$(curl -sL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/launch_data.json);
 
@@ -23,14 +25,15 @@ if ! which jq > /dev/null; then
 fi
 
 ## Check KBFS mount point
-echo -e "--------------- VERIFYING KEYBASE FILE SYSTEM ---------------\n";
-KBFS_MOUNT=$(keybase status | grep mount | cut -f 2 -d: | sed -e 's/^\s*//' -e '/^$/d');
+echo -e "\n--------------- VERIFYING KEYBASE FILE SYSTEM ---------------\n";
+
+KBFS_MOUNT=$(keybase status | awk '/mount/ {print $2}');
 
 ## Restart Keybase if needed
 if [ ! -d "$KBFS_MOUNT" ]; then
         echo "kbfs is not running...";
         run_keybase
-        sleep 3
+        sleep 3;
 else
         echo -e "KBFS mounted at $KBFS_MOUNT\n";
 fi
@@ -127,8 +130,9 @@ build_genesis()
 }
 
 GLOBAL_PATH=$(pwd)
-croncmd="bash $GLOBAL_PATH/autolaunch.sh $flag >> $GLOBAL_PATH/autolaunch.log";
-cronjob="0,10,20,30,40,50 * * * * $croncmd";
+echo "GlobalPath = $GLOBAL_PATH";
+croncmd="$GLOBAL_PATH/autolaunch.sh $flag >> $GLOBAL_PATH/autolaunch.log";
+cronjob="*/1 * * * * $croncmd";
 
 add_cronjob()
 {
@@ -271,7 +275,22 @@ done < users.txt
 
 send_message() {
 	user="$1";
-	json=$(echo '{"method": "send", "params": {"options": {"channel": {"name": "eos_ghostbusters", "members_type": "team", "topic_name": "general"}, "message": {"body": "[Automatic Message] Ghostbusters Launch Time! $user was selected as bios! Everybody get ready!"}}}}');
+	json=$(echo '
+{
+	"method": "send",
+	"params": {
+		"options": {
+			"channel": {
+				"name": "eos_ghostbusters",
+				"members_type": "team",
+				"topic_name": "bios"
+			},
+			"message": {
+			"body": "[Automatic Message] '$keybase_username' reporting that '$user' was selected as bios!"
+			}
+		}
+	}
+}');
 	echo "$json" | keybase chat api
 }
 
@@ -297,13 +316,14 @@ else
 	echo "Waiting for genesis... 15s";
 	echo
 	sleep 15;
-	while [[ ! -f $KBFS_MOUNT/public/$SELECTED_USER/genesis.json ]]; do
+	if [[ ! -f $KBFS_MOUNT/public/$SELECTED_USER/genesis.json ]]; then
 		echo -e "Genesis is not ready yet - please verify this url on your browser\n https://$SELECTED_USER.keybase.pub/genesis.json";
 		read -n 1 -s -r -p "Press any key when ready!";
-	done
+	fi
 	cp $KBFS_MOUNT/public/$SELECTED_USER/genesis.json genesis.json;
 	echo "Genesis ready! Node will start now...";
 	remove_cronjob;
+	rm -rf blocks/ shared_mem/
 	./start.sh
 	echo "Please verify logs on stderr.txt";
 fi
