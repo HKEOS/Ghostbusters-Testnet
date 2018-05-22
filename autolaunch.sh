@@ -221,7 +221,7 @@ if (( $matched > 0 )); then
 		time_r=$(($remaining_blocks * 10));
 		echo "Not there yet! $remaining_blocks blocks remaining, about $time_r minutes...";
 		add_cronjob;
-#		exit 1;
+		exit 1;
 	fi
 else
 	echo "No source consensus! Exiting...";
