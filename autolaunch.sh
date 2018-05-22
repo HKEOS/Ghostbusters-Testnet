@@ -104,6 +104,11 @@ else
 	echo -e "KBFS mounted at $KBFS_MOUNT\n";
 fi
 
+if [[ -f "$KBFS_MOUNT"/public/$keybase_username/genesis.json ]]; then
+	echo "Removing old genesis.json...";
+	sudo rm "$KBFS_MOUNT"/public/$keybase_username/genesis.json
+fi
+
 echo -e "--------------- VERIFYING BITCOIN STATE ---------------\n";
 
 matches=0;
