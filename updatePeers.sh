@@ -59,13 +59,9 @@ add_section()
 			else
 				sudo wg set ghostbusters peer "$publickey=" endpoint "$endpoint" allowed-ips "$allowedips" persistent-keepalive "$persistentkeepalive";
 			fi
-			((wgPeerCount++))
 			publickey=""
 			endpoint=""
 			allowedips=""
-		fi
-		if [[ $section == "eos" ]]; then
-			((eosPeerCount++))
 		fi
 		section=""
 	fi
@@ -102,8 +98,6 @@ add_eos_line()
 
 			for file in $KBFS_MOUNT/team/eos_ghostbusters/mesh/*.peer_info.signed; do
 				[ -e "$file" ] || continue
-				echo -e "\n";
-				echo "Reading data from $file";
 				kbuser=$(echo "$file" | sed -e 's/.*mesh\/\(.*\).peer_info.signed*/\1/');
 				echo "Verifying signature from $kbuser";
 				cat "$file" | keybase verify -S "$kbuser" &>output
@@ -113,15 +107,17 @@ add_eos_line()
 					section="";
 					while read line; do
 						if [[ $line != "" ]] && [[ $line != \#* ]]; then
-							if [[ $line == [* ]]; then
+							if [[ $line == "["* ]]; then
 								add_section;
 							fi
 							if [[ "${line,,}" == "[peer]" ]]; then
+								((wgPeerCount++))
 								section="wg";
 								continue;
 							fi
 							if [[ "${line,,}" == "[eos]" ]]; then
 								section="eos";
+								((eosPeerCount++))
 								continue;
 							fi
 							if [[ $section == "wg" ]]; then
@@ -171,11 +167,13 @@ if [[ $LXD_MODE == true ]]; then
 	lxc file push config.ini eos-node/home/eos/gb/config.ini;
 	rm config.ini
 else
-	rm ./$TESTNET_DIR/config.ini;
+	if [[ -f ./$TESTNET_DIR/config.ini ]]; then
+		rm ./$TESTNET_DIR/config.ini;
+	fi
 	mv config.ini ./$TESTNET_DIR/config.ini;
 fi
 
-echo -e "\n Update finished!\nWG Peers: $wgPeerCount \nEOS Peers: $eosPeerCount";
+echo -e "\n >> Update finished!\n >> WG Peers: $wgPeerCount \n >> EOS Peers: $eosPeerCount \n ----- END ----- \n";
 
 if [[ $2 == "restart" ]]; then
 	if [[ $LXD_MODE == true ]]; then

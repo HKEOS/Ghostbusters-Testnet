@@ -23,10 +23,11 @@ function initEOSJS() {
     };
     eos = Eos.Localnet(config);
     eos['getInfo']({}).then(result => {
+
         // Get last irreversible block
         const lib_num = result['last_irreversible_block_num'];
         console.log('Starting at block: ' + lib_num);
-        const chunkSize = Math.ceil(lib_num / cpuCount);
+        const chunkSize = Math.ceil(lib_num / cpuCount) * 4;
         let b = lib_num;
         totalBlocks = lib_num;
         while (b > 1) {
