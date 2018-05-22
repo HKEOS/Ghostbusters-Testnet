@@ -34,13 +34,27 @@ run_keybase
  keybase signup
  ```
 
-### 1. Wireguard VPN Setup
+### 1. Wireguard Setup
 
 - Install Wireguard
 ```console
 sudo add-apt-repository ppa:wireguard/wireguard
 sudo apt-get update
 sudo apt-get install wireguard resolvconf
+```
+
+### 2. Setup
+
+`cd` to your `opt` folder.
+
+```console
+mkdir Ghostbusters && cd Ghostbusters
+curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
+```
+
+- You can use the interactive publisher script, then you can jump to step 3. Or skip this and follow along.
+```console
+./interactivePublish.sh
 ```
 
 - Create Wireguard keys and config
@@ -59,15 +73,6 @@ sudo nano /etc/wireguard/ghostbusters.conf
 # Save the file
 ```
 It is recommended that you use Keybase when communicating information related to your node.
-
-### 2. Setup
-
-`cd` to your `opt` folder.
-
-```console
-mkdir Ghostbusters && cd Ghostbusters
-curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
-```
 
 - Publish and update peers
 ```console
