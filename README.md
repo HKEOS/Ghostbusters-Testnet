@@ -65,23 +65,29 @@ echo -e "[Interface]\nPrivateKey = $(cat privatekey)\nSaveConfig = true\nDNS = 1
 echo -e "ListenPort = 5555" >> ghostbusters.conf
 echo -e "Address = 192.168.100.X/22" >> ghostbusters.conf
 sudo cp ghostbusters.conf /etc/wireguard/.
-sudo nano /etc/wireguard/ghostbusters.conf
-# You can input any number for "X" that hasn't been taken by another node.
-# X Can be any integer between 0 and 255, inclusive.
-# The full range is 192.168.100.0 to 192.168.103.255
+```
+Selecting your Wireguard IP
 
+Your Wireguard IP address should be within the range of 192.168.100.X to 192.168.103.X, where X is between 0 and 255, inclusive.
+You can input any number for "X" in `ghostbusters.conf` that hasn't been taken by another node. To find which IPs have been taken:
+```console
+keybase status | grep mount
+# copy the mount directory
+ls /<keybase-mount-directory>/team/eos_ghostbusters/ip_list
+sudo nano /etc/wireguard/ghostbusters.conf
+# Add in the value of X you chose
 # Save the file
 ```
+
 It is recommended that you use Keybase when communicating information related to your node.
 
-- Publish and update peers
+- Publish peer information
 ```console
 nano my-peer-info
  ## Fill in your information
 
 ./publishPeerInfo.sh my-peer-info
 ```
-You can run updatePeers.sh again to update Wireguard config any time a new peer joins and publishes their peer info.
 
 Check firewall settings, and make sure that port 5555 is open. If not, you can use:
 ```console
@@ -116,6 +122,7 @@ Input your information for the highlighted fields shown below:
 
  # update peers on the base config.ini
 ./updatePeers.sh
+ # You can run updatePeers.sh again to automatically update Wireguard and EOS peer configs any time a new peer joins and publishes their peer info.
 
 # other options for updatePeers.sh
 ./updatePeers.sh - restart # will reload nodeos after update
