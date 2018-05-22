@@ -1,6 +1,25 @@
 #!/bin/bash
 GLOBAL_PATH=$(pwd)
 TESTNET_DIR=$(cat testnet.name);
+
+function valid_ip()
+{
+    local  ip=$1
+    local  stat=1
+
+    if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+        OIFS=$IFS
+        IFS='.'
+        ip=($ip)
+        IFS=$OIFS
+        [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 \
+            && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+        stat=$?
+    fi
+    return $stat
+}
+
+
 ## Check KBFS mount point
 echo
 echo "--------------- VERIFYING KEYBASE FILE SYSTEM ---------------";
@@ -53,11 +72,17 @@ add_section() {
 
 	if [[ "$WG_PUB_KEY" != "$publickey=" ]]; then
 		if [[ $section == "wg" ]] && [[ $publickey != "" ]] && [[ $endpoint != "" ]] && [[ $allowedips != "" ]]; then
-			echo -e "\n Injecting wg peer with:\n >> PublicKey: $publickey\n >> Endpoint: $endpoint\n >> AllowedIPs: $allowedips\n >> PKA: $persistentkeepalive\n";
-			if [[ $LXD_MODE == true ]]; then
-				lxc exec eos-node -- sudo wg set ghostbusters peer "$publickey=" endpoint "$endpoint" allowed-ips "$allowedips" persistent-keepalive "$persistentkeepalive"
+			peerIP=$(echo "$allowedips" | cut -f1 -d"/");
+			if valid_ip $peerIP; then
+				echo -e "\n Injecting wg peer with:\n >> PublicKey: $publickey\n >> Endpoint: $endpoint\n >> AllowedIPs: $allowedips\n >> PKA: $persistentkeepalive\n";
+				if [[ $LXD_MODE == true ]]; then
+					lxc exec eos-node -- sudo wg set ghostbusters peer "$publickey=" endpoint "$endpoint" allowed-ips "$allowedips" persistent-keepalive "$persistentkeepalive"
+				else
+					sudo wg set ghostbusters peer "$publickey=" endpoint "$endpoint" allowed-ips "$allowedips" persistent-keepalive "$persistentkeepalive";
+				fi
 			else
-				sudo wg set ghostbusters peer "$publickey=" endpoint "$endpoint" allowed-ips "$allowedips" persistent-keepalive "$persistentkeepalive";
+				echo " >> INVALID IP: $allowedips";
+				echo
 			fi
 			publickey=""
 			endpoint=""
@@ -72,8 +97,10 @@ add_eos_line() {
 	if [[ $line == "peer-key"* ]]; then
 		NEW_PUB_KEY=$(echo "$line" | cut -f3 -d" ");
 		if [[ "$NEW_PUB_KEY" != "$EOS_PUB_KEY" ]]; then
-			echo " >> $line";
-			echo "$line" >> config.ini.temp;
+			if [[ ${#NEW_PUB_KEY} == 55 ]]; then
+				echo " >> $line";
+				echo "$line" >> config.ini.temp;
+			fi
 		fi
 	fi
 
@@ -102,6 +129,8 @@ for file in $KBFS_MOUNT/team/eos_ghostbusters/mesh/*.peer_info.signed; do
 	[ -e "$file" ] || continue;
 
 	kbuser=$(echo "$file" | sed -e 's/.*mesh\/\(.*\).peer_info.signed*/\1/');
+
+	echo
 
 	echo " --- Verifying signature from $kbuser ---";
 
