@@ -11,7 +11,7 @@ const config = {
     sign: false
 };
 const eos = Eos.Localnet(config);
-mongoose.connect('mongodb://localhost/eosrio').then(() => {
+mongoose.connect('mongodb://localhost/validator').then(() => {
     process.send({
         status: 'ready'
     });
