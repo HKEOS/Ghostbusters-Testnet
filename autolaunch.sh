@@ -1,7 +1,10 @@
 #!/bin/bash
 
 ## DEFINE TARGET BTC BLOCK
-TARGET_BLOCK=523069;
+
+TARGET_BLOCK=$(curl -sL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/launchblock);
+
+CURRENT_BLK=$(curl -sL -H 'Cache-Control: no-cache' https://blockchain.info/latestblock | jq .height);
 
 if ! which keybase > /dev/null; then
    echo -e "Keybase not installed. Exiting..."
@@ -11,9 +14,46 @@ fi
 if ! which jq > /dev/null; then
    echo -e "jq not found! Install? (y/n) \c"
    read
-   if "$REPLY" = "y"; then
+   if [[ "$REPLY" == "y" ]]; then
       sudo apt install jq
    fi
+fi
+
+## Check KBFS mount point
+echo -e "--------------- VERIFYING KEYBASE FILE SYSTEM ---------------\n";
+KBFS_MOUNT=$(keybase status | grep mount | cut -f 2 -d: | sed -e 's/^\s*//' -e '/^$/d');
+
+## Restart Keybase if needed
+if [ ! -d "$KBFS_MOUNT" ]; then
+        echo "kbfs is not running...";
+        run_keybase
+        sleep 3
+else
+        echo -e "KBFS mounted at $KBFS_MOUNT\n";
+fi
+
+keybase_username=$(keybase status -j | jq -r .Username);
+
+if (($TARGET_BLOCK >= $CURRENT_BLK)); then
+	remaining_blocks=$(($TARGET_BLOCK - $CURRENT_BLK));
+	MINS_TO_LAUNCH=$(($remaining_blocks * 10));
+fi
+
+echo
+echo " > Hello $keybase_username,";
+echo
+echo " > Welcome to the Ghostbusters Launch Tool.";
+echo
+echo " > This network is set to launch when the Bitcoin blockchain reach $TARGET_BLOCK blocks!";
+echo
+echo " > We are on block $CURRENT_BLK, so launch is estimated in about $MINS_TO_LAUNCH mins";
+echo -e "\n > Do you want to be eligible as the bios node? (y/n) \c"
+read
+if [[ "$REPLY" == "y" ]]; then
+	echo -e "\n > Your node will be flagged as bios-ready to others!\n";
+	echo "true" > $KBFS_MOUNT/public/$keybase_username/bios.status;
+else
+	echo "false" > $KBFS_MOUNT/public/$keybase_username/bios.status;
 fi
 
 get_seeded_random()
@@ -91,22 +131,9 @@ remove_cronjob()
 	( crontab -l | grep -v -F "$croncmd" ) | crontab -
 }
 
-## Check KBFS mount point
-echo -e "--------------- VERIFYING KEYBASE FILE SYSTEM ---------------\n";
-KBFS_MOUNT=$(keybase status | grep mount | cut -f 2 -d: | sed -e 's/^\s*//' -e '/^$/d');
-
-## Restart Keybase if needed
-if [ -d "$KBFS_MOUNT" ]; then
-	echo "kbfs is not running...";
-	run_keybase
-	sleep 3
-else
-	echo -e "KBFS mounted at $KBFS_MOUNT\n";
-fi
-
-if [[ -f "$KBFS_MOUNT"/public/$keybase_username/genesis.json ]]; then
+if [[ -f $KBFS_MOUNT/public/$keybase_username/genesis.json ]]; then
 	echo "Removing old genesis.json...";
-	sudo rm "$KBFS_MOUNT"/public/$keybase_username/genesis.json
+	rm $KBFS_MOUNT/public/$keybase_username/genesis.json
 fi
 
 echo -e "--------------- VERIFYING BITCOIN STATE ---------------\n";
@@ -115,46 +142,39 @@ matches=0;
 
 echo -e "Target Launch BTC Block = $TARGET_BLOCK \n";
 
-echo "Checking source 1: https://blockchain.info/latestblock";
 
+echo "Checking source 1: https://blockchain.info/latestblock";
 API1="https://blockchain.info/latestblock";
 BTC_DATA1=$(curl -s $API1);
 BTC_HASH1=$(echo "$BTC_DATA1" | jq .hash | sed 's/"//g');
 BTC_HEAD1=$(echo "$BTC_DATA1" | jq .height | sed 's/"//g');
 BTC_TIME1=$(echo "$BTC_DATA1" | jq .time | sed 's/"//g');
-
 echo "Current Time: $BTC_TIME1";
 echo "Current Bitcoin Block is: $BTC_HEAD1";
 echo "Block Hash: $BTC_HASH1";
-
 echo -e "\n";
 
-echo "Checking source 2: https://api.blockcypher.com/v1/btc/main";
 
+echo "Checking source 2: https://api.blockcypher.com/v1/btc/main";
 API2="https://api.blockcypher.com/v1/btc/main";
 BTC_DATA2=$(curl -s $API2);
 BTC_HASH2=$(echo "$BTC_DATA2" | jq .hash | sed 's/"//g');
 BTC_HEAD2=$(echo "$BTC_DATA2" | jq .height | sed 's/"//g');
 BTC_TIME2=$(echo "$BTC_DATA2" | jq .time | sed 's/"//g');
-
 echo "Current Time: $BTC_TIME2";
 echo "Current Bitcoin Block is: $BTC_HEAD2";
 echo "Block Hash: $BTC_HASH2";
-
 echo -e "\n";
 
 echo "Checking source 3: https://api.blockchair.com/bitcoin/mempool/blocks";
-
 API3="https://api.blockchair.com/bitcoin/mempool/blocks";
 BTC_DATA3=$(curl -s $API3);
 BTC_HASH3=$(echo "$BTC_DATA3" | jq .data[0].hash | sed 's/"//g');
 BTC_HEAD3=$(echo "$BTC_DATA3" | jq .data[0].id | sed 's/"//g');
 BTC_TIME3=$(echo "$BTC_DATA3" | jq .data[0].time | sed 's/"//g');
-
 echo "Current Time: $BTC_TIME3";
 echo "Current Bitcoin Block is: $BTC_HEAD3";
 echo "Block Hash: $BTC_HASH3";
-
 echo -e "\n";
 
 latestblock=0;
@@ -199,7 +219,7 @@ if (( $matched > 0 )); then
 		time_r=$(($remaining_blocks * 10));
 		echo "Not there yet! $remaining_blocks blocks remaining, about $time_r minutes...";
 		add_cronjob;
-		exit 1;
+#		exit 1;
 	fi
 else
 	echo "No source consensus! Exiting...";
@@ -221,12 +241,26 @@ if (( $selectedAPI_code == 3 )); then
 fi
 
 echo "Target hash = $BTC_HASH";
+echo
 
-keybase_username=$(keybase status | grep Username: | cut -f2- -d: | sed -e 's/^\s*//' -e '/^$/d');
+keybase team list-members eos_ghostbusters -j | grep username | cut -d'"' -f 4 | sort > users.txt;
 
-keybase team list-members eos_ghostbusters.bios_opt_in -j | grep username | cut -d'"' -f 4 | sort > users.txt;
+if [[ -f bios_list.txt ]]; then
+	sudo rm bios_list.txt
+fi
 
-SELECTED_USER=$(shuf -n 1 --random-source=<(get_seeded_random $BTC_HASH) users.txt);
+while read line; do
+	stat="unset";
+	if [[ -f $KBFS_MOUNT/public/$line/bios.status ]]; then
+		stat=$(cat $KBFS_MOUNT/public/$line/bios.status);
+		if [[ "$stat"==true ]]; then
+			echo "$line" >> bios_list.txt
+		fi
+	fi
+	echo "$line :: $stat";
+done < users.txt
+
+SELECTED_USER=$(shuf -n 1 --random-source=<(get_seeded_random $BTC_HASH) bios_list.txt);
 
 if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	echo "You have been chosen as bios!";
@@ -240,9 +274,11 @@ if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	remove_cronjob;
 else
 	echo "Selected User: $SELECTED_USER";
+	echo
 	wall "EOS Launch Time! $SELECTED_USER was chosen as bios node! - press enter to continue...";
-	echo "Waiting for genesis... 30s";
-	sleep 30;
+	echo "Waiting for genesis... 15s";
+	echo
+	sleep 15;
 	while [[ ! -f $KBFS_MOUNT/public/$SELECTED_USER/genesis.json ]]; do
 		echo -e "Genesis is not ready yet - please verify this url on your browser\n https://$SELECTED_USER.keybase.pub/genesis.json";
 		read -n 1 -s -r -p "Press any key when ready!";
@@ -250,6 +286,6 @@ else
 	cp $KBFS_MOUNT/public/$SELECTED_USER/genesis.json genesis.json;
 	echo "Genesis ready! Node will start now...";
 	remove_cronjob;
-	bash start.sh
+	./start.sh
 	echo "Please verify logs on stderr.txt";
 fi

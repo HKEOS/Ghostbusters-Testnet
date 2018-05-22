@@ -49,8 +49,8 @@ else
 	echo -e "\nCurrent Public Key: $EOS_PUB_KEY\n";
 fi
 
-add_section()
-{
+add_section() {
+
 	if [[ "$WG_PUB_KEY" != "$publickey=" ]]; then
 		if [[ $section == "wg" ]] && [[ $publickey != "" ]] && [[ $endpoint != "" ]] && [[ $allowedips != "" ]]; then
 			echo -e "\n Injecting wg peer with:\n >> PublicKey: $publickey\n >> Endpoint: $endpoint\n >> AllowedIPs: $allowedips\n >> PKA: $persistentkeepalive\n";
@@ -67,77 +67,87 @@ add_section()
 	fi
 }
 
-add_eos_line()
-{
-	NEW_PUB_KEY=$(echo "$line" | cut -f3 -d" ")
-		if [[ $line == "peer-key"* ]]; then
-			NEW_PUB_KEY=$(echo "$line" | cut -f3 -d" ")
-				if [[ "$NEW_PUB_KEY" != "$EOS_PUB_KEY" ]]; then
-					echo "$line" >> config.ini.temp;
+add_eos_line() {
+
+	if [[ $line == "peer-key"* ]]; then
+		NEW_PUB_KEY=$(echo "$line" | cut -f3 -d" ");
+		if [[ "$NEW_PUB_KEY" != "$EOS_PUB_KEY" ]]; then
+			echo " >> $line";
+			echo "$line" >> config.ini.temp;
+		fi
+	fi
+
+	if [[ $line == "p2p-peer-address"* ]]; then
+		EOS_ADDR=$(echo "$line" | cut -f3 -d " " | cut -f1 -d":");
+		if [[ "$WG_ADDR" != "$EOS_ADDR" ]]; then
+			echo " >> $line";
+			echo "$line" >> config.ini.temp;
+		fi
+	fi
+}
+
+if [[ ! -f /etc/wireguard/ghostbusters.conf ]]; then
+	echo "Configuration file not found! Please add your interface info to /etc/wireguard/ghostbusters.conf";
+	exit 1;
+else
+	if [[ $LXD_MODE == true ]]; then
+		lxc exec eos-node -- wg-quick up ghostbusters;
+	else
+		sudo wg-quick up ghostbusters;
+	fi
+fi
+
+for file in $KBFS_MOUNT/team/eos_ghostbusters/mesh/*.peer_info.signed; do
+
+	[ -e "$file" ] || continue;
+
+	kbuser=$(echo "$file" | sed -e 's/.*mesh\/\(.*\).peer_info.signed*/\1/');
+
+	echo " --- Verifying signature from $kbuser ---";
+
+	cat "$file" | keybase verify -S "$kbuser" &>output;
+
+	out=$(<output);
+
+	err=$(echo "$out" | grep "ERR");
+
+	if [[ "$err" == "" ]]; then
+
+		section="";
+
+		while read line; do
+			if [[ $line != "" ]] && [[ $line != \#* ]]; then
+				if [[ $line == "["* ]]; then
+					add_section;
+				fi
+				if [[ "${line,,}" == "[peer]" ]]; then
+					((wgPeerCount++))
+					section="wg";
+					continue;
+				fi
+				if [[ "${line,,}" == "[eos]" ]]; then
+					((eosPeerCount++))
+					section="eos";
+					continue;
+				fi
+				if [[ $section == "wg" ]]; then
+					shopt -s extglob
+					prop=$(echo "$line" | cut -f1 -d"=" | sed -e 's/^\s*//' -e '/^$/d');
+					prop="${prop,,}";
+					prop="${prop%%*( )}";
+					value=$(echo "$line" | cut -f2 -d"=" | sed -e 's/^\s*//' -e '/^$/d');
+					declare "$prop=$value";
+					shopt -u extglob
+				fi
+				if [[ $section == "eos" ]]; then
+					add_eos_line;
 				fi
 			fi
-
-			if [[ $line == "p2p-peer-address"* ]]; then
-				EOS_ADDR=$(echo "$line" | cut -f3 -d " " |cut -f1 -d":");
-					if [[ "$WG_ADDR" != "$EOS_ADDR" ]]; then
-						echo "$line" >> config.ini.temp;
-					fi
-				fi
-			}
-
-			if [[ ! -f /etc/wireguard/ghostbusters.conf ]]; then
-				echo "Configuration file not found! Please add your interface info to /etc/wireguard/ghostbusters.conf";
-				exit 1;
-			else
-				if [[ $LXD_MODE == true ]]; then
-					lxc exec eos-node -- wg-quick up ghostbusters;
-				else
-					sudo wg-quick up ghostbusters;
-				fi
-			fi
-
-			for file in $KBFS_MOUNT/team/eos_ghostbusters/mesh/*.peer_info.signed; do
-				[ -e "$file" ] || continue
-				kbuser=$(echo "$file" | sed -e 's/.*mesh\/\(.*\).peer_info.signed*/\1/');
-				echo "Verifying signature from $kbuser";
-				cat "$file" | keybase verify -S "$kbuser" &>output
-				out=$(<output)
-				err=$(echo "$out" | grep "ERR");
-				if [[ "$err" == "" ]]; then
-					section="";
-					while read line; do
-						if [[ $line != "" ]] && [[ $line != \#* ]]; then
-							if [[ $line == "["* ]]; then
-								add_section;
-							fi
-							if [[ "${line,,}" == "[peer]" ]]; then
-								((wgPeerCount++))
-								section="wg";
-								continue;
-							fi
-							if [[ "${line,,}" == "[eos]" ]]; then
-								section="eos";
-								((eosPeerCount++))
-								continue;
-							fi
-							if [[ $section == "wg" ]]; then
-								shopt -s extglob
-								prop=$(echo "$line" | cut -f1 -d"=" | sed -e 's/^\s*//' -e '/^$/d');
-								prop="${prop,,}";
-								prop="${prop%%*( )}";
-								value=$(echo "$line" | cut -f2 -d"=" | sed -e 's/^\s*//' -e '/^$/d');
-								declare "$prop=$value";
-								shopt -u extglob
-							fi
-							if [[ $section == "eos" ]]; then
-								add_eos_line;
-							fi
-						fi
-					done <output
-				else
-					echo -e "Unable to verify! Skipping...";
-				fi
-			done
+		done <output
+	else
+		echo -e "Unable to verify! Skipping...";
+	fi
+done
 
 # Save wg config
 if [[ $LXD_MODE == true ]]; then
@@ -173,7 +183,7 @@ else
 	mv config.ini ./$TESTNET_DIR/config.ini;
 fi
 
-echo -e "\n >> Update finished!\n >> WG Peers: $wgPeerCount \n >> EOS Peers: $eosPeerCount \n ----- END ----- \n";
+echo -e "\n >> Update finished!\n >> WG Peers: $wgPeerCount \n >> EOS Peers: $eosPeerCount \n ------ END ------ \n";
 
 if [[ $2 == "restart" ]]; then
 	if [[ $LXD_MODE == true ]]; then
