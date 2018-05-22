@@ -1,8 +1,10 @@
 #!/bin/bash
 
 ## DEFINE TARGET BTC BLOCK
+LAUNCH_DATA=$(curl -sL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/launch_data.json);
 
-TARGET_BLOCK=$(curl -sL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/launchblock);
+TARGET_BLOCK=$(echo "$LAUNCH_DATA" | jq -r .btc_block);
+CHAIN_ID=$(echo "$LAUNCH_DATA" | jq -r .initial_chain_id);
 
 CURRENT_BLK=$(curl -sL -H 'Cache-Control: no-cache' https://blockchain.info/latestblock | jq .height);
 
@@ -83,36 +85,36 @@ build_genesis()
     cp bios_keys ./BiosNode/bios_keys;
 
     genesis='{
-    	"initial_timestamp": "'$(date -I)'T'$(date +"%H:%M")':00.000",
-    	"initial_key": "'$public_key'",
-    	"initial_configuration": {
+	"initial_timestamp": "'$(date -I)'T'$(date +"%H:%M")':00.000",
+	"initial_key": "'$public_key'",
+	"initial_configuration": {
     		"max_block_net_usage": 1048576,
-    		"target_block_net_usage_pct": 1000,
-    		"max_transaction_net_usage": 524288,
-    		"base_per_transaction_net_usage": 12,
-    		"net_usage_leeway": 500,
-    		"context_free_discount_net_usage_num": 20,
-    		"context_free_discount_net_usage_den": 100,
-    		"max_block_cpu_usage": 100000,
-    		"target_block_cpu_usage_pct": 500,
-    		"max_transaction_cpu_usage": 100000,
-    		"base_per_transaction_cpu_usage": 512,
-    		"base_per_action_cpu_usage": 1024,
-    		"base_setcode_cpu_usage": 2097152,
-    		"per_signature_cpu_usage": 102400,
-    		"cpu_usage_leeway": 2048,
-    		"context_free_discount_cpu_usage_num": 20,
-    		"context_free_discount_cpu_usage_den": 100,
-    		"max_transaction_lifetime": 3600,
-    		"deferred_trx_expiration_window": 600,
-    		"max_transaction_delay": 3888000,
-    		"max_inline_action_size": 4096,
-    		"max_inline_action_depth": 4,
-    		"max_authority_depth": 6,
-    		"max_generated_transaction_count": 16
-    	},
-    	"initial_chain_id": "0000000000000000000000000000000000000000000000007472696e6974790b"
-    }';
+	    	"target_block_net_usage_pct": 1000,
+	    	"max_transaction_net_usage": 524288,
+	    	"base_per_transaction_net_usage": 12,
+	    	"net_usage_leeway": 500,
+	    	"context_free_discount_net_usage_num": 20,
+	    	"context_free_discount_net_usage_den": 100,
+	    	"max_block_cpu_usage": 100000,
+	    	"target_block_cpu_usage_pct": 500,
+	    	"max_transaction_cpu_usage": 100000,
+	    	"base_per_transaction_cpu_usage": 512,
+	    	"base_per_action_cpu_usage": 1024,
+	    	"base_setcode_cpu_usage": 2097152,
+	    	"per_signature_cpu_usage": 102400,
+	    	"cpu_usage_leeway": 2048,
+	    	"context_free_discount_cpu_usage_num": 20,
+	    	"context_free_discount_cpu_usage_den": 100,
+	    	"max_transaction_lifetime": 3600,
+	    	"deferred_trx_expiration_window": 600,
+	    	"max_transaction_delay": 3888000,
+		"max_inline_action_size": 4096,
+		"max_inline_action_depth": 4,
+		"max_authority_depth": 6,
+		"max_generated_transaction_count": 16
+	},
+	"initial_chain_id": "'$CHAIN_ID'"
+}';
 
     echo "$genesis" > ./genesis.json;
 }
