@@ -331,7 +331,7 @@ if [[ "$REPLY" = "y" || "$REPLY" = "" ]]; then
 	PUB_KEY=$(cat wg_publickey.txt);
 	echo
 	echo "Here is your public key: [$PUB_KEY] ... It was also saved on wg_pubkey.txt for convenience.";
-	echo -e "[Interface]\nPrivateKey = $(cat privatekey)\nSaveConfig = true\nDNS = 1.1.1.1" > ghostbusters.conf;
+	echo -e "[Interface]\nPrivateKey = $PVT_KEY\nSaveConfig = true\nDNS = 1.1.1.1" > ghostbusters.conf;
 	echo
 	echo -e " > Please define your Wiregaurd port? [default=5555]: \c"
 	read
