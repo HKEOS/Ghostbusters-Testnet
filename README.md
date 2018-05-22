@@ -75,7 +75,7 @@ keybase status | grep mount
 # copy the mount directory
 ls /<keybase-mount-directory>/team/eos_ghostbusters/ip_list
 sudo nano /etc/wireguard/ghostbusters.conf
-# Add in the value of X you chose
+# Add in the value of X that you have chosen
 # Save the file
 ```
 
