@@ -320,6 +320,9 @@ ask_ip() {
 echo -e " > Do you want to setup Wireguard now? [y/n]: \c"
 read
 if [[ "$REPLY" = "y" || "$REPLY" = "" ]]; then
+	sudo cp /etc/wireguard/ghostbusters.conf ghostbusters.conf.bak
+	echo
+	echo "Backup saved: ghostbusters.conf.bak";
 	umask 077
 	wg genkey | tee wg_privatekey.txt | wg pubkey > wg_publickey.txt
 	echo
