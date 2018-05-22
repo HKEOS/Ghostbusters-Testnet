@@ -41,21 +41,27 @@ if (($TARGET_BLOCK >= $CURRENT_BLK)); then
 	MINS_TO_LAUNCH=$(($remaining_blocks * 10));
 fi
 
-echo
-echo " > Hello $keybase_username,";
-echo
-echo " > Welcome to the Ghostbusters Launch Tool.";
-echo
-echo " > This network is set to launch when the Bitcoin blockchain reach $TARGET_BLOCK blocks!";
-echo
-echo " > We are on block $CURRENT_BLK, so launch is estimated in about $MINS_TO_LAUNCH mins";
-echo -e "\n > Do you want to be eligible as the bios node? (y/n) \c"
-read
-if [[ "$REPLY" == "y" ]]; then
-	echo -e "\n > Your node will be flagged as bios-ready to others!\n";
-	echo "true" > $KBFS_MOUNT/public/$keybase_username/bios.status;
+if [[ "$1" == "" ]]; then
+	echo
+	echo " > Hello $keybase_username,";
+	echo
+	echo " > Welcome to the Ghostbusters Launch Tool.";
+	echo
+	echo " > This network is set to launch when the Bitcoin blockchain reach $TARGET_BLOCK blocks!";
+	echo
+	echo " > We are on block $CURRENT_BLK, so launch is estimated in about $MINS_TO_LAUNCH mins";
+	echo -e "\n > Do you want to be eligible as the bios node? (y/n) \c"
+	read
+	if [[ "$REPLY" == "y" || "$1" == "bios" ]]; then
+		echo -e "\n > Your node will be flagged as bios-ready to others!\n";
+		echo "true" > $KBFS_MOUNT/public/$keybase_username/bios.status;
+		flag="bios";
+	else
+		echo "false" > $KBFS_MOUNT/public/$keybase_username/bios.status;
+		flag="node";
+	fi
 else
-	echo "false" > $KBFS_MOUNT/public/$keybase_username/bios.status;
+	flag="$1"
 fi
 
 get_seeded_random()
@@ -120,7 +126,7 @@ build_genesis()
 }
 
 GLOBAL_PATH=$(pwd)
-croncmd="bash $GLOBAL_PATH/autolaunch.sh >> $GLOBAL_PATH/autolaunch.log";
+croncmd="bash $GLOBAL_PATH/autolaunch.sh $flag >> $GLOBAL_PATH/autolaunch.log";
 cronjob="0,10,20,30,40,50 * * * * $croncmd";
 
 add_cronjob()
@@ -248,7 +254,7 @@ echo
 keybase team list-members eos_ghostbusters -j | grep username | cut -d'"' -f 4 | sort > users.txt;
 
 if [[ -f bios_list.txt ]]; then
-	sudo rm bios_list.txt
+	rm bios_list.txt
 fi
 
 while read line; do
