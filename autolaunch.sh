@@ -279,7 +279,7 @@ announce_bios() {
 RANDOM="$BTC_HASH"
 list=($(cat bios_list.txt));
 num=${#list[*]}
-SELECTED_USER=$(${list[$((RANDOM%num))]});
+SELECTED_USER=$(echo ${list[$((RANDOM%num))]});
 
 # Announce on Keybase channel
 announce_bios "$SELECTED_USER";
