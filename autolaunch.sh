@@ -5,6 +5,7 @@ kb="keybase -F --socket-file /run/user/1001/keybase/keybased.sock";
 LAUNCH_DATA=$(curl -sL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/launch_data.json);
 
 TARGET_BLOCK=$(echo "$LAUNCH_DATA" | jq -r .btc_block);
+
 CHAIN_ID=$(echo "$LAUNCH_DATA" | jq -r .initial_chain_id);
 
 CURRENT_BLK=$(curl -sL -H 'Cache-Control: no-cache' https://blockchain.info/latestblock | jq .height);
@@ -45,6 +46,14 @@ if (($TARGET_BLOCK >= $CURRENT_BLK)); then
 	MINS_TO_LAUNCH=$(($remaining_blocks * 10));
 fi
 
+join() {
+	eval "$kb chat join-channel eos_ghostbusters bios_$TARGET_BLOCK";
+}
+
+leave() {
+	eval "$kb chat leave-channel eos_ghostbusters bios_$TARGET_BLOCK";
+}
+
 if [[ "$1" == "" ]]; then
 	echo
 	echo " > Hello $keybase_username,";
@@ -58,10 +67,10 @@ if [[ "$1" == "" ]]; then
 	read
 	if [[ "$REPLY" == "y" || "$1" == "bios" ]]; then
 		echo -e "\n > Your node will be flagged as bios-ready to others!\n";
-		eval "$kb chat join-channel eos_ghostbusters bios";
+		join;
 		flag="bios";
 	else
-		eval "$kb chat leave-channel eos_ghostbusters bios";
+		leave;
 		flag="node";
 	fi
 else
@@ -300,6 +309,8 @@ if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	cp ./cleos.sh ./BiosNode/cleos.sh
 	cp ./start.sh ./BiosNode/start.sh
 	cp ./stop.sh ./BiosNode/stop.sh
+
+	leave;
 else
 	echo "Selected User: $SELECTED_USER";
 	echo
@@ -311,17 +322,19 @@ else
 	sleep 15;
 	if ! eval "$kb fs stat /keybase/public/$SELECTED_USER/genesis.json" > /dev/null; then
 		echo -e "Genesis is not ready yet - please verify this url on your browser:\n >> https://$SELECTED_USER.keybase.pub/genesis.json << \n\n";
+	else
+		# Download new genesis from Bios public folder
+		eval "$kb fs cp /keybase/public/$SELECTED_USER/genesis.json genesis.json";
+		echo "Genesis ready! Node will start now...";
+		start_node;
+		echo "Nodeos should have started!";
+		sleep 1;
+		echo "Please verify logs on stderr.txt";
+		echo "----------- LAST 20 Lines --------------";
+		echo
+		tail -n 20 stderr.txt;
+		echo
+		echo "------------- END OF LOG ---------------";
 	fi
-	# Download new genesis from Bios public folder
-	eval "$kb fs cp /keybase/public/$SELECTED_USER/genesis.json genesis.json";
-	echo "Genesis ready! Node will start now...";
-	start_node;
-	echo "Nodeos should have started!";
-	sleep 1;
-	echo "Please verify logs on stderr.txt";
-	echo "----------- LAST 20 Lines --------------";
-	echo
-	tail -n 20 stderr.txt;
-	echo
-	echo "------------- END OF LOG ---------------";
+	leave;
 fi
