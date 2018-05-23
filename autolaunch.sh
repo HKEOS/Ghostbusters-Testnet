@@ -8,7 +8,7 @@
 ##########################################
 
 #Find the keybase daemon socket
-logfile=$(systemctl --user status keybase.service | grep 'log-file' | cut -f2 -d'=' | cut -f1 -d' ')
+logfile=$(ps aux | grep [k]eybase | grep 'log-file' | cut -f2 -d'=' | cut -f1 -d' ')
 sock=$(grep -P -m 1 -oh "(\/.*?\.sock)" "$logfile")
 kb="keybase -F --socket-file $sock";
 
