@@ -4,8 +4,10 @@ kb="keybase -F --socket-file /run/user/1001/keybase/keybased.sock";
 ## DEFINE TARGET BTC BLOCK
 LAUNCH_DATA=$(curl -sL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/launch_data.json);
 
-TARGET_BLOCK=$(echo "$LAUNCH_DATA" | jq -r .btc_block);
+#TARGET_BLOCK=$(echo "$LAUNCH_DATA" | jq -r .btc_block);
 CHAIN_ID=$(echo "$LAUNCH_DATA" | jq -r .initial_chain_id);
+
+TARGET_BLOCK=523975
 
 CURRENT_BLK=$(curl -sL -H 'Cache-Control: no-cache' https://blockchain.info/latestblock | jq .height);
 
@@ -129,10 +131,15 @@ build_genesis()
     echo "$genesis" > ./genesis.json;
 }
 
-GLOBAL_PATH=$(pwd)
-echo "GlobalPath = $GLOBAL_PATH";
+if [[ ! -f ~/autolaunch.path ]]; then
+	GLOBAL_PATH=$(pwd)
+	echo "$GLOBAL_PATH" > ~/autolaunch.path;
+else
+	GLOBAL_PATH=$(cat ~/autolaunch.path);
+fi
+
 croncmd="$GLOBAL_PATH/autolaunch.sh $flag >> $GLOBAL_PATH/autolaunch.log";
-cronjob="*/1 * * * * $croncmd";
+cronjob="*/2 * * * * $croncmd";
 
 add_cronjob()
 {
@@ -142,6 +149,7 @@ add_cronjob()
 remove_cronjob()
 {
 	( crontab -l | grep -v -F "$croncmd" ) | crontab -
+	rm ~/autolaunch.path
 }
 
 if eval "$kb fs stat /keybase/public/$keybase_username/genesis.json" > /dev/null; then
