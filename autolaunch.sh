@@ -47,6 +47,7 @@ if (($TARGET_BLOCK >= $CURRENT_BLK)); then
 fi
 
 join() {
+	eval "$kb chat create-channel eos_ghostbusters bios_$TARGET_BLOCK";
 	eval "$kb chat join-channel eos_ghostbusters bios_$TARGET_BLOCK";
 }
 
