@@ -4,6 +4,8 @@ If you were selected as the bios node, here are your instructions:
 
 First, `cd` into the `BiosNode` directory created by `autolaunch.sh`.
 
+**The current bios-instructions are inaccurate. Please communicate with the team on Keybase for the first iteration until these are patched**
+
 ### Edit scripts
 ```console
 nano start.sh
