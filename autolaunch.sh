@@ -27,7 +27,7 @@ fi
 ## Check KBFS mount point
 echo -e "\n--------------- VERIFYING KEYBASE FILE SYSTEM ---------------\n";
 
-KBFS_MOUNT=$(eval "$kb keybase status" | awk '/mount/ {print $2}');
+KBFS_MOUNT=$(eval "$kb status" | awk '/mount/ {print $2}');
 
 ## Restart Keybase if needed
 if [ ! -d "$KBFS_MOUNT" ]; then
@@ -38,7 +38,7 @@ else
         echo -e "KBFS mounted at $KBFS_MOUNT\n";
 fi
 
-keybase_username=$(eval "$kb keybase status -j" | jq -r .Username);
+keybase_username=$(eval "$kb status -j" | jq -r .Username);
 
 if (($TARGET_BLOCK >= $CURRENT_BLK)); then
 	remaining_blocks=$(($TARGET_BLOCK - $CURRENT_BLK));
