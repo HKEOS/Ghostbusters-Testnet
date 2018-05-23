@@ -1,12 +1,10 @@
-#!/bin/bash
-
-PATH="/bin:/sbin:/usr/bin:/usr/sbin"
+#!/usr/bin/env bash
+kb="keybase -F --socket-file /run/user/1001/keybase/keybased.sock";
 
 ## DEFINE TARGET BTC BLOCK
 LAUNCH_DATA=$(curl -sL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/launch_data.json);
 
 TARGET_BLOCK=$(echo "$LAUNCH_DATA" | jq -r .btc_block);
-
 CHAIN_ID=$(echo "$LAUNCH_DATA" | jq -r .initial_chain_id);
 
 CURRENT_BLK=$(curl -sL -H 'Cache-Control: no-cache' https://blockchain.info/latestblock | jq .height);
@@ -21,13 +19,15 @@ if ! which jq > /dev/null; then
    read
    if [[ "$REPLY" == "y" ]]; then
       sudo apt install jq
+   else
+   	exit 1;
    fi
 fi
 
 ## Check KBFS mount point
 echo -e "\n--------------- VERIFYING KEYBASE FILE SYSTEM ---------------\n";
 
-KBFS_MOUNT=$(keybase status | awk '/mount/ {print $2}');
+KBFS_MOUNT=$(eval "$kb keybase status" | awk '/mount/ {print $2}');
 
 ## Restart Keybase if needed
 if [ ! -d "$KBFS_MOUNT" ]; then
@@ -38,7 +38,7 @@ else
         echo -e "KBFS mounted at $KBFS_MOUNT\n";
 fi
 
-keybase_username=$(keybase status -j | jq -r .Username);
+keybase_username=$(eval "$kb keybase status -j" | jq -r .Username);
 
 if (($TARGET_BLOCK >= $CURRENT_BLK)); then
 	remaining_blocks=$(($TARGET_BLOCK - $CURRENT_BLK));
@@ -58,10 +58,10 @@ if [[ "$1" == "" ]]; then
 	read
 	if [[ "$REPLY" == "y" || "$1" == "bios" ]]; then
 		echo -e "\n > Your node will be flagged as bios-ready to others!\n";
-		echo "true" > $KBFS_MOUNT/public/$keybase_username/bios.status;
+		eval "$kb chat join-channel eos_ghostbusters bios";
 		flag="bios";
 	else
-		echo "false" > $KBFS_MOUNT/public/$keybase_username/bios.status;
+		eval "$kb chat leave-channel eos_ghostbusters bios";
 		flag="node";
 	fi
 else
@@ -144,15 +144,14 @@ remove_cronjob()
 	( crontab -l | grep -v -F "$croncmd" ) | crontab -
 }
 
-if [[ -f $KBFS_MOUNT/public/$keybase_username/genesis.json ]]; then
+if eval "$kb fs stat /keybase/public/$keybase_username/genesis.json" > /dev/null; then
 	echo "Removing old genesis.json...";
-	rm $KBFS_MOUNT/public/$keybase_username/genesis.json
+	eval "$kb fs rm /keybase/public/$keybase_username/genesis.json";
 fi
 
 echo -e "--------------- VERIFYING BITCOIN STATE ---------------\n";
 
 matches=0;
-
 echo -e "Target Launch BTC Block = $TARGET_BLOCK \n";
 
 
@@ -256,73 +255,61 @@ fi
 echo "Target hash = $BTC_HASH";
 echo
 
-keybase team list-members eos_ghostbusters -j | grep username | cut -d'"' -f 4 | sort > users.txt;
+# Extract current members of the bios channel
+eval "$kb chat list-members eos_ghostbusters bios" | awk 'NR > 2' | sort > bios_list.txt;
 
-if [[ -f bios_list.txt ]]; then
-	rm bios_list.txt
-fi
-
-while read line; do
-	stat="unset";
-	if [[ -f $KBFS_MOUNT/public/$line/bios.status ]]; then
-		stat=$(cat $KBFS_MOUNT/public/$line/bios.status);
-		if [[ "$stat"==true ]]; then
-			echo "$line" >> bios_list.txt
-		fi
-	fi
-	echo "$line :: $stat";
-done < users.txt
-
-send_message() {
+announce_bios() {
 	user="$1";
-	json=$(echo '
-{
-	"method": "send",
-	"params": {
-		"options": {
-			"channel": {
-				"name": "eos_ghostbusters",
-				"members_type": "team",
-				"topic_name": "bios"
-			},
-			"message": {
-			"body": "[Automatic Message] '$keybase_username' reporting that '$user' was selected as bios!"
-			}
-		}
-	}
-}');
-	echo "$json" | keybase chat api
+	timestamp=$(date -u);
+	msg="*autolaunch* :: _$timestamp_ :: `$keybase_username` is reporting that `$user` was sorted as bios!"
+	eval "$kb chat send --channel '#_autolaunch' eos_ghostbusters $msg";
 }
 
-
+# Shuffle according to the btc hash
 SELECTED_USER=$(shuf -n 1 --random-source=<(get_seeded_random $BTC_HASH) bios_list.txt);
 
-send_message "$SELECTED_USER";
+# Announce on Keybase channel
+announce_bios "$SELECTED_USER";
+
+# Prevent this script from auto starting in the next minute!
+remove_cronjob;
+
+start_node() {
+	# Stop node if running
+	./stop.sh
+	# Remove old chain data
+	rm -rf blocks/ shared_mem/
+	# Start node
+	./start.sh
+}
 
 if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	echo "You have been chosen as bios!";
 	wall "EOS Launch Time: You have been chosen as bios! - press enter to continue...";
 	build_genesis;
+	eval "$kb fs cp ./genesis.json /keybase/public/$keybase_username/genesis.json";
+
+	# Copy files to the bios node folder
 	cp ./genesis.json ./BiosNode/genesis.json
-	cp ./genesis.json $KBFS_MOUNT/public/$keybase_username/genesis.json;
 	cp ./cleos.sh ./BiosNode/cleos.sh
 	cp ./start.sh ./BiosNode/start.sh
 	cp ./stop.sh ./BiosNode/stop.sh
-	remove_cronjob;
 else
 	echo "Selected User: $SELECTED_USER";
 	echo
+	# Send message to any available terminal
 	wall "EOS Launch Time! $SELECTED_USER was chosen as bios node! - press enter to continue...";
 	echo "Waiting for genesis... 15s";
 	echo
+	# Wait some time for network deployment
 	sleep 15;
-	if [[ ! -f $KBFS_MOUNT/public/$SELECTED_USER/genesis.json ]]; then
-		echo -e "Genesis is not ready yet - please verify this url on your browser\n https://$SELECTED_USER.keybase.pub/genesis.json";
+	if ! eval "$kb fs stat /keybase/public/$SELECTED_USER/genesis.json" > /dev/null; then
+		echo -e "Genesis is not ready yet - please verify this url on your browser:\n >> https://$SELECTED_USER.keybase.pub/genesis.json << \n\n";
 	fi
-	cp $KBFS_MOUNT/public/$SELECTED_USER/genesis.json genesis.json;
+	# Download new genesis from Bios public folder
+	eval "$kb fs cp /keybase/public/$SELECTED_USER/genesis.json genesis.json";
 	echo "Genesis ready! Node will start now...";
-	remove_cronjob;
-	rm -rf blocks/ shared_mem/
-	./start.sh
 	echo "Please verify logs on stderr.txt";
 fi
+
+start_node;
