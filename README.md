@@ -171,6 +171,14 @@ Try `cat config.ini`, and `cat cleos.sh` to check that all the information is co
 ```console
 sudo apt install jq
 
+# Find keybase socket directory
+sudo find /run -name keybased.sock
+```
+If the output is different from `/run/user/1000/keybase/keybased.sock`,
+```console
+nano autolaunch.sh
+# Change the socket directory in the second line
+# Save
 # Run autolaunch, answer questions prompted by script
 ./autolaunch.sh
 
@@ -178,8 +186,6 @@ sudo apt install jq
 # it will schedule itself on CRON, please verify with
 crontab -e
 
-# Add to CRON (if required)
-./setupAutoLaunch.sh
 ```
 
 ### 8. Bios Node
