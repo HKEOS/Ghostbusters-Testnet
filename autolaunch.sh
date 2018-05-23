@@ -78,12 +78,6 @@ else
 	flag="$1"
 fi
 
-get_seeded_random()
-{
-	seed="$1"
-	openssl enc -aes-256-ctr -pass pass:"$seed" -nosalt < /dev/zero 2> /dev/null
-}
-
 build_genesis()
 {
 
@@ -282,7 +276,10 @@ announce_bios() {
 }
 
 # Shuffle according to the btc hash
-SELECTED_USER=$(shuf -n 1 --random-source=<(get_seeded_random $BTC_HASH) bios_list.txt);
+RANDOM="$BTC_HASH"
+list=($(cat bios_list.txt));
+num=${#list[*]}
+SELECTED_USER=$(${list[$((RANDOM%num))]});
 
 # Announce on Keybase channel
 announce_bios "$SELECTED_USER";
