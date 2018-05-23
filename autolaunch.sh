@@ -4,10 +4,8 @@ kb="keybase -F --socket-file /run/user/1001/keybase/keybased.sock";
 ## DEFINE TARGET BTC BLOCK
 LAUNCH_DATA=$(curl -sL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/launch_data.json);
 
-#TARGET_BLOCK=$(echo "$LAUNCH_DATA" | jq -r .btc_block);
+TARGET_BLOCK=$(echo "$LAUNCH_DATA" | jq -r .btc_block);
 CHAIN_ID=$(echo "$LAUNCH_DATA" | jq -r .initial_chain_id);
-
-TARGET_BLOCK=523967;
 
 CURRENT_BLK=$(curl -sL -H 'Cache-Control: no-cache' https://blockchain.info/latestblock | jq .height);
 
