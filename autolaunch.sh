@@ -310,8 +310,6 @@ if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	cp ./cleos.sh ./BiosNode/cleos.sh
 	cp ./start.sh ./BiosNode/start.sh
 	cp ./stop.sh ./BiosNode/stop.sh
-
-	leave;
 else
 	echo "Selected User: $SELECTED_USER";
 	echo
@@ -337,5 +335,4 @@ else
 		echo
 		echo "------------- END OF LOG ---------------";
 	fi
-	leave;
 fi
