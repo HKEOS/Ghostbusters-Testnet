@@ -272,7 +272,7 @@ echo "Target hash = $BTC_HASH";
 echo
 
 # Extract current members of the bios channel
-eval "$kb chat list-members eos_ghostbusters bios" | awk 'NR > 2' | sort > bios_list.txt;
+eval "$kb chat list-members eos_ghostbusters bios_$TARGET_BLOCK" | awk 'NR > 2' | sort > bios_list.txt;
 
 announce_bios() {
 	user="$1";
