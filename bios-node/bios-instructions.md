@@ -12,6 +12,8 @@ nano stop.sh
 #Add /BiosNode at the end of DIR
 nano config.ini
 # Set enable-stale-production to true
+# Substitue in the bios_keys
+# Change producer name to eosio
 ```
 
 ### Download bios-scripts
