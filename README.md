@@ -74,7 +74,7 @@ You can input any number for "X" in `ghostbusters.conf` that hasn't been taken b
 ```console
 keybase status | grep mount
 # copy the mount directory
-ls /<keybase-mount-directory>/team/eos_ghostbusters/ip_list
+ls ~/kbfs/team/eos_ghostbusters/ip_list
 sudo nano /etc/wireguard/ghostbusters.conf
 # Add in the value of X that you have chosen
 # Save the file
@@ -142,7 +142,7 @@ Input your information for the highlighted fields shown below:
  ```console
  nano bp_info.json
   # add your bp info and save it!
- cp bp_info.json /keybase/public/<username>
+ cp bp_info.json ~/kbfs/public/<username>
  ```
  **Note:** You do not have to fill out your BP node's api_endpoint and p2p_endpoint-- this way, they can remain hidden from public.
  
