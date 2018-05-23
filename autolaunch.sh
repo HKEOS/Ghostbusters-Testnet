@@ -7,6 +7,9 @@
 ## Jae Chung, HKEOS                     ##
 ##########################################
 
+# Change to local directory based on producer name
+cd "$(dirname "$0")"
+
 #Find the keybase daemon socket
 logfile=$(ps aux | grep [k]eybase | grep 'log-file' | cut -f2 -d'=' | cut -f1 -d' ')
 sock=$(grep -P -m 1 -oh "(\/.*?\.sock)" "$logfile")
