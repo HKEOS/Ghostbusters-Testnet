@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
-kb="keybase -F --socket-file /run/user/1001/keybase/keybased.sock";
+
+##########################################
+## Autolaunch Tool                      ##
+## Created by                           ##
+## Igor Lins e Silva, EOS Rio           ##
+## Jae Chung, HKEOS                     ##
+##########################################
+
+#Find the keybase daemon socket
+logfile=$(systemctl --user status keybase.service | grep 'log-file' | cut -f2 -d'=' | cut -f1 -d' ')
+sock=$(grep -P -m 1 -oh "(\/.*?\.sock)" "$logfile")
+kb="keybase -F --socket-file $sock";
 
 ## DEFINE TARGET BTC BLOCK
 LAUNCH_DATA=$(curl -sL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/launch_data.json);
