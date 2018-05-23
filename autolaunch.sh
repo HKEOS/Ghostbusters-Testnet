@@ -4,8 +4,10 @@ kb="keybase -F --socket-file /run/user/1001/keybase/keybased.sock";
 ## DEFINE TARGET BTC BLOCK
 LAUNCH_DATA=$(curl -sL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/launch_data.json);
 
-TARGET_BLOCK=$(echo "$LAUNCH_DATA" | jq -r .btc_block);
+#TARGET_BLOCK=$(echo "$LAUNCH_DATA" | jq -r .btc_block);
 CHAIN_ID=$(echo "$LAUNCH_DATA" | jq -r .initial_chain_id);
+
+TARGET_BLOCK=523967;
 
 CURRENT_BLK=$(curl -sL -H 'Cache-Control: no-cache' https://blockchain.info/latestblock | jq .height);
 
@@ -29,7 +31,7 @@ echo -e "\n--------------- VERIFYING KEYBASE FILE SYSTEM ---------------\n";
 
 KBFS_MOUNT=$(eval "$kb status" | awk '/mount/ {print $2}');
 
-## Restart Keybase if needed
+# Restart Keybase if needed
 if [ ! -d "$KBFS_MOUNT" ]; then
         echo "kbfs is not running...";
         run_keybase
@@ -89,12 +91,12 @@ build_genesis()
 
 	public_key=$(cat bios_keys | grep 'Public key: ' | cut -f 3 -d ' ');
 
-    ## Create folder for bios node
-    mkdir -p BiosNode;
-    cp config.ini ./BiosNode/config.ini;
-    cp bios_keys ./BiosNode/bios_keys;
+	## Create folder for bios node
+	mkdir -p BiosNode;
+	cp config.ini ./BiosNode/config.ini;
+	cp bios_keys ./BiosNode/bios_keys;
 
-    genesis='{
+	genesis='{
 	"initial_timestamp": "'$(date -I)'T'$(date +"%H:%M")':00.000",
 	"initial_key": "'$public_key'",
 	"initial_configuration": {
@@ -261,8 +263,8 @@ eval "$kb chat list-members eos_ghostbusters bios" | awk 'NR > 2' | sort > bios_
 announce_bios() {
 	user="$1";
 	timestamp=$(date -u);
-	msg="*autolaunch* :: _$timestamp_ :: `$keybase_username` is reporting that `$user` was sorted as bios!"
-	eval "$kb chat send --channel '#_autolaunch' eos_ghostbusters $msg";
+	msg='*autolaunch* :: _'"$timestamp"'_ :: \`'"$keybase_username"'\` is reporting that \`'"$user"'\` was sorted as bios!';
+	eval "$kb chat send --channel '#_autolaunch' eos_ghostbusters \"$msg\"";
 }
 
 # Shuffle according to the btc hash
@@ -309,7 +311,13 @@ else
 	# Download new genesis from Bios public folder
 	eval "$kb fs cp /keybase/public/$SELECTED_USER/genesis.json genesis.json";
 	echo "Genesis ready! Node will start now...";
+	start_node;
+	echo "Nodeos should have started!";
+	sleep 1;
 	echo "Please verify logs on stderr.txt";
+	echo "----------- LAST 20 Lines --------------";
+	echo
+	tail -n 20 stderr.txt;
+	echo
+	echo "------------- END OF LOG ---------------";
 fi
-
-start_node;
