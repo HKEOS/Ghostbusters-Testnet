@@ -110,7 +110,7 @@ build_genesis()
 	cp bios_keys ./BiosNode/bios_keys;
 
 	genesis='{
-	"initial_timestamp": "'$(date -I)'T'$(date +"%H:%M")':00.000",
+	"initial_timestamp": "'$(date -u -I)'T'$(date -u +"%H:%M")':00.000",
 	"initial_key": "'$public_key'",
 	"initial_configuration": {
     		"max_block_net_usage": 1048576,
