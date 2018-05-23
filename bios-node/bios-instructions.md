@@ -16,6 +16,8 @@ nano config.ini
 
 ### Download bios-scripts
 ```console
+# Install svn if it isn't already installed
+sudo apt-get install subversion
 curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/bios-node/getScripts.sh | bash -
 ```
 
