@@ -9,6 +9,9 @@ First, `cd` into the `bios-files` directory created by `autolaunch.sh`.
 nano 00_CONFIG.conf
 # Enter information
 # Check bios_keys file for bios public and private key
+# Use the same Wireguard IP you used for peering
+# You should set different http and p2p ports for your bios node
+# Seed P2P port is the p2p port for your original node
 ```
 
 ### Generate bios node config
