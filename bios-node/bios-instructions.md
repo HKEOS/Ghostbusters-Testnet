@@ -6,7 +6,7 @@ First, `cd` into the `bios-files` directory created by `autolaunch.sh`.
 
 ### Set up BIOS config
 ```console
-nano ./bios-files/00_CONFIG.conf
+nano 00_CONFIG.conf
 # Enter information
 # Check bios_keys file for bios public and private key
 ```
