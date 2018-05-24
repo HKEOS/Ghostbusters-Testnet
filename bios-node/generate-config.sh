@@ -8,7 +8,7 @@
 ##                                      ##
 ##########################################
 cd "$(dirname "$0")"
-GLOBAL_PATH = $(pwd)
+GLOBAL_PATH=$(pwd)
 CONFIG='$GLOBAL_PATH'/config.ini
 
 SOURCES_FOLDER="$( jq -r '.SOURCES_FOLDER' "00_CONFIG.conf" )"
