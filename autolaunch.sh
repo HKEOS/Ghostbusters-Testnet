@@ -120,7 +120,7 @@ build_genesis()
 	## Create folder for bios node
 	# mkdir -p BiosNode;
 	# cp config.ini ./BiosNode/config.ini;
-	cp bios_keys ./bios-files/bios_keys;
+	# cp bios_keys ./bios-files/bios_keys;
 
 	genesis='{
 	"initial_timestamp": "'$(date -u -I)'T'$(date -u +"%H:%M")':00.000",
@@ -328,10 +328,8 @@ if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	# Download bios scripts into bios-files folder
 	curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/bios-node/getScripts.sh | bash -
 	# Copy files to the bios-files folder
+	cp bios_keys ./bios-files/bios_keys;
 	cp ./genesis.json ./bios-files/genesis.json
-	# cp ./cleos.sh ./bios-files/cleos.sh
-	# cp ./start.sh ./bios-files/start.sh
-	# cp ./stop.sh ./bios-files/stop.sh
 else
 	echo "Selected User: $SELECTED_USER";
 	echo
