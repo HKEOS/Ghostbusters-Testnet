@@ -10,7 +10,7 @@
 ##                                                   ##
 #######################################################
 
-EOS_DIR="$( jq -r '.EOS_SOURCE_DIR' "00_CONFIG.conf" )"
+EOS_DIR="$( jq -r '.SOURCES_FOLDER' "00_CONFIG.conf" )"
 NODEOS=$EOS_DIR/build/programs/nodeos/nodeos
 DATADIR=$(pwd)
 $DATADIR/stop.sh
