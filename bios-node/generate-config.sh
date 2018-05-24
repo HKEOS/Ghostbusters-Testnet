@@ -3,7 +3,7 @@
 ##########################################
 ## Created by                           ##
 ## Jae Chung, HKEOS                     ##
-##                                      ##
+## Igor Lins e Silva, EOS Rio           ##
 ## For Ghostbusters Testnet             ##
 ##                                      ##
 ##########################################
@@ -60,3 +60,5 @@ echo '
 p2p-peer-address = '$NODE_HOST':'$SEED_P2P'
 peer-key = "'$PUB_KEY'"
 ' >> $CONFIG
+
+echo -ne "\n\n..:: config.ini has been generated. Please check that the inputs were entered correctly. ::..\n\n";
