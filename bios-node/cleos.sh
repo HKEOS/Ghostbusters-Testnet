@@ -10,7 +10,7 @@
 ##                                                   ##
 #######################################################
 
-EOS_DIR="$( jq -r '.EOS_SOURCE_DIR' "00_CONFIG.conf" )"
+EOS_DIR="$( jq -r '.SOURCES_FOLDER' "00_CONFIG.conf" )"
 NODE_PORT="$( jq -r '.HTTP_PORT' "00_CONFIG.conf" )"
 KEOSD_PORT="$( jq -r '.WALLET_PORT' "00_CONFIG.conf" )"
 
