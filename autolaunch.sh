@@ -39,6 +39,16 @@ if ! which jq > /dev/null; then
    fi
 fi
 
+if ! which svn > /dev/null; then
+   echo -e "svn not found! Install? (y/n) \c"
+   read
+   if [[ "$REPLY" == "y" ]]; then
+      sudo apt-get install subversion
+   else
+   	exit 1;
+   fi
+fi
+
 ## Check KBFS mount point
 echo -e "\n--------------- VERIFYING KEYBASE FILE SYSTEM ---------------\n";
 
@@ -108,9 +118,9 @@ build_genesis()
 	public_key=$(cat bios_keys | grep 'Public key: ' | cut -f 3 -d ' ');
 
 	## Create folder for bios node
-	mkdir -p BiosNode;
-	cp config.ini ./BiosNode/config.ini;
-	cp bios_keys ./BiosNode/bios_keys;
+	# mkdir -p BiosNode;
+	# cp config.ini ./BiosNode/config.ini;
+	cp bios_keys ./bios-files/bios_keys;
 
 	genesis='{
 	"initial_timestamp": "'$(date -u -I)'T'$(date -u +"%H:%M")':00.000",
@@ -315,12 +325,13 @@ if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	wall "EOS Launch Time: You have been chosen as bios! - press enter to continue...";
 	build_genesis;
 	eval "$kb fs cp ./genesis.json /keybase/public/$keybase_username/genesis.json";
-
-	# Copy files to the bios node folder
-	cp ./genesis.json ./BiosNode/genesis.json
-	cp ./cleos.sh ./BiosNode/cleos.sh
-	cp ./start.sh ./BiosNode/start.sh
-	cp ./stop.sh ./BiosNode/stop.sh
+	# Download bios scripts into bios-files folder
+	curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/bios-node/getScripts.sh | bash -
+	# Copy files to the bios-files folder
+	cp ./genesis.json ./bios-files/genesis.json
+	# cp ./cleos.sh ./bios-files/cleos.sh
+	# cp ./start.sh ./bios-files/start.sh
+	# cp ./stop.sh ./bios-files/stop.sh
 else
 	echo "Selected User: $SELECTED_USER";
 	echo
