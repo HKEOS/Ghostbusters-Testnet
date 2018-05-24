@@ -27,9 +27,9 @@ echo '
 get-transactions-time-limit = 3
 genesis-json = "'$GLOBAL_PATH'/genesis.json"
 block-log-dir = "'$GLOBAL_PATH'/blocks"
-http-server-address = '127.0.0.1:$HTTP_PORT'
-p2p-listen-endpoint = '$NODE_HOST:$P2P_PORT'
-p2p-server-address = '$NODE_HOST:$P2P_PORT'
+http-server-address = 127.0.0.1:'$HTTP_PORT'
+p2p-listen-endpoint = '$NODE_HOST':'$P2P_PORT'
+p2p-server-address = '$NODE_HOST':'$P2P_PORT'
 access-control-allow-origin = *
 ' >> $CONFIG
 
@@ -57,6 +57,6 @@ producer-name = eosio
 ' >> $CONFIG
 
 echo '
-p2p-peer-address = $NODE_HOST:$SEED_P2P
-peer-key = "$PUB_KEY"
+p2p-peer-address = '$NODE_HOST':'$SEED_P2P'
+peer-key = "'$PUB_KEY'"
 ' >> $CONFIG
