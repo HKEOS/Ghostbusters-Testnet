@@ -209,9 +209,9 @@ if [[ ! -d $TESTNET_DIR ]]; then
     echo "CLEOS=$EOS_SOURCE_DIR/build/programs/cleos/cleos" >> $TESTNET_DIR/cleos.sh
     echo -ne "\n"
     if [[ $NODE_SSL_PORT != "" ]]; then
-        echo "\$CLEOS -u https://127.0.0.1:$NODE_SSL_PORT --wallet-url http://127.0.0.1:$WALLET_PORT \"\$@\"" >> $TESTNET_DIR/cleos.sh
+        echo "\$CLEOS -u https://$NODE_HOST:$NODE_SSL_PORT --wallet-url http://127.0.0.1:$WALLET_PORT \"\$@\"" >> $TESTNET_DIR/cleos.sh
     else
-        echo "\$CLEOS -u http://127.0.0.1:$NODE_API_PORT --wallet-url http://127.0.0.1:$WALLET_PORT \"\$@\"" >> $TESTNET_DIR/cleos.sh
+        echo "\$CLEOS -u http://$NODE_HOST:$NODE_API_PORT --wallet-url http://127.0.0.1:$WALLET_PORT \"\$@\"" >> $TESTNET_DIR/cleos.sh
 
     fi
     chmod u+x $TESTNET_DIR/cleos.sh
