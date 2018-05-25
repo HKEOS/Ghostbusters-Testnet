@@ -45,3 +45,5 @@ sudo rm -r ghostbusters-<account-name>
 ```
 
 By completing these, you should have your node peered and ready to go again!
+
+Wait until the team decides on a launch block before you run `autolaunch.sh`. Run `updatePeers.sh` regularly to add new members into the mesh.
