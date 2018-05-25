@@ -4,7 +4,7 @@ Between launches, we will typically update a significant portion of the scripts.
 
 This is a quick guide on how to get ready for the next launch as soon as possible.
 
-**Note:** Skip parts that you know that are unnecessary for your scenario (for example, you have already updated EOS.IO to the next tag)
+**Note:** Skip parts that you know that are unnecessary for your scenario (for example, if you have already updated EOS.IO to the next tag, skip the "Update EOS" part)
 
 ### Update EOS
 ```console
