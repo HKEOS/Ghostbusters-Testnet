@@ -260,6 +260,9 @@ if (( $matched > 0 )); then
 
 	if (($TARGET_BLOCK <= $latestblock)); then
 		echo "Ready to launch!";
+	if ((($latestblock - $TARGET_BLOCK) > 1)); then
+		echo "You have passed the time limit to launch automatically. Please receive the genesis file through the team and start your node.";
+		exit 1;
 	else
 		remaining_blocks=$(($TARGET_BLOCK - $BTC_HEAD2));
 		time_r=$(($remaining_blocks * 10));
