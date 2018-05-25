@@ -255,24 +255,25 @@ if (( $BTC_HEAD1 == $BTC_HEAD3 )); then
 fi
 
 if (( $matched > 0 )); then
-	echo "Latest block = $latestblock";
-	echo "Using data from: $selectedAPI";
+        echo "Latest block = $latestblock";
+        echo "Using data from: $selectedAPI";
 
-	if (($TARGET_BLOCK <= $latestblock)); then
-		echo "Ready to launch!";
-	if ((($latestblock - $TARGET_BLOCK) > 1)); then
-		echo "You have passed the time limit to launch automatically. Please receive the genesis file through the team and start your node.";
-		exit 1;
-	else
-		remaining_blocks=$(($TARGET_BLOCK - $BTC_HEAD2));
-		time_r=$(($remaining_blocks * 10));
-		echo "Not there yet! $remaining_blocks blocks remaining, about $time_r minutes...";
-		add_cronjob;
-		exit 1;
-	fi
+        if (($TARGET_BLOCK <= $latestblock)); then
+                echo "Ready to launch!";
+        else
+                remaining_blocks=$(($TARGET_BLOCK - $BTC_HEAD2));
+                time_r=$(($remaining_blocks * 10));
+                echo "Not there yet! $remaining_blocks blocks remaining, about $time_r minutes...";
+                add_cronjob;
+                exit 1;
+        fi
+        if ((($latestblock - $TARGET_BLOCK) > 1)); then
+                echo "You have passed the time limit to launch automatically. Please receive the genesis file through the team and start your node.";
+                exit 1;
+        fi
 else
-	echo "No source consensus! Exiting...";
-	exit 1;
+        echo "No source consensus! Exiting...";
+        exit 1;
 fi
 
 BTC_HASH=null;
