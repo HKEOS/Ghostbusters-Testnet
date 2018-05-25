@@ -8,7 +8,7 @@
 ################################################################################
 
 EOSIO_PRODUCER_KEY="$( jq -r '.EOSIO_PRODUCER_PUB_KEY' "00_CONFIG.conf" )"
-cmd="cleos create account eosio";
+cmd="./cleos.sh create account eosio";
 
 echo "Creating system accounts...";
 
