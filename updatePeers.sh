@@ -16,6 +16,19 @@ function valid_ip()
             && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
         stat=$?
     fi
+    local a=$(echo "$ip" | cut -f1 -d".");
+    local b=$(echo "$ip" | cut -f2 -d".");
+    local c=$(echo "$ip" | cut -f3 -d".");
+    local d=$(echo "$ip" | cut -f4 -d".");
+    if [[ $ip == "0.0.0.0" ]]; then
+    	stat=0
+    fi
+    if [[ $a != "192" ]] || [[ $b != "168" ]]; then
+    	stat=0
+    fi
+    if [ "$c" -gt "103" ] || [ "$c" -lt "100" ]; then
+    	stat=0
+    fi
     return $stat
 }
 
