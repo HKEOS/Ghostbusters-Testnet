@@ -52,11 +52,6 @@ mkdir Ghostbusters && cd Ghostbusters
 curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
 ```
 
-- You can use the interactive publisher script, then you can jump to step 3. Or skip this and follow along.
-```console
-./interactivePublish.sh
-```
-
 - Create Wireguard keys and config
 ```console
 umask 077
