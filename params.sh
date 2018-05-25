@@ -15,7 +15,7 @@ TESTNET="ghostbusters";
 
 ##### PARAMETERS TO BE MODIFIED ######
 
-# EOS Source code folder, if empty - it will create the folder, download sources and compile on the specified tag
+# EOS Source code folder, if left completely blank - it will create the folder, download sources and compile on the specified tag
 EOS_SOURCE_DIR="/path/to/eos"
 
 # Node port definitions (avoid ports below 1024 - you shouldn't run as root)
