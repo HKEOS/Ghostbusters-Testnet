@@ -8,6 +8,15 @@
 ################################################################################
 
 EOSIO_PRODUCER_KEY="$( jq -r '.EOSIO_PRODUCER_PUB_KEY' "00_CONFIG.conf" )"
+cmd="cleos create account eosio";
 
-./cleos.sh create account eosio eosio.token $EOSIO_PRODUCER_KEY $EOSIO_PRODUCER_KEY -p eosio
-./cleos.sh create account eosio eosio.msig $EOSIO_PRODUCER_KEY $EOSIO_PRODUCER_KEY -p eosio
+echo "Creating system accounts...";
+
+accounts=( eosio.bpay eosio.msig eosio.names eosio.ram eosio.ramfee eosio.saving eosio.stake eosio.token eosio.vpay );
+
+for a in "${accounts[@]}"
+do
+echo -e "\n creating $a \n";
+$cmd $a $EOSIO_PRODUCER_KEY;
+sleep 1;
+done
