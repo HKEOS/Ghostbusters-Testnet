@@ -12,7 +12,7 @@ NC='\033[0m' # No Color
 EOSIO_PRODUCER_KEY="$( jq -r '.EOSIO_PRODUCER_PUB_KEY' "00_CONFIG.conf" )"
 cmd="./cleos.sh create account eosio";
 
-echo "\n${GREEN}Creating system accounts...";
+echo "\n${GREEN}Creating system accounts...{NC}";
 
 accounts=( eosio.bpay eosio.msig eosio.names eosio.ram eosio.ramfee eosio.saving eosio.stake eosio.token eosio.vpay );
 
