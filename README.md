@@ -94,6 +94,8 @@ Then, start Wireguard and check if it's working.
 sudo wg-quick up ghostbusters
 # Test configuration
 sudo wg show ghostbusters
+# If at any time you want to reload the network interface
+sudo ip link del dev ghostbusters && sudo wg-quick up ghostbusters
 ```
 
 ### 3. Fill out your info in the install script
