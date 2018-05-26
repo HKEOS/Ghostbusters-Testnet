@@ -40,7 +40,7 @@ No blocks should be produced yet since you haven't started the bios node yet.
 ### Start bios node
 ```console
 cd bios-files
-./start.sh
+nodeos --config-dir ./ --data-dir ./ --delete-all-blocks --genesis-json genesis.json
 tail -F stderr.txt
 # Check logs live
 ```
