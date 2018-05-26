@@ -319,9 +319,9 @@ start_node() {
 	# Stop node if running
 	./stop.sh
 	# Remove old chain data
-	rm -rf blocks/ shared_mem/
+	rm -rf blocks/ state/
 	# Start node
-	./start.sh
+	nodeos --config-dir ./ --data-dir ./ --delete-all-blocks --genesis-json genesis.json
 }
 
 if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
