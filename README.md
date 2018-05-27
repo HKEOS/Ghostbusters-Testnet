@@ -166,6 +166,9 @@ Try `cat config.ini`, and `cat cleos.sh` to check that all the information is co
 
 ```console
 sudo apt install jq
+crontab -e
+# Select nano (if you are initializing cron for the first time)
+# Exit
 
 # Run autolaunch, answer questions prompted by script
 ./autolaunch.sh
