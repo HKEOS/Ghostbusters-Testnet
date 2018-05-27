@@ -1,5 +1,12 @@
 # Ghostbusters Testnet Instructions
 
+For the Ghostbusters testnet you will need to choose 3 IP ports that can be whatever you want:
+1. wireguard VPN port - default is 5555
+2. EOS API / HTTP port - normally 9876
+3. EOS P2P port - some are using 15555
+
+You will also need to choose a free ip in the subnet 192.168.100.0/22 - ask in the Keybase chat about what is available.
+
 ### 0. Install Keybase
 
 **Note:** Skip parts that you have already completed.
@@ -7,7 +14,8 @@
 Start by joining the eos_ghostbusters Keybase group: https://keybase.io/team/eos_ghostbusters.
 
 - Install keybase: https://keybase.io/docs/the_app/install_linux
- Ubuntu instructions
+
+ Ubuntu instructions - do not install as root user, please use sudo where appropriate
  ```console
 # Install curl if required
 sudo apt install curl
@@ -20,12 +28,12 @@ sudo dpkg -i keybase_amd64.deb
 sudo apt-get install -f
 run_keybase
  ```
- 
+
  - Mandatory step: modify keybase default storage path for kbfs
  ```console
  curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/keybase_relocate.sh | bash -
  ```
- 
+
  - Login or signup:
  ```console
  # Login
@@ -77,8 +85,9 @@ It is recommended that you use Keybase when communicating information related to
 - Publish peer information
 ```console
 nano my-peer-info
- ## Fill in your information
+ ## Fill in your information for PublicKey, AllowedIPs, Endpoint, p2p-peer-address, and peer-key
 
+ ## then run this script  
 ./publishPeerInfo.sh my-peer-info
 ```
 
@@ -139,13 +148,13 @@ Input your information for the highlighted fields shown below:
  cp bp_info.json ~/kbfs/public/<username>
  ```
  **Note:** You do not have to fill out your BP node's api_endpoint and p2p_endpoint-- this way, they can remain hidden from public.
- 
+
  - Check that file is up on `https://<username>.keybase.pub/bp_info.json`
- 
+
 #### 5.1 BP Info verification (optional)
 
  You can verify that bp_info.json correctly follows the schema using command line. We recommend ajv-cli for the job.
- 
+
  If npm is not installed:
  ```console
 curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
