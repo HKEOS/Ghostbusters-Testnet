@@ -1,11 +1,11 @@
 #Wireguard
 [Peer]
-PublicKey = <peer-public-key>
-AllowedIPs = 192.168.100.Y/32
-Endpoint = <peer-public-endpoint>:<peer-vpn-port>
+PublicKey = <from-publickey-file>
+AllowedIPs = <wireguard-private-ip>/32
+Endpoint = <node-public-ip>:<ListenPort-from-ghostbusters.conf>
 PersistentKeepAlive = 20
 
 #EOS
 [EOS]
-p2p-peer-address = <vpn-ip-address>:<p2p-port>
+p2p-peer-address = <wireguard-private-ip>:<p2p-port>
 peer-key = "<eos-public-key>"
