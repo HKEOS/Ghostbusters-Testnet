@@ -267,7 +267,7 @@ if (( $matched > 0 )); then
                 add_cronjob;
                 exit 1;
         fi
-        if ((($latestblock - $TARGET_BLOCK) > 1)); then
+        if ((($latestblock - $TARGET_BLOCK) > 0)); then
                 echo "You have passed the time limit to launch automatically. Please receive the genesis file through the team and start your node.";
                 exit 1;
         fi
