@@ -9,7 +9,7 @@ This is a quick guide on how to get ready for the next launch as soon as possibl
 ### Update EOS
 ```console
 cd /path/to/eos
-git checkout DAWN-2018-05-22
+git checkout dawn-v4.2.0
 git submodule update --init --recursive
 ex -sc '16i|set( CORE_SYMBOL_NAME "EOS" )' -cx CMakeLists.txt
 git pull
