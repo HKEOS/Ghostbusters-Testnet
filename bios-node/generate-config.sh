@@ -9,7 +9,7 @@
 ##########################################
 cd "$(dirname "$0")"
 GLOBAL_PATH=$(pwd)
-CONFIG='$GLOBAL_PATH'/config.ini
+CONFIG=$GLOBAL_PATH/config.ini
 
 SOURCES_FOLDER="$( jq -r '.SOURCES_FOLDER' "00_CONFIG.conf" )"
 PUB_KEY="$( jq -r '.EOSIO_PRODUCER_PUB_KEY' "00_CONFIG.conf" )"

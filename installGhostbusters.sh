@@ -61,15 +61,6 @@ TESTNET_DIR="$GLOBAL_PATH/$TESTNET";
 
 if [[ $EOS_SOURCE_DIR == "" ]]; then
     EOS_SOURCE_DIR="$GLOBAL_PATH/eos-source"
-else
-    EOS_GIT_BRANCH=$(git -C $EOS_SOURCE_DIR branch | grep '*' | cut -f 5 -d' ' | cut -f1 -d')');
-    echo "Source code at branch $EOS_GIT_BRANCH";
-    EOS_VERSION=$("$EOS_SOURCE_DIR/build/programs/nodeos/nodeos" --version)
-    echo "Current nodeos version: $EOS_VERSION";
-    if [[ "$EOS_VERSION" != "$EOS_TARGET_VERSION" ]]; then
-        echo "Wrong version, $EOS_TARGET_VERSION required!";
-        exit 1
-    fi
 fi
 
 WALLET_DIR="$GLOBAL_PATH/wallet"
@@ -96,6 +87,16 @@ if [[ ! -d $EOS_SOURCE_DIR/build ]]; then
     git pull
     ./eosio_build.sh
     cd $GLOBAL_PATH
+fi
+
+# Check version
+EOS_GIT_BRANCH=$(git -C $EOS_SOURCE_DIR branch | grep '*' | cut -f 5 -d' ' | cut -f1 -d')');
+echo "Source code at branch $EOS_GIT_BRANCH";
+EOS_VERSION=$("$EOS_SOURCE_DIR/build/programs/nodeos/nodeos" --version)
+echo "Current nodeos version: $EOS_VERSION";
+if [[ "$EOS_VERSION" != "$EOS_TARGET_VERSION" ]]; then
+    echo "Wrong version, $EOS_TARGET_VERSION required!";
+    exit 1
 fi
 
 # Creating Wallet Folder and files
