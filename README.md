@@ -7,7 +7,8 @@
 Start by joining the eos_ghostbusters Keybase group: https://keybase.io/team/eos_ghostbusters.
 
 - Install keybase: https://keybase.io/docs/the_app/install_linux
- Ubuntu instructions
+
+ Ubuntu instructions - do not install as root user, please use sudo where appropriate
  ```console
 # Install curl if required
 sudo apt install curl
@@ -20,12 +21,12 @@ sudo dpkg -i keybase_amd64.deb
 sudo apt-get install -f
 run_keybase
  ```
- 
+
  - Mandatory step: modify keybase default storage path for kbfs
  ```console
  curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/keybase_relocate.sh | bash -
  ```
- 
+
  - Login or signup:
  ```console
  # Login
@@ -51,6 +52,11 @@ sudo apt-get install wireguard resolvconf
 mkdir Ghostbusters && cd Ghostbusters
 curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
 ```
+- Note
+For the Ghostbusters testnet, you will need to choose 3 ports that can be whatever you want (greater than 1024):
+1. wireguard VPN port - default is 5555
+2. EOS API / HTTP port - some are using 8888
+3. EOS P2P port - some are using 9876
 
 - Create Wireguard keys and config
 ```console
@@ -61,6 +67,7 @@ echo -e "ListenPort = 5555" >> ghostbusters.conf
 echo -e "Address = 192.168.100.X/22" >> ghostbusters.conf
 sudo cp ghostbusters.conf /etc/wireguard/.
 ```
+
 
 - Selecting your Wireguard IP
 
@@ -77,8 +84,9 @@ It is recommended that you use Keybase when communicating information related to
 - Publish peer information
 ```console
 nano my-peer-info
- ## Fill in your information
+ ## Fill in your information for PublicKey, AllowedIPs, Endpoint, p2p-peer-address, and peer-key
 
+ ## then run this script  
 ./publishPeerInfo.sh my-peer-info
 ```
 
@@ -139,13 +147,13 @@ Input your information for the highlighted fields shown below:
  cp bp_info.json ~/kbfs/public/<username>
  ```
  **Note:** You do not have to fill out your BP node's api_endpoint and p2p_endpoint-- this way, they can remain hidden from public.
- 
+
  - Check that file is up on `https://<username>.keybase.pub/bp_info.json`
- 
+
 #### 5.1 BP Info verification (optional)
 
  You can verify that bp_info.json correctly follows the schema using command line. We recommend ajv-cli for the job.
- 
+
  If npm is not installed:
  ```console
 curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
