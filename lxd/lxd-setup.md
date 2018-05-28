@@ -5,7 +5,7 @@
 ```console
 cd /opt/eos
 git pull
-git checkout dawn-v4.1.0
+git checkout dawn-v4.2.0
 git submodule update --recursive
 ```
 
