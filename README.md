@@ -1,12 +1,5 @@
 # Ghostbusters Testnet Instructions
 
-For the Ghostbusters testnet you will need to choose 3 IP ports that can be whatever you want:
-1. wireguard VPN port - default is 5555
-2. EOS API / HTTP port - normally 9876
-3. EOS P2P port - some are using 15555
-
-You will also need to choose a free ip in the subnet 192.168.100.0/22 - ask in the Keybase chat about what is available.
-
 ### 0. Install Keybase
 
 **Note:** Skip parts that you have already completed.
@@ -59,6 +52,11 @@ sudo apt-get install wireguard resolvconf
 mkdir Ghostbusters && cd Ghostbusters
 curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
 ```
+- Note
+For the Ghostbusters testnet, you will need to choose 3 ports that can be whatever you want (greater than 1024):
+1. wireguard VPN port - default is 5555
+2. EOS API / HTTP port - some are using 8888
+3. EOS P2P port - some are using 9876
 
 - Create Wireguard keys and config
 ```console
@@ -69,6 +67,7 @@ echo -e "ListenPort = 5555" >> ghostbusters.conf
 echo -e "Address = 192.168.100.X/22" >> ghostbusters.conf
 sudo cp ghostbusters.conf /etc/wireguard/.
 ```
+
 
 - Selecting your Wireguard IP
 
