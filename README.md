@@ -185,10 +185,13 @@ If you were selected as the bios node, please follow instructions [here](https:/
 
 ### 9. Resync
 
-If at any point you need to restart your node:
+If at any point if you need to restart your node:
 ```console
 ./start.sh
 tail -F stderr.txt
+
+# Hard resync
+./start.sh --delete-all-blocks --hard-replay-blockchain
 ```
 Or you can update your peers and restart at the same time:
 ```console
