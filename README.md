@@ -193,7 +193,7 @@ If you were selected as the bios node, please follow instructions [here](https:/
 
 ### 9. Resync
 
-If at any point if you need to restart your node:
+If at any point you need to restart your node:
 ```console
 ./start.sh
 tail -F stderr.txt
