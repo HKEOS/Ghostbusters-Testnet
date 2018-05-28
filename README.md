@@ -73,6 +73,17 @@ sudo cp ghostbusters.conf /etc/wireguard/.
 
 Your Wireguard IP address should be within the range of 192.168.100.X to 192.168.103.X, where X is between 0 and 255, inclusive.
 You can input any number for "X" in `ghostbusters.conf` that hasn't been taken by another node.
+To check which IPs have been claimed:
+```console
+cd ~/kbfs/team/eos_ghostbusters/ip_list
+ls
+# You will see the list of IP addresses that have already been claimed
+# Choose an address that is open
+touch <your-node-name>@<chosen-ip-address>
+```
+
+This adds your a file with your IP address to the ip_list folder.
+
 ```console
 sudo nano /etc/wireguard/ghostbusters.conf
 # Add in the value of X that you have chosen
