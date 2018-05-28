@@ -190,7 +190,7 @@ crontab -e
 # Exit
 ```
 
-Run `autolaunch.sh` when the team (on Keybase) is ready to queue up and launch.
+Run `autolaunch.sh` when the team (on Keybase) is ready to queue up and launch. Run `autolaunch.sh` on only one of your nodes, and manually launch the rest of them when the genesis.json file is published.
 
 ```console
 # Run autolaunch, answer questions prompted by script
