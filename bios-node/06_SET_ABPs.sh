@@ -1,7 +1,8 @@
 #!/bin/bash
 ################################################################################
 #
-# Script Created by Jae Chung, HKEOS and Igor Lins e Silva, EOS Rio
+# Script created by Eric Björk, EOS Sw/eden
+# Script edited by Jae Chung, HKEOS and Igor Lins e Silva, EOS Rio
 # For Ghostbusters testnet
 #
 ################################################################################
