@@ -188,14 +188,21 @@ sudo apt install jq
 crontab -e
 # Select nano (if you are initializing cron for the first time)
 # Exit
+```
 
+Run `autolaunch.sh` when the team (on Keybase) is ready to queue up and launch.
+
+```console
 # Run autolaunch, answer questions prompted by script
 ./autolaunch.sh
 
 # If the target BTC block was not reached at runtime,
 # it will schedule itself on CRON, please verify with
 crontab -e
-
+```
+If `autolaunch.sh` doesn't start your node correctly, run the following command:
+```console
+./start.sh --delete-all-blocks --genesis-json ./genesis.json
 ```
 
 ### 8. Bios Node
@@ -211,8 +218,9 @@ tail -F stderr.txt
 
 # Hard resync
 ./start.sh --delete-all-blocks --hard-replay-blockchain
+tail -F stderr.txt
 ```
-Or you can update your peers and restart at the same time:
+You can also update your peers and restart at the same time:
 ```console
 ./updatePeers - restart
 ```
