@@ -44,13 +44,13 @@ sudo apt-get update
 sudo apt-get install wireguard resolvconf
 ```
 
-### 2. Setup
+### 2. Setup Node
 
 `cd` to your `opt` folder.
 
 ```console
-mkdir Ghostbusters && cd Ghostbusters
-curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
+sudo mkdir Ghostbusters && cd Ghostbusters
+sudo curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
 ```
 - Note
 For the Ghostbusters testnet, you will need to choose 3 ports that can be whatever you want (greater than 1024):
