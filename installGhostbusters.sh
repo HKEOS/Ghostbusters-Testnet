@@ -210,9 +210,9 @@ if [[ ! -d $TESTNET_DIR ]]; then
     echo "CLEOS=$EOS_SOURCE_DIR/build/programs/cleos/cleos" >> $TESTNET_DIR/cleos.sh
     echo -ne "\n"
     if [[ $NODE_SSL_PORT != "" ]]; then
-        echo "\$CLEOS -u https://$NODE_NET_ADDR:$NODE_SSL_PORT --wallet-url http://127.0.0.1:$WALLET_PORT \"\$@\"" >> $TESTNET_DIR/cleos.sh
+        echo "\$CLEOS -u https://$NODE_HTTP_SRV_ADDR:$NODE_SSL_PORT --wallet-url http://127.0.0.1:$WALLET_PORT \"\$@\"" >> $TESTNET_DIR/cleos.sh
     else
-        echo "\$CLEOS -u http://$NODE_NET_ADDR:$NODE_API_PORT --wallet-url http://127.0.0.1:$WALLET_PORT \"\$@\"" >> $TESTNET_DIR/cleos.sh
+        echo "\$CLEOS -u http://$NODE_HTTP_SRV_ADDR:$NODE_API_PORT --wallet-url http://127.0.0.1:$WALLET_PORT \"\$@\"" >> $TESTNET_DIR/cleos.sh
 
     fi
     chmod u+x $TESTNET_DIR/cleos.sh
@@ -313,10 +313,9 @@ sync-fetch-span = 2000
 enable-stale-production = false
 required-participation = 33
 
-plugin = eosio::chain_plugin
-plugin = eosio::chain_api_plugin
-plugin = eosio::history_plugin
-plugin = eosio::history_api_plugin
+#plugin = eosio::chain_api_plugin
+#plugin = eosio::history_plugin
+#plugin = eosio::history_api_plugin
 
 #plugin = eosio::net_plugin
 #plugin = eosio::net_api_plugin
