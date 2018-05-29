@@ -16,11 +16,10 @@ TESTNET="ghostbusters";
 
 ##### PARAMETERS TO BE MODIFIED ######
 
-# Wireguard private IP
 # This is used to set the HTTP addresses in the config.ini
+# This should be set to your wireguard private IP.  192.168.100.X
 NODE_NET_ADDR="<net-addr>"
 
-# Wireguard private IP
 # This is used to set the P2P address in the config.ini
 # For most people this is the same as NODE_NET_ADDR above
 NODE_HOST="<server-address>"
