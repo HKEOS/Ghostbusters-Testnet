@@ -313,7 +313,6 @@ sync-fetch-span = 2000
 enable-stale-production = false
 required-participation = 33
 
-#plugin = eosio::chain_plugin
 #plugin = eosio::chain_api_plugin
 #plugin = eosio::history_plugin
 #plugin = eosio::history_api_plugin
