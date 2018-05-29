@@ -119,14 +119,11 @@ sudo ip link del dev ghostbusters && sudo wg-quick up ghostbusters
 
 ### 3. Fill out your info in the install script
 
+Update the params.sh file.
+
 ```console
 nano params.sh
 ```
-Input your information for the highlighted fields shown below:
-
-![gb-config](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/gb-config.png)
-
-**Note:** Producer name must be exactly **12 characters** long!
 
 ### 4. Run the script
 
