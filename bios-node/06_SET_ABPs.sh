@@ -13,7 +13,7 @@ SORUCES_FOLDER="$( jq -r '.SOURCES_FOLDER' "00_CONFIG.conf" )"
 
 EOS_BUILD_DIR=$SOURCES_FOLDER/build
 
-EOSIO_KEY=EOSIO_PRODUCER_KEY="$( jq -r '.EOSIO_PRODUCER_PUB_KEY' "00_CONFIG.conf" )"
+EOSIO_KEY="$( jq -r '.EOSIO_PRODUCER_PUB_KEY' "00_CONFIG.conf" )"
 
 PRODUCERS_JSON='{"schedule":['
 while read -r line
