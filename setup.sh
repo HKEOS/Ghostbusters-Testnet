@@ -31,4 +31,4 @@ if [[ ! -f ./params.sh ]]; then
 	chmod u+x params.sh
 fi
 
-echo "Scripts updated. Verify information on params.sh and execute ./installGhostbusters.sh";
+echo "Scripts updated. Please follow the README.md to setup wireguard, update your peer information to keybase, check firewall, start wireguard, edit params.sh and (finally) execute ./installGhostbusters.sh";
