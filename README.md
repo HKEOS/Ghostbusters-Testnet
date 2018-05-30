@@ -152,6 +152,9 @@ sudo wg show|grep hand|wc -l
 ```console
 ## If you change your wireguard IP, here is where you need to update it
 
+# This is the configuration file that you can edit to change your VPN IP and port
+nano /opt/Ghostbusters/ghostbusters.conf
+
 nano /path/to/Ghostbusters/my-peer-info
 /path/to/Ghostbusters/publishPeerInfo.sh my-peer-info
 nano /path/to/Ghostbusters/base_config.ini
