@@ -19,15 +19,15 @@ TESTNET="ghostbusters";
 EOS_SOURCE_DIR="/path/to/eos"
 
 # Set port numbers for everything on the BP
-API_PORT="8888"
-EOS_P2P_PORT="9876"
-WIREGUARD_PORT="5555"
+API_PORT=""
+EOS_P2P_PORT=""
+WIREGUARD_PORT=""
 WALLET_PORT="7777"
 
 # Set your keybase username here
 KEYBASE_USER="<yourkeybaseusername>"
 
-# Enter your EOS BP Info - you can generate keys using #  cleos create key 
+# Enter your EOS BP Info - you can generate keys using #  cleos create key
 EOS_PUBLIC_KEY=""
 EOS_PRODUCER_NAME=""
 
