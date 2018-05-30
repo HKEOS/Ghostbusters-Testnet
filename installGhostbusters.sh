@@ -11,6 +11,7 @@
 
 GLOBAL_PATH=$(pwd)
 source "$(dirname $0)/params.sh"
+
 NODE_HTTP_SRV_ADDR="$NODE_NET_ADDR:$NODE_API_PORT"
 NODE_P2P_LST_ENDP="$NODE_NET_ADDR:$NODE_P2P_PORT"
 NODE_P2P_SRV_ADDR="$NODE_HOST:$NODE_P2P_PORT"
@@ -383,7 +384,7 @@ echo "./cleos.sh system claimrewards $PRODUCER_NAME -p $PRODUCER_NAME" >> $TESTN
 chmod u+x $TESTNET_DIR/bp04_claimReward.sh
 
 # This script will generate the ghostbusters.conf and my-peer-info files
-cd /opt/Ghostbusters
+cd $GLOBAL_PATH
 umask 077
 
 #generate wiregaurd keys and set source
@@ -391,8 +392,6 @@ if [ ! -f privatekey ] && [ ! -f publickey ]; then
   echo -e "Generating wireguard keys..."
   wg genkey | tee privatekey | wg pubkey > publickey
 fi
-
-source "$(dirname $0)/params.sh"
 
 #generate ghostbuster.conf
 echo -e "Generating ghostbuster.conf..."
@@ -404,7 +403,7 @@ sudo cp ghostbusters.conf /etc/wireguard/.
 #Wireguard
 echo -e "Generating my-peer-info file..."
 echo -e "[Peer]" > my-peer-info
-echo -e "## wireguard public key from your /opt/Ghostbusters/publickey file" >> my-peer-info
+echo -e "## wireguard public key from your $GLOBAL_PATH publickey file" >> my-peer-info
 echo -e "PublicKey = $(cat publickey)" >> my-peer-info
 echo -e "AllowedIPs = $WIREGUARD_PRIVATE_IP/32" >> my-peer-info
 echo -e "Endpoint = $NODE_PUBLIC_IP:$WIREGUARD_PORT" >> my-peer-info
@@ -474,9 +473,9 @@ echo -ne $FINISHTEXT > ghostbusters.txt
 echo
 echo "This info was saved to ghostbusters.txt file"
 echo
-echo "You will now need to run:"
-echo "1 >> /publishPeerInfo my-peer-info       to publish your peer info to keybase"
-echo "2 >> sudo wg-quick up ghostbusters      to start your wireguard interface"
-echo "3 >> ./updatePeers.sh       to connect to the other ghostbusters peers."
+echo "You will now need to execute the following commands:"
+echo "1 to publish your peer info to keybase >> ./publishPeerInfo my-peer-info"
+echo "2 to start your wireguard interface >> sudo wg-quick up ghostbusters"
+echo "3 to connect to the other ghostbusters peers >> ./updatePeers.sh"
 read -n 1 -s -r -p "Press any key to continue"
 chmod 644 $0

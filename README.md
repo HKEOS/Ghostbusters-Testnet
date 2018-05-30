@@ -90,12 +90,12 @@ sudo ufw allow 5555
 ### 3. Fill out your info in the install script
 
 ```console
-cd /opt/Ghostbusters
+cd /path/to/Ghostbusters
 nano params.sh
 
 Please update your information in the fields above ## OPTIONAL ### (the rest are optional):
 ```console
-EOS_SOURCE_DIR="/opt/eos"
+EOS_SOURCE_DIR="/path/to/eos"
 API_PORT=""
 EOS_P2P_PORT=""
 WIREGUARD_PORT=""
@@ -153,7 +153,7 @@ sudo wg show|grep hand|wc -l
 ## If you change your wireguard IP, here is where you need to update it
 
 # This is the configuration file that you can edit to change your VPN IP and port
-nano /opt/Ghostbusters/ghostbusters.conf
+nano /path/to/Ghostbusters/ghostbusters.conf
 
 # You will also need to update the following locations
 nano /path/to/Ghostbusters/my-peer-info
@@ -162,7 +162,7 @@ nano /path/to/Ghostbusters/base_config.ini
 nano /path/to/Ghostbusters/params.sh
 nano /path/to/Ghostbusters/ghostbusters-<your-producername>/config.ini
 #then you need to restart your wireguard
-cd /opt/Ghostbusters
+cd /path/to/Ghostbusters
 sudo ip link del dev ghostbusters && sudo wg-quick up ghostbusters.conf
 
 # Ask team members to update peers

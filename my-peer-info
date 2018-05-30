@@ -1,6 +1,6 @@
 #Wireguard
 [Peer]
-## wireguard public key from your /opt/Ghostbusters/publickey file 
+## wireguard public key from your /path/to/Ghostbusters/publickey file 
 PublicKey = <from-publickey-file>
 AllowedIPs = <wireguard-private-ip>/32
 Endpoint = <node-public-ip>:<ListenPort-from-ghostbusters.conf>
