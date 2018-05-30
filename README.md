@@ -8,6 +8,8 @@ Start by joining the eos_ghostbusters Keybase group: https://keybase.io/team/eos
 
 If you don't already have keybase, you will need to install it and verify your identity. Join requests to the eos_ghostbusters group require a verified keybase identity.
 
+It is recommended that you use Keybase chat when communicating information related to your node. There are keybase clients for every OS and mobile. Keybase is very secure and all of the BPs are relying on it.
+
 - Install keybase: https://keybase.io/docs/the_app/install_linux
 
  Ubuntu instructions - do not install as root user, please use sudo where appropriate
@@ -56,21 +58,10 @@ curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/set
 ```
 - Note
 For the Ghostbusters testnet, you will need to choose 4 ports that can be whatever you want - we encourage diversity! Please write down what you plan to use for each of these so that you have it as a guide moving forward. (Ports must greater than 1024 unless you run as root and NO ONE should run as root):
-1. Wireguard VPN port - default is 5555
-2. EOS API / HTTP port - default is 8888
-3. EOS P2P port - default is 9876
+1. Wireguard VPN port - default is 5555 - pls do not to use defaults
+2. EOS API / HTTP port - default is 8888 - pls do not to use defaults
+3. EOS P2P port - default is 9876 - pls do not to use defaults
 4. Wallet port used by `keosd` - this is only for localhost connections - default is 7777
-
-- Create Wireguard keys and config
-```console
-umask 077
-wg genkey | tee privatekey | wg pubkey > publickey
-echo -e "[Interface]\nPrivateKey = $(cat privatekey)\nSaveConfig = true\nDNS = 1.1.1.1" > ghostbusters.conf
-echo -e "ListenPort = 5555" >> ghostbusters.conf
-echo -e "Address = 192.168.100.X/22" >> ghostbusters.conf
-sudo cp ghostbusters.conf /etc/wireguard/.
-```
-
 
 - Selecting your Wireguard IP and port
 
@@ -88,42 +79,10 @@ Your Wireguard IP address should be within the range of 192.168.100.X to 192.168
 You can input any number for "X" in `ghostbusters.conf` that hasn't been taken by another node.
 You can put any number in place of "5555" in `ghostbusters.conf` - this is your VPN port.
 
-```console
-sudo nano /etc/wireguard/ghostbusters.conf
-# Add in the value of X that you have chosen where it says 192.168.100.X/22 - do not change /22 please
-$ Add in the port number you have chosen where it says ListenPort = 5555
-# Save the file
-```
-It is recommended that you use Keybase chat when communicating information related to your node. There are keybase clients for every OS and mobile.
-
-- Publish peer information
-```console
-nano my-peer-info
- ## Fill in your information for the Wireguard VPN setup
- ## PublicKey - from the publickey file that should be in your /Ghostbusters folder   
- ## AllowedIPs - your wireguard IP (from ghostbusters.conf) do not change the /32, only the IP
- ## Endpoint - this should be your public IP or hostname
- ## p2p-peer-address - your wireguard IP and your EOS p2p port
- ## peer-key - EOS Public Key for your BP
-
- ## then run this script  
-./publishPeerInfo.sh my-peer-info
-```
 
 Check firewall settings, and make sure that port 5555 is open. If not, you can use:
 ```console
 sudo ufw allow 5555
-```
-
-Then, start Wireguard and check if it's working.
-
-```console
-# Start wireguard
-sudo wg-quick up ghostbusters
-# Test configuration
-sudo wg show ghostbusters
-# If at any time you want to reload the network interface
-sudo ip link del dev ghostbusters && sudo wg-quick up ghostbusters
 ```
 
 ### 3. Fill out your info in the install script
@@ -133,7 +92,6 @@ nano params.sh
 ```
 Input your information for the highlighted fields shown below:
 
-![gb-config](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/gb-config.png)
 
 **Note:** Producer name must be exactly **12 characters** long!
 
@@ -142,6 +100,18 @@ Input your information for the highlighted fields shown below:
 ```console
  # Run testnet installation script
 ./installGhostbusters.sh
+
+
+Then, start Wireguard and check if it's working.
+
+```console
+# Start wireguard
+sudo wg-quick up ghostbusters
+# Test configuration
+sudo wg show ghostbusters
+# If at any time you want to reload the network interface
+sudo ip link del dev ghostbusters && sudo wg-quick up ghostbusters.conf
+```
 
  # update peers on the base config.ini
 ./updatePeers.sh

@@ -382,6 +382,41 @@ echo -ne "$signature" > $TESTNET_DIR/bp04_claimReward.sh
 echo "./cleos.sh system claimrewards $PRODUCER_NAME -p $PRODUCER_NAME" >> $TESTNET_DIR/bp04_claimReward.sh
 chmod u+x $TESTNET_DIR/bp04_claimReward.sh
 
+# This script will generate the ghostbusters.conf and my-peer-info files
+cd /opt/Ghostbusters
+umask 077
+
+#generate wiregaurd keys and set source
+if [ ! -f privatekey ] && [ ! -f publickey ]; then
+  echo -e "Generating wireguard keys..."
+  wg genkey | tee privatekey | wg pubkey > publickey
+fi
+
+source "$(dirname $0)/params.sh"
+
+#generate ghostbuster.conf
+echo -e "Generating ghostbuster.conf..."
+echo -e "[Interface]\nPrivateKey = $(cat privatekey)\nSaveConfig = true\nDNS = 1.1.1.1" > ghostbusters.conf
+echo -e "ListenPort = $WIREGUARD_PORT" >> ghostbusters.conf
+echo -e "Address = $WIREGUARD_PRIVATE_IP/22" >> ghostbusters.conf
+sudo cp ghostbusters.conf /etc/wireguard/.
+
+#Wireguard
+echo -e "Generating my-peer-info file..."
+echo -e "[Peer]" > my-peer-info
+echo -e "## wireguard public key from your /opt/Ghostbusters/publickey file" >> my-peer-info
+echo -e "PublicKey = $(cat publickey)" >> my-peer-info
+echo -e "AllowedIPs = $WIREGUARD_PRIVATE_IP/32" >> my-peer-info
+echo -e "Endpoint = $NODE_PUBLIC_IP:$WIREGUARD_PORT" >> my-peer-info
+echo -e "PersistentKeepAlive = 20" >> my-peer-info
+echo -e "\n" >> my-peer-info
+echo -e "\n" >> my-peer-info
+echo -e "#EOS" >> my-peer-info
+echo -e "[EOS]" >> my-peer-info
+echo -e "p2p-peer-address = $WIREGUARD_PRIVATE_IP:$EOS_P2P_PORT" >> my-peer-info
+echo -e "# Your BP EOS Public Key with double quotes around it --> \"EOSxxxxx\"" >> my-peer-info
+echo -e "peer-key = \"$EOS_PUBLIC_KEY\"" >> my-peer-info
+
 # FINISH MESSAGE
 FINISHTEXT="\n .====================================================================.\n"
 FINISHTEXT+=" |====================================================================|\n"
@@ -439,5 +474,6 @@ echo -ne $FINISHTEXT > ghostbusters.txt
 echo
 echo "This info was saved to ghostbusters.txt file"
 echo
+echo "You will now need to run ./publishPeerInfo my-peer-info  and   start your wireguard interface..."
 read -n 1 -s -r -p "Press any key to continue"
 chmod 644 $0
