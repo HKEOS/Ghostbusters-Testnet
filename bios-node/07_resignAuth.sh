@@ -16,7 +16,7 @@ do
     ./cleos.sh push action eosio updateauth '{"account": "eosio", "permission": "owner", "parent": "", "auth":{"threshold": 1, "keys": [], "waits": [], "accounts": [{"weight": 1, "permission": {"actor": "abp", "permission": active}}]}}' -p eosio@active
     ./cleos.sh push action eosio updateauth '{"account": "eosio", "permission": "active", "parent": "owner", "auth":{"threshold": 1, "keys": [], "waits": [], "accounts": [{"weight": 1, "permission": {"actor": "abp", "permission": active}}]}}' -p eosio@active
     sleep 1;
-done < producers
+done < randomized_abps
 
 accounts=( eosio.bpay eosio.msig eosio.names eosio.ram eosio.ramfee eosio.saving eosio.stake eosio.token eosio.vpay );
 
