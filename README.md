@@ -155,6 +155,7 @@ sudo wg show|grep hand|wc -l
 # This is the configuration file that you can edit to change your VPN IP and port
 nano /opt/Ghostbusters/ghostbusters.conf
 
+# You will also need to update the following locations
 nano /path/to/Ghostbusters/my-peer-info
 /path/to/Ghostbusters/publishPeerInfo.sh my-peer-info
 nano /path/to/Ghostbusters/base_config.ini
