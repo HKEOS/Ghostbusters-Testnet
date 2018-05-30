@@ -25,7 +25,7 @@ WIREGUARD_PORT=""
 WALLET_PORT="7777"
 
 # Set your keybase username here
-KEYBASE_USER="<yourkeybaseusername>"
+KEYBASE_USER="<your-keybase-username>"
 
 # Enter your EOS BP Info - you can generate keys using #  cleos create key
 EOS_PUBLIC_KEY=""
