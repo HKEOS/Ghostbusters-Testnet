@@ -59,7 +59,7 @@ For the Ghostbusters testnet, you will need to choose 4 ports that can be whatev
 1. Wireguard VPN port - default is 5555
 2. EOS API / HTTP port - default is 8888
 3. EOS P2P port - default is 9876
-4. keos wallet port - this is only for localhost connections - default is 7777
+4. Wallet port used by `keosd` - this is only for localhost connections - default is 7777
 
 - Create Wireguard keys and config
 ```console
