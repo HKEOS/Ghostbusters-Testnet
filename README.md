@@ -28,7 +28,7 @@ run_keybase
 
  - Mandatory step: modify keybase default storage path for kbfs
  ```console
- curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/keybase_relocate.sh | bash -
+ curl -sL https://raw.githubusercontent.com/bensig/Ghostbusters-Testnet/master/keybase_relocate.sh | bash -
  ```
 
  - Login or signup:
@@ -54,7 +54,7 @@ sudo apt-get install wireguard resolvconf
 
 ```console
 mkdir Ghostbusters && cd Ghostbusters
-curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
+curl -sL https://raw.githubusercontent.com/bensig/Ghostbusters-Testnet/master/setup.sh | bash -
 ```
 - Note
 For the Ghostbusters testnet, you will need to choose 4 ports that can be whatever you want - we encourage diversity! Please write down what you plan to use for each of these so that you have it as a guide moving forward. (Ports must greater than 1024 unless you run as root and NO ONE should run as root).
@@ -228,7 +228,7 @@ If `autolaunch.sh` doesn't start your node correctly, run the following command:
 
 ### 8. Bios Node
 
-If you were selected as the bios node, please follow instructions [here](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/bios-node/bios-instructions.md)
+If you were selected as the bios node, please follow instructions [here](https://github.com/bensig/Ghostbusters-Testnet/blob/master/bios-node/bios-instructions.md)
 
 ### 9. Resync
 
