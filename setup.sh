@@ -8,9 +8,17 @@ echo "Downloading latest publishPeerInfo script...";
 curl -s -O https://raw.githubusercontent.com/hkeos/Ghostbusters-Testnet/master/publishPeerInfo.sh
 chmod u+x publishPeerInfo.sh
 
+echo "Downloading latest trustedPublish script...";
+curl -s -O https://raw.githubusercontent.com/hkeos/Ghostbusters-Testnet/master/trustedPublish.sh
+chmod u+x trustedPublish.sh
+
 echo "Downloading latest updatePeers script...";
 curl -s -O https://raw.githubusercontent.com/hkeos/Ghostbusters-Testnet/master/updatePeers.sh
 chmod u+x updatePeers.sh
+
+echo "Downloading latest trustedUpdate script...";
+curl -s -O https://raw.githubusercontent.com/hkeos/Ghostbusters-Testnet/master/trustedUpdate.sh
+chmod u+x trustedUpdate.sh
 
 echo "Downloading latest peerCleanup script...";
 curl -s -O https://raw.githubusercontent.com/hkeos/Ghostbusters-Testnet/master/peerCleanup.sh
