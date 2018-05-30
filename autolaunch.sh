@@ -65,11 +65,6 @@ fi
 
 keybase_username=$(eval "$kb status -j" | jq -r .Username);
 
-if (($TARGET_BLOCK >= $CURRENT_BLK)); then
-	remaining_blocks=$(($TARGET_BLOCK - $CURRENT_BLK));
-	MINS_TO_LAUNCH=$(($remaining_blocks * 10));
-fi
-
 join() {
 	eval "$kb chat create-channel eos_ghostbusters bios_$TARGET_BLOCK";
 	eval "$kb chat join-channel eos_ghostbusters bios_$TARGET_BLOCK";
@@ -87,16 +82,23 @@ if [[ "$1" == "" ]]; then
 	echo
 	echo " > This network is set to launch when the Bitcoin blockchain reach $TARGET_BLOCK blocks!";
 	echo
-	echo " > We are on block $CURRENT_BLK, so launch is estimated in about $MINS_TO_LAUNCH mins";
-	echo -e "\n > Do you want to be eligible as the bios node? (y/n) \c"
-	read
-	if [[ "$REPLY" == "y" || "$1" == "bios" ]]; then
-		echo -e "\n > Your node will be flagged as bios-ready to others!\n";
-		join;
-		flag="bios";
+	if (($TARGET_BLOCK >= $CURRENT_BLK)); then
+        	remaining_blocks=$(($TARGET_BLOCK - $CURRENT_BLK));
+        	MINS_TO_LAUNCH=$(($remaining_blocks * 10));
+		echo " > We are on block $CURRENT_BLK, so launch is estimated in about $MINS_TO_LAUNCH mins";
+                echo -e "\n > Do you want to be eligible as the bios node? (y/n) \c"
+                read
+        	if [[ "$REPLY" == "y" || "$1" == "bios" ]]; then
+                        echo -e "\n > Your node will be flagged as bios-ready to others!\n";
+                        join;
+                        flag="bios";
+        	else
+                	leave;
+                	flag="node";
+        	fi
 	else
-		leave;
-		flag="node";
+		echo " > We are on block $CURRENT_BLK, launch time is already due.";
+		echo -e " > Proceeding to sorting phase...\n"
 	fi
 else
 	flag="$1"
@@ -104,24 +106,14 @@ fi
 
 build_genesis()
 {
-
 	if [[ ! -f ./cleos.sh ]]; then
 		echo "cleos.sh not found! Exiting...";
 		exit 1;
 	fi
-
 	echo "Generating key pair...";
 	./cleos.sh create key > bios_keys;
-
 	echo "Key pair saved to bios_keys file!";
-
 	public_key=$(cat bios_keys | grep 'Public key: ' | cut -f 3 -d ' ');
-
-	## Create folder for bios node
-	# mkdir -p BiosNode;
-	# cp config.ini ./BiosNode/config.ini;
-	# cp bios_keys ./bios-files/bios_keys;
-
 	genesis='{
 	"initial_timestamp": "'$(date -u -I)'T'$(date -u +"%H:%M")':00.000",
 	"initial_key": "'$public_key'",
@@ -150,8 +142,7 @@ build_genesis()
 		"max_inline_action_depth": 4,
 		"max_authority_depth": 6,
 		"max_generated_transaction_count": 16
-	},
-	"initial_chain_id": "'$CHAIN_ID'"
+	}
 }';
 
     echo "$genesis" > ./genesis.json;
@@ -178,117 +169,27 @@ remove_cronjob()
 	rm ~/autolaunch.path
 }
 
-if eval "$kb fs stat /keybase/public/$keybase_username/genesis.json" > /dev/null; then
+if eval "$kb fs read /keybase/public/$keybase_username/genesis.json" > /dev/null 2>&1; then
 	echo "Removing old genesis.json...";
 	eval "$kb fs rm /keybase/public/$keybase_username/genesis.json";
 fi
 
 echo -e "--------------- VERIFYING BITCOIN STATE ---------------\n";
 
-matches=0;
 echo -e "Target Launch BTC Block = $TARGET_BLOCK \n";
 
-
-echo "Checking source 1: https://blockchain.info/latestblock";
-API1="https://blockchain.info/latestblock";
-BTC_DATA1=$(curl -s $API1);
-BTC_HASH1=$(echo "$BTC_DATA1" | jq .hash | sed 's/"//g');
-BTC_HEAD1=$(echo "$BTC_DATA1" | jq .height | sed 's/"//g');
-BTC_TIME1=$(echo "$BTC_DATA1" | jq .time | sed 's/"//g');
-echo "Current Time: $BTC_TIME1";
-echo "Current Bitcoin Block is: $BTC_HEAD1";
-echo "Block Hash: $BTC_HASH1";
-echo -e "\n";
-
-
-echo "Checking source 2: https://api.blockcypher.com/v1/btc/main";
-API2="https://api.blockcypher.com/v1/btc/main";
-BTC_DATA2=$(curl -s $API2);
-BTC_HASH2=$(echo "$BTC_DATA2" | jq .hash | sed 's/"//g');
-BTC_HEAD2=$(echo "$BTC_DATA2" | jq .height | sed 's/"//g');
-BTC_TIME2=$(echo "$BTC_DATA2" | jq .time | sed 's/"//g');
-echo "Current Time: $BTC_TIME2";
-echo "Current Bitcoin Block is: $BTC_HEAD2";
-echo "Block Hash: $BTC_HASH2";
-echo -e "\n";
-
-echo "Checking source 3: https://api.blockchair.com/bitcoin/mempool/blocks";
-API3="https://api.blockchair.com/bitcoin/mempool/blocks";
-BTC_DATA3=$(curl -s $API3);
-BTC_HASH3=$(echo "$BTC_DATA3" | jq .data[0].hash | sed 's/"//g');
-BTC_HEAD3=$(echo "$BTC_DATA3" | jq .data[0].id | sed 's/"//g');
-BTC_TIME3=$(echo "$BTC_DATA3" | jq .data[0].time | sed 's/"//g');
-echo "Current Time: $BTC_TIME3";
-echo "Current Bitcoin Block is: $BTC_HEAD3";
-echo "Block Hash: $BTC_HASH3";
-echo -e "\n";
-
-latestblock=0;
-selectedAPI="";
-selectedAPI_code=0;
-
-if (( $BTC_HEAD1 == $BTC_HEAD2 )); then
-	matched=$(($matched + 1));
-	if (( $BTC_HEAD1 > $latestblock )); then
-		latestblock="$BTC_HEAD1";
-		selectedAPI="$API1";
-		selectedAPI_code=1;
-	fi
-fi
-
-if (( $BTC_HEAD2 == $BTC_HEAD3 )); then
-	matched=$(($matched + 1));
-	if (( $BTC_HEAD2 > $latestblock )); then
-		latestblock="$BTC_HEAD2";
-		selectedAPI="$API2";
-		selectedAPI_code=2;
-	fi
-fi
-
-if (( $BTC_HEAD1 == $BTC_HEAD3 )); then
-	matched=$(($matched + 1));
-	if (( $BTC_HEAD3 > $latestblock )); then
-		latestblock="$BTC_HEAD3";
-		selectedAPI="$API3";
-		selectedAPI_code=3;
-	fi
-fi
-
-if (( $matched > 0 )); then
-        echo "Latest block = $latestblock";
-        echo "Using data from: $selectedAPI";
-
-        if (($TARGET_BLOCK <= $latestblock)); then
-                echo "Ready to launch!";
-        else
-                remaining_blocks=$(($TARGET_BLOCK - $BTC_HEAD2));
-                time_r=$(($remaining_blocks * 10));
-                echo "Not there yet! $remaining_blocks blocks remaining, about $time_r minutes...";
-                add_cronjob;
-                exit 1;
-        fi
-        if ((($latestblock - $TARGET_BLOCK) > 0)); then
-                echo "You have passed the time limit to launch automatically. Please receive the genesis file through the team and start your node.";
-                exit 1;
-        fi
+if (($TARGET_BLOCK <= $CURRENT_BLK)); then
+        echo "Ready to launch!";
 else
-        echo "No source consensus! Exiting...";
-        exit 1;
+        remaining_blocks=$(($TARGET_BLOCK - $BTC_HEAD2));
+        time_r=$(($remaining_blocks * 10));
+        echo "Not there yet! $remaining_blocks blocks remaining, about $time_r minutes...";
+	# Add script to CRON and quit!
+        add_cronjob;
+	exit 1;
 fi
-
-BTC_HASH=null;
-
-if (( $selectedAPI_code == 1 )); then
-	BTC_HASH=$(curl -s "https://blockchain.info/block-height/$TARGET_BLOCK?format=json" | jq .blocks[0].hash | sed 's/"//g');
-fi
-
-if (( $selectedAPI_code == 2 )); then
-	BTC_HASH=$(curl -s "https://api.blockcypher.com/v1/btc/main/blocks/$TARGET_BLOCK?txstart=1&limit=1" | jq .hash | sed 's/"//g');
-fi
-
-if (( $selectedAPI_code == 3 )); then
-	BTC_HASH=$(curl -s 'https://api.blockchair.com/bitcoin/blocks?q=id($TARGET_BLOCK)' | jq .data[0].hash | sed 's/"//g');
-fi
+# Fecth block hash
+BTC_HASH=$(curl -s "https://blockchain.info/block-height/$TARGET_BLOCK?format=json" | jq .blocks[0].hash | sed 's/"//g');
 
 echo "Target hash = $BTC_HASH";
 echo
@@ -309,8 +210,74 @@ list=($(cat bios_list.txt));
 num=${#list[*]}
 SELECTED_USER=$(echo ${list[$((RANDOM%num))]});
 
+if [[ -f abp_list ]]; then
+        rm abp_list;
+fi
+
+eval "$kb fs ls -l /keybase/team/eos_ghostbusters/mesh" 2> /dev/null > files
+
+echo "--------";
+echo "$files";
+echo "---------"
+
+while read entry; do
+	line=$(echo "$entry" | cut -d":" -f2 | cut -f2 -d" ");
+	kbuser=$(echo "$line" | sed -e 's/\(.*\).peer_info.signed*/\1/');
+#	eval "$kb fs read /keybase/team/eos_ghostbusters/mesh/$line" | $kb verify -S "$kbuser" &>output;
+#       out=$(<output);
+#       err=$(echo "$out" | grep "ERR");
+#       if [[ "$err" == "" ]]; then
+        peerdata=$(eval "$kb fs read /keybase/public/$kbuser/bp_info.json");
+        acc=$(echo "$peerdata" | jq -r ".producer_account_name");
+        pubkey=$(echo "$peerdata" | jq -r ".producer_public_key");
+        echo "$kbuser :: $acc :: $pubkey";
+        if [[ $acc != "" ]] && [[ $pubkey != "" ]]; then
+           echo "$acc,$pubkey" >> abp_list
+        fi
+#       fi
+done <files
+
+echo -e "\n >> ABP List is ready!";
+
+cat abp_list | sort | uniq > uniq_abp;
+
+echo -e "\n\n--------- RANDOM 21 ABP LIST -------------";
+cat abp_list;
+echo -e "---------------------------------------------\n";
+
+echo -e "\n\n >> Randomizing";
+
+if [[ -f randomized_abps ]]; then
+        rm randomized_abps
+fi
+
+RANDOM="$BTC_HASH"
+
+list=($(cat uniq_abp));
+
+num=${#list[*]}
+
+abp_count=0;
+
+while read entry; do
+	if (( abp_count <= 21 )); then
+		((abp_count++))
+		ABP=$(echo ${list[$((RANDOM%num))]});
+                echo "ABP Count: $abp_count - $ABP";
+		echo "$ABP" >> randomized_abps
+	fi
+done <abp_list;
+
+echo -e "\n\n--------- RANDOM 21 ABP LIST -------------";
+cat randomized_abps;
+echo -e "---------------------------------------------\n";
 # Announce on Keybase channel
-announce_bios "$SELECTED_USER";
+if ((($CURRENT_BLK - $TARGET_BLOCK) > 1)); then
+        echo "You have passed the time limit to launch automatically. Please receive the genesis file through the team and launch your node";
+        exit 1;
+else
+	announce_bios "$SELECTED_USER";
+fi
 
 # Prevent this script from auto starting in the next minute!
 remove_cronjob;
@@ -323,6 +290,8 @@ start_node() {
 	# Start node
 	nodeos --config-dir ./ --data-dir ./ --delete-all-blocks --genesis-json genesis.json
 }
+
+exit 1;
 
 if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	echo "You have been chosen as bios!";
