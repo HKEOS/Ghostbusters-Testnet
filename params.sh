@@ -16,7 +16,7 @@ TESTNET="ghostbusters";
 ##### REQUIRED PARAMETERS TO BE MODIFIED ######
 
 # EOS Source code folder, if left completely blank - it will create the folder, download sources and compile on the specified tag
-EOS_SOURCE_DIR="/opt/eos"
+EOS_SOURCE_DIR="/path/to/eos"
 
 # Set port numbers for everything on the BP
 API_PORT=""
