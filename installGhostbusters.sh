@@ -474,6 +474,9 @@ echo -ne $FINISHTEXT > ghostbusters.txt
 echo
 echo "This info was saved to ghostbusters.txt file"
 echo
-echo "You will now need to run ./publishPeerInfo my-peer-info  and   start your wireguard interface..."
+echo "You will now need to run:"
+echo "1 >> /publishPeerInfo my-peer-info       to publish your peer info to keybase"
+echo "2 >> sudo wg-quick up ghostbusters      to start your wireguard interface"
+echo "3 >> ./updatePeers.sh       to connect to the other ghostbusters peers."
 read -n 1 -s -r -p "Press any key to continue"
 chmod 644 $0
