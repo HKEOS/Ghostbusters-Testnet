@@ -11,6 +11,7 @@
 
 GLOBAL_PATH=$(pwd)
 source "$(dirname $0)/params.sh"
+
 NODE_HTTP_SRV_ADDR="$NODE_NET_ADDR:$NODE_API_PORT"
 NODE_P2P_LST_ENDP="$NODE_NET_ADDR:$NODE_P2P_PORT"
 NODE_P2P_SRV_ADDR="$NODE_HOST:$NODE_P2P_PORT"
@@ -166,7 +167,7 @@ if [[ ! -d $TESTNET_DIR ]]; then
 
     mkdir $TESTNET_DIR
 
-    # Creating node start.sh 
+    # Creating node start.sh
     echo "..:: Creating start.sh ::..";
     echo -ne "$signature" > $TESTNET_DIR/start.sh
     echo "NODEOS=$EOS_SOURCE_DIR/build/programs/nodeos/nodeos" >> $TESTNET_DIR/start.sh
@@ -178,7 +179,7 @@ if [[ ! -d $TESTNET_DIR ]]; then
     chmod u+x $TESTNET_DIR/start.sh
 
 
-    # Creating node stop.sh 
+    # Creating node stop.sh
     echo "..:: Creating stop.sh ::..";
     echo -ne "$signature" > $TESTNET_DIR/stop.sh
     echo "DIR=$TESTNET_DIR" >> $TESTNET_DIR/stop.sh
@@ -204,7 +205,7 @@ if [[ ! -d $TESTNET_DIR ]]; then
     chmod u+x $TESTNET_DIR/stop.sh
 
 
-    # Creating cleos.sh 
+    # Creating cleos.sh
     echo "..:: Creating cleos.sh ::..";
     echo -ne "$signature" > $TESTNET_DIR/cleos.sh
     echo "CLEOS=$EOS_SOURCE_DIR/build/programs/cleos/cleos" >> $TESTNET_DIR/cleos.sh
@@ -216,7 +217,7 @@ if [[ ! -d $TESTNET_DIR ]]; then
 
     fi
     chmod u+x $TESTNET_DIR/cleos.sh
-    
+
     # schema.json
     echo "..:: Downloading schema.json ::..";
     curl https://raw.githubusercontent.com/eosrio/bp-info-standard/master/schema.json > schema.json
@@ -224,22 +225,22 @@ if [[ ! -d $TESTNET_DIR ]]; then
     # bp_info_sample.json
     echo "..:: Downloading bp_info_sample.json ::..";
     curl https://raw.githubusercontent.com/eosrio/bp-info-standard/master/bp_info_sample.json > bp_info_sample.json
-    
+
     # autolaunch.sh
     echo "..:: Downloading autolaunch.sh ::..";
     curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/autolaunch.sh > $TESTNET_DIR/autolaunch.sh
     chmod u+x $TESTNET_DIR/autolaunch.sh
-    
+
     # setupAutoLaunch.sh
     echo "..:: Downloading setupAutoLaunch.sh ::..";
     curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setupAutoLaunch.sh > $TESTNET_DIR/setupAutoLaunch.sh
     chmod u+x $TESTNET_DIR/setupAutoLaunch.sh
-    
 
 
-# config.ini 
+
+# config.ini
 echo -ne "\n\n..:: Creating config.ini ::..\n\n";
-if [[ $ISBP == true && $PRODUCER_PRIV_KEY == "" ]]; then 
+if [[ $ISBP == true && $PRODUCER_PRIV_KEY == "" ]]; then
     echo -n $'\E[0;33m'
     echo "!!! PRIV KEY SECTION !!! You can enter your private key here and it will be imported in wallet and inserted in config.ini. I can skip this step (Enter) and do it manually before start"
     echo -ne "PRIV KEY (Enter skip):"
@@ -248,15 +249,15 @@ if [[ $ISBP == true && $PRODUCER_PRIV_KEY == "" ]]; then
 fi
 
 if [[ $ISBP == true ]]; then
-    if [[ $PRODUCER_PRIV_KEY == "" ]]; then 
+    if [[ $PRODUCER_PRIV_KEY == "" ]]; then
         PRODUCER_PRIV_KEY=$PRODUCER_PRIV_KEY_DEF
-    else 
+    else
         if [[ ! -f $WALLET_DIR/default.wallet ]]; then
             WALLET_LOG=$( $TESTNET_DIR/cleos.sh wallet create)
             echo "$WALLET_LOG" > wallet_pass.txt
         fi
     fi
-    $TESTNET_DIR/cleos.sh wallet import $PRODUCER_PRIV_KEY  
+    $TESTNET_DIR/cleos.sh wallet import $PRODUCER_PRIV_KEY
 fi
 
 if [[ $PEER_PUB_KEY == "" ]]; then
@@ -382,6 +383,38 @@ echo -ne "$signature" > $TESTNET_DIR/bp04_claimReward.sh
 echo "./cleos.sh system claimrewards $PRODUCER_NAME -p $PRODUCER_NAME" >> $TESTNET_DIR/bp04_claimReward.sh
 chmod u+x $TESTNET_DIR/bp04_claimReward.sh
 
+# This script will generate the ghostbusters.conf and my-peer-info files
+cd $GLOBAL_PATH
+umask 077
+
+#generate wiregaurd keys and set source
+if [ ! -f privatekey ] && [ ! -f publickey ]; then
+  echo -e "Generating wireguard keys..."
+  wg genkey | tee privatekey | wg pubkey > publickey
+fi
+
+#generate ghostbuster.conf
+echo -e "Generating ghostbuster.conf..."
+echo -e "[Interface]\nPrivateKey = $(cat privatekey)\nSaveConfig = true\nDNS = 1.1.1.1" > ghostbusters.conf
+echo -e "ListenPort = $WIREGUARD_PORT" >> ghostbusters.conf
+echo -e "Address = $WIREGUARD_PRIVATE_IP/22" >> ghostbusters.conf
+sudo cp ghostbusters.conf /etc/wireguard/.
+
+#Wireguard
+echo -e "Generating my-peer-info file..."
+echo -e "#Wireguard" >> my-peer-info
+echo -e "[Peer]" > my-peer-info
+echo -e "PublicKey = $(cat publickey)" >> my-peer-info
+echo -e "AllowedIPs = $WIREGUARD_PRIVATE_IP/32" >> my-peer-info
+echo -e "Endpoint = $NODE_PUBLIC_IP:$WIREGUARD_PORT" >> my-peer-info
+echo -e "PersistentKeepAlive = 20" >> my-peer-info
+echo -e "\n" >> my-peer-info
+echo -e "\n" >> my-peer-info
+echo -e "#EOS" >> my-peer-info
+echo -e "[EOS]" >> my-peer-info
+echo -e "p2p-peer-address = $WIREGUARD_PRIVATE_IP:$EOS_P2P_PORT" >> my-peer-info
+echo -e "peer-key = \"$EOS_PUBLIC_KEY\"" >> my-peer-info
+
 # FINISH MESSAGE
 FINISHTEXT="\n .====================================================================.\n"
 FINISHTEXT+=" |====================================================================|\n"
@@ -439,5 +472,9 @@ echo -ne $FINISHTEXT > ghostbusters.txt
 echo
 echo "This info was saved to ghostbusters.txt file"
 echo
+echo "You will now need to execute the following commands:"
+echo "1 to publish your peer info to keybase >> ./publishPeerInfo my-peer-info"
+echo "2 to start your wireguard interface >> sudo wg-quick up ghostbusters"
+echo "3 to connect to the other ghostbusters peers >> ./updatePeers.sh"
 read -n 1 -s -r -p "Press any key to continue"
 chmod 644 $0
