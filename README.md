@@ -82,7 +82,7 @@ Check firewall settings, and make sure that port you chose for your wireguard is
 
 If you are using lxd, then you will need to forward ports from your WAN IP. If you are using AWS, then you will need to edit your security policy.
 
-If you use ufw on Ubuntu, you can use:
+If you use ufw on Ubuntu, you can use (substitute 5555 for whatever port you plan to use for your Wireguard VPN):
 ```console
 sudo ufw allow 5555
 ```
