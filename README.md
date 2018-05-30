@@ -111,7 +111,7 @@ sudo wg-quick up ghostbusters
 sudo wg show ghostbusters
 # If at any time you want to reload the network interface
 sudo ip link del dev ghostbusters && sudo wg-quick up ghostbusters.conf
-```
+
 
  # update peers on the base config.ini
 ./updatePeers.sh
