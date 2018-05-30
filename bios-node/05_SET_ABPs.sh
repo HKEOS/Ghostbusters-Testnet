@@ -31,7 +31,7 @@ do
                 PRODUCERS_JSON="$PRODUCERS_JSON,{\"producer_name\":\"$name\",\"block_signing_key\":\"$key\"}"
         fi
 
-done < producers
+done < randomized_abps
 
 PRODUCERS_JSON="$PRODUCERS_JSON"']}'
 
