@@ -241,8 +241,8 @@ echo -e "\n >> ABP List is ready!";
 
 cat abp_list | sort | uniq > uniq_abp;
 
-echo -e "\n\n--------- RANDOM 21 ABP LIST -------------";
-cat abp_list;
+echo -e "\n\n--------- FULL ABP LIST -------------";
+cat uniq_abp;
 echo -e "---------------------------------------------\n";
 
 echo -e "\n\n >> Randomizing";
@@ -250,6 +250,8 @@ echo -e "\n\n >> Randomizing";
 if [[ -f randomized_abps ]]; then
         rm randomized_abps
 fi
+
+echo "" >> randomized_abps
 
 RANDOM="$BTC_HASH"
 
@@ -260,13 +262,25 @@ num=${#list[*]}
 abp_count=0;
 
 while read entry; do
-	if (( abp_count <= 21 )); then
-		((abp_count++))
-		ABP=$(echo ${list[$((RANDOM%num))]});
-                echo "ABP Count: $abp_count - $ABP";
-		echo "$ABP" >> randomized_abps
-	fi
-done <abp_list;
+	while (( $abp_count < 21 )); do
+		ABP=$(echo ${list[$(($RANDOM%$num))]});
+		echo "0" > inList
+		while read line; do
+			if [ "$line" = "$ABP" ]; then
+				echo "duplicate"
+				echo "1" > inList
+				break;
+			fi
+		done < randomized_abps
+                if [ $(cat inList) = "0" ]; then
+			(( abp_count++ ))
+			echo "ABP Count: $abp_count - $ABP";
+			echo "$ABP" >> randomized_abps
+		fi
+	done
+done <uniq_abp;
+
+rm inList
 
 echo -e "\n\n--------- RANDOM 21 ABP LIST -------------";
 cat randomized_abps;
