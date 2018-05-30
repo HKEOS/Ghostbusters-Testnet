@@ -89,8 +89,21 @@ sudo ufw allow 5555
 
 ```console
 nano params.sh
+
+Please update your information in the fields above ## OPTIONAL ### (the rest are optional):
+```console
+EOS_SOURCE_DIR="/opt/eos"
+API_PORT=""
+EOS_P2P_PORT=""
+WIREGUARD_PORT=""
+WALLET_PORT="7777"
+KEYBASE_USER="<yourkeybaseusername>"
+EOS_PUBLIC_KEY=""
+EOS_PRODUCER_NAME=""
+NODE_PUBLIC_IP="xxx.xxx.xxx.xxx"
+AGENT_NAME="<agent-name>"
+WIREGUARD_PRIVATE_IP="192.168.10Y.X"
 ```
-Input your information for the highlighted fields shown below:
 
 
 **Note:** Producer name must be exactly **12 characters** long!
