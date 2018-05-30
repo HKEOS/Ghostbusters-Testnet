@@ -70,6 +70,7 @@ PEER_KEYS='
 # peer-key = "EOS4tiVonwbmT6w5jZjxaWx8p1CkejsBtcwtn6YaqZRteKyYGQZAE"
 # peer-key = "<EOS-public-key>"
 '
+
 ## THIS WILL AUTOFILL FROM ABOVE
 
 # Node port definitions (avoid ports below 1024 - you shouldn't run as root)
