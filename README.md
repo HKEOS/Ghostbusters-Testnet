@@ -90,7 +90,7 @@ You can put any number in place of "5555" in `ghostbusters.conf` - this is your 
 
 ```console
 sudo nano /etc/wireguard/ghostbusters.conf
-# Add in the value of X that you have chosen where it says 192.168.100.x/22 - do not change /22 please
+# Add in the value of X that you have chosen where it says 192.168.100.X/22 - do not change /22 please
 $ Add in the port number you have chosen where it says ListenPort = 5555
 # Save the file
 ```
@@ -166,15 +166,16 @@ sudo wg show|grep hand|wc -l
 ```console
 ## If you change your wireguard IP, here is where you need to update it
 
-nano /opt/Ghostbusters/my-peer-info
-/opt/Ghostbusters/publishPeerInfo.sh my-peer-info
-nano /opt/Ghostbusters/ghostbusters
-nano /opt/Ghostbusters/base_config.ini
-nano /opt/Ghostbusters/params.sh
-nano /opt/Ghostbusters/ghostbusters-yourproducername/config.ini
+nano /path/to/Ghostbusters/my-peer-info
+/path/to/Ghostbusters/publishPeerInfo.sh my-peer-info
+nano /path/to/Ghostbusters/base_config.ini
+nano /path/to/Ghostbusters/params.sh
+nano /path/to/Ghostbusters/ghostbusters-<your-producername>/config.ini
 #then you need to restart your wireguard
 cd /opt/Ghostbusters
 sudo ip link del dev ghostbusters && sudo wg-quick up ghostbusters.conf
+
+# Ask team members to update peers
 ```
 
 
