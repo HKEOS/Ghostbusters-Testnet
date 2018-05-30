@@ -101,7 +101,7 @@ It is recommended that you use Keybase chat when communicating information relat
 nano my-peer-info
  ## Fill in your information for the Wireguard VPN setup
  ## PublicKey - from the publickey file that should be in your /Ghostbusters folder   
- ## AllowedIPs - your wireguard IP (from ghostbusters.conf) do not change the /32, only the IP 
+ ## AllowedIPs - your wireguard IP (from ghostbusters.conf) do not change the /32, only the IP
  ## Endpoint - this should be your public IP or hostname
  ## p2p-peer-address - your wireguard IP and your EOS p2p port
  ## peer-key - EOS Public Key for your BP
@@ -147,6 +147,12 @@ Input your information for the highlighted fields shown below:
 ./updatePeers.sh
  # You can run updatePeers.sh again to automatically update Wireguard and EOS peer configs any time a new peer joins and publishes their peer info.
 
+# You can check your communication with other peers
+sudo wg show
+
+# Count your handshakes with peers
+sudo wg show|grep hand|wc -l
+
 # other options for updatePeers.sh
 ./updatePeers.sh - restart # will reload nodeos after update
 ./updatePeers.sh lxd restart # will reload nodeos on lxd after update
@@ -156,6 +162,21 @@ Input your information for the highlighted fields shown below:
 ./peerCleanup.sh remove # removes just completely offline host
 ./peerCleanup.sh # debug mode, doesn't actually remove peers
 ```
+
+```console
+## If you change your wireguard IP, here is where you need to update it
+
+nano /opt/Ghostbusters/my-peer-info
+/opt/Ghostbusters/publishPeerInfo.sh my-peer-info
+nano /opt/Ghostbusters/ghostbusters
+nano /opt/Ghostbusters/base_config.ini
+nano /opt/Ghostbusters/params.sh
+nano /opt/Ghostbusters/ghostbusters-yourproducername/config.ini
+#then you need to restart your wireguard
+cd /opt/Ghostbusters
+sudo ip link del dev ghostbusters && sudo wg-quick up ghostbusters.conf
+```
+
 
 ### 5. Publishing BP info on Keybase
 
