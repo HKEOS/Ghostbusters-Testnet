@@ -6,6 +6,8 @@
 
 Start by joining the eos_ghostbusters Keybase group: https://keybase.io/team/eos_ghostbusters.
 
+If you don't already have keybase, you will need to install it and verify your identity. Join requests to the eos_ghostbusters group require a verified keybase identity.
+
 - Install keybase: https://keybase.io/docs/the_app/install_linux
 
  Ubuntu instructions - do not install as root user, please use sudo where appropriate
@@ -44,19 +46,20 @@ sudo apt-get update
 sudo apt-get install wireguard resolvconf
 ```
 
-### 2. Setup
+### 2. Setup Node
 
 `cd` to your `opt` folder.
 
 ```console
-mkdir Ghostbusters && cd Ghostbusters
-curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
+sudo mkdir Ghostbusters && cd Ghostbusters
+sudo curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
 ```
 - Note
-For the Ghostbusters testnet, you will need to choose 3 ports that can be whatever you want (greater than 1024):
-1. wireguard VPN port - default is 5555
-2. EOS API / HTTP port - some are using 8888
-3. EOS P2P port - some are using 9876
+For the Ghostbusters testnet, you will need to choose 4 ports that can be whatever you want - we encourage diversity! Please write down what you plan to use for each of these so that you have it as a guide moving forward. (Ports must greater than 1024 unless you run as root and NO ONE should run as root):
+1. Wireguard VPN port - default is 5555
+2. EOS API / HTTP port - default is 8888
+3. EOS P2P port - default is 9876
+4. keos wallet port - this is only for localhost connections - default is 7777
 
 - Create Wireguard keys and config
 ```console
@@ -69,10 +72,8 @@ sudo cp ghostbusters.conf /etc/wireguard/.
 ```
 
 
-- Selecting your Wireguard IP
+- Selecting your Wireguard IP and port
 
-Your Wireguard IP address should be within the range of 192.168.100.X to 192.168.103.X, where X is between 0 and 255, inclusive.
-You can input any number for "X" in `ghostbusters.conf` that hasn't been taken by another node.
 To check which IPs have been claimed:
 ```console
 cd ~/kbfs/team/eos_ghostbusters/ip_list
@@ -80,22 +81,30 @@ ls
 # You will see the list of IP addresses that have already been claimed
 # Choose an address that is open
 touch <your-node-name>@<chosen-ip-address>
+This adds your a file with your IP address to the ip_list folder.
 ```
 
-This adds your a file with your IP address to the ip_list folder.
+Your Wireguard IP address should be within the range of 192.168.100.X to 192.168.103.X, where X is between 0 and 255, inclusive.
+You can input any number for "X" in `ghostbusters.conf` that hasn't been taken by another node.
+You can put any number in place of "5555" in `ghostbusters.conf` - this is your VPN port.
 
 ```console
 sudo nano /etc/wireguard/ghostbusters.conf
-# Add in the value of X that you have chosen
+# Add in the value of X that you have chosen where it says 192.168.100.x/22 - do not change /22 please
+$ Add in the port number you have chosen where it says ListenPort = 5555
 # Save the file
 ```
-
-It is recommended that you use Keybase when communicating information related to your node.
+It is recommended that you use Keybase chat when communicating information related to your node. There are keybase clients for every OS and mobile.
 
 - Publish peer information
 ```console
 nano my-peer-info
- ## Fill in your information for PublicKey, AllowedIPs, Endpoint, p2p-peer-address, and peer-key
+ ## Fill in your information for the Wireguard VPN setup
+ ## PublicKey - from the publickey file that should be in your /Ghostbusters folder   
+ ## AllowedIPs - your wireguard IP (from ghostbusters.conf) do not change the /32, only the IP 
+ ## Endpoint - this should be your public IP or hostname
+ ## p2p-peer-address - your wireguard IP and your EOS p2p port
+ ## peer-key - EOS Public Key for your BP
 
  ## then run this script  
 ./publishPeerInfo.sh my-peer-info
@@ -154,7 +163,11 @@ Input your information for the highlighted fields shown below:
  `cd` to your `Ghostbusters` folder if you are not in there already.
  ```console
  nano bp_info.json
-  # add your bp info and save it!
+# add your basic bp info and save it! at a minimum you will need the producer_account_name,
+# producer_public_key. Bonus points if you add your LAT and LONG for the map.
+#  "producer_account_name": "<producername>",
+#  "producer_public_key": "<eos-producer-public-key>",
+
  cp bp_info.json ~/kbfs/public/<username>
  ```
  **Note:** You do not have to fill out your BP node's api_endpoint and p2p_endpoint-- this way, they can remain hidden from public.

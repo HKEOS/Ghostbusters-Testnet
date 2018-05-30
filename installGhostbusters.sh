@@ -166,7 +166,7 @@ if [[ ! -d $TESTNET_DIR ]]; then
 
     mkdir $TESTNET_DIR
 
-    # Creating node start.sh 
+    # Creating node start.sh
     echo "..:: Creating start.sh ::..";
     echo -ne "$signature" > $TESTNET_DIR/start.sh
     echo "NODEOS=$EOS_SOURCE_DIR/build/programs/nodeos/nodeos" >> $TESTNET_DIR/start.sh
@@ -178,7 +178,7 @@ if [[ ! -d $TESTNET_DIR ]]; then
     chmod u+x $TESTNET_DIR/start.sh
 
 
-    # Creating node stop.sh 
+    # Creating node stop.sh
     echo "..:: Creating stop.sh ::..";
     echo -ne "$signature" > $TESTNET_DIR/stop.sh
     echo "DIR=$TESTNET_DIR" >> $TESTNET_DIR/stop.sh
@@ -204,7 +204,7 @@ if [[ ! -d $TESTNET_DIR ]]; then
     chmod u+x $TESTNET_DIR/stop.sh
 
 
-    # Creating cleos.sh 
+    # Creating cleos.sh
     echo "..:: Creating cleos.sh ::..";
     echo -ne "$signature" > $TESTNET_DIR/cleos.sh
     echo "CLEOS=$EOS_SOURCE_DIR/build/programs/cleos/cleos" >> $TESTNET_DIR/cleos.sh
@@ -216,7 +216,7 @@ if [[ ! -d $TESTNET_DIR ]]; then
 
     fi
     chmod u+x $TESTNET_DIR/cleos.sh
-    
+
     # schema.json
     echo "..:: Downloading schema.json ::..";
     curl https://raw.githubusercontent.com/eosrio/bp-info-standard/master/schema.json > schema.json
@@ -224,22 +224,22 @@ if [[ ! -d $TESTNET_DIR ]]; then
     # bp_info_sample.json
     echo "..:: Downloading bp_info_sample.json ::..";
     curl https://raw.githubusercontent.com/eosrio/bp-info-standard/master/bp_info_sample.json > bp_info_sample.json
-    
+
     # autolaunch.sh
     echo "..:: Downloading autolaunch.sh ::..";
     curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/autolaunch.sh > $TESTNET_DIR/autolaunch.sh
     chmod u+x $TESTNET_DIR/autolaunch.sh
-    
+
     # setupAutoLaunch.sh
     echo "..:: Downloading setupAutoLaunch.sh ::..";
     curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setupAutoLaunch.sh > $TESTNET_DIR/setupAutoLaunch.sh
     chmod u+x $TESTNET_DIR/setupAutoLaunch.sh
-    
 
 
-# config.ini 
+
+# config.ini
 echo -ne "\n\n..:: Creating config.ini ::..\n\n";
-if [[ $ISBP == true && $PRODUCER_PRIV_KEY == "" ]]; then 
+if [[ $ISBP == true && $PRODUCER_PRIV_KEY == "" ]]; then
     echo -n $'\E[0;33m'
     echo "!!! PRIV KEY SECTION !!! You can enter your private key here and it will be imported in wallet and inserted in config.ini. I can skip this step (Enter) and do it manually before start"
     echo -ne "PRIV KEY (Enter skip):"
@@ -248,15 +248,15 @@ if [[ $ISBP == true && $PRODUCER_PRIV_KEY == "" ]]; then
 fi
 
 if [[ $ISBP == true ]]; then
-    if [[ $PRODUCER_PRIV_KEY == "" ]]; then 
+    if [[ $PRODUCER_PRIV_KEY == "" ]]; then
         PRODUCER_PRIV_KEY=$PRODUCER_PRIV_KEY_DEF
-    else 
+    else
         if [[ ! -f $WALLET_DIR/default.wallet ]]; then
             WALLET_LOG=$( $TESTNET_DIR/cleos.sh wallet create)
             echo "$WALLET_LOG" > wallet_pass.txt
         fi
     fi
-    $TESTNET_DIR/cleos.sh wallet import $PRODUCER_PRIV_KEY  
+    $TESTNET_DIR/cleos.sh wallet import $PRODUCER_PRIV_KEY
 fi
 
 if [[ $PEER_PUB_KEY == "" ]]; then
