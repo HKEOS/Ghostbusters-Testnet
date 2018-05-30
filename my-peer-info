@@ -1,5 +1,6 @@
 #Wireguard
 [Peer]
+## wireguard public key from your /opt/Ghostbusters/publickey file 
 PublicKey = <from-publickey-file>
 AllowedIPs = <wireguard-private-ip>/32
 Endpoint = <node-public-ip>:<ListenPort-from-ghostbusters.conf>
@@ -8,4 +9,5 @@ PersistentKeepAlive = 20
 #EOS
 [EOS]
 p2p-peer-address = <wireguard-private-ip>:<p2p-port>
+# Your BP EOS Public Key with double quotes around it --> "EOSxxxxx"
 peer-key = "<eos-public-key>"
