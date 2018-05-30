@@ -76,4 +76,3 @@ PEER_KEYS='
 # peer-key = "EOS4tiVonwbmT6w5jZjxaWx8p1CkejsBtcwtn6YaqZRteKyYGQZAE"
 # peer-key = "<EOS-public-key>"
 '
-echo "Configuration done!";
