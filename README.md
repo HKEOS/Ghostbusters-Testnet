@@ -90,6 +90,7 @@ sudo ufw allow 5555
 ### 3. Fill out your info in the install script
 
 ```console
+cd /opt/Ghostbusters
 nano params.sh
 
 Please update your information in the fields above ## OPTIONAL ### (the rest are optional):
