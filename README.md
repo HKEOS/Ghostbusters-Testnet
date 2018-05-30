@@ -92,6 +92,7 @@ sudo ufw allow 5555
 ```console
 cd /path/to/Ghostbusters
 nano params.sh
+```
 
 Please update your information in the fields above ## OPTIONAL ### (the rest are optional):
 ```console
@@ -113,10 +114,11 @@ WIREGUARD_PRIVATE_IP="192.168.10Y.X"
 
 ### 4. Run the script
 
+Install testnet folder and scripts.
 ```console
  # Run testnet installation script
 ./installGhostbusters.sh
-
+```
 
 Then, start Wireguard and check if it's working.
 
@@ -127,19 +129,44 @@ sudo wg-quick up ghostbusters
 sudo wg show ghostbusters
 # If at any time you want to reload the network interface
 sudo ip link del dev ghostbusters && sudo wg-quick up ghostbusters.conf
+```
 
+Publish peer info.
+```console
+./publishPeerInfo.sh my-peer-info
+```
 
+Optional: Publish peer info to only trusted peers
+```console
+nano trusted-peers
+# Add a list of the keybase usernames of your trusted peers. Add a space in between each one, without commas or new lines in between.
+./trustedPublish.sh my-peer-info trusted-peers
+```
+
+Update Wireguard and EOS `config.ini`
+```console
  # update peers on the base config.ini
 ./updatePeers.sh
  # You can run updatePeers.sh again to automatically update Wireguard and EOS peer configs any time a new peer joins and publishes their peer info.
+```
 
+Optional: Update trusted Wireguard and EOS peers only
+```console
+./trustedUpdate.sh
+```
+
+Checking Wireguard connections
+```console
 # You can check your communication with other peers
 sudo wg show
 
 # Count your handshakes with peers
 sudo wg show|grep hand|wc -l
+```
 
-# other options for updatePeers.sh
+Other optional commands
+```console
+# Other options for updatePeers.sh
 ./updatePeers.sh - restart # will reload nodeos after update
 ./updatePeers.sh lxd restart # will reload nodeos on lxd after update
 
@@ -149,9 +176,8 @@ sudo wg show|grep hand|wc -l
 ./peerCleanup.sh # debug mode, doesn't actually remove peers
 ```
 
+If you change your wireguard IP, here is where you need to update it
 ```console
-## If you change your wireguard IP, here is where you need to update it
-
 # This is the configuration file that you can edit to change your VPN IP and port
 nano /path/to/Ghostbusters/ghostbusters.conf
 
