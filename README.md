@@ -57,7 +57,8 @@ mkdir Ghostbusters && cd Ghostbusters
 curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
 ```
 - Note
-For the Ghostbusters testnet, you will need to choose 4 ports that can be whatever you want - we encourage diversity! Please write down what you plan to use for each of these so that you have it as a guide moving forward. (Ports must greater than 1024 unless you run as root and NO ONE should run as root):
+For the Ghostbusters testnet, you will need to choose 4 ports that can be whatever you want - we encourage diversity! Please write down what you plan to use for each of these so that you have it as a guide moving forward. (Ports must greater than 1024 unless you run as root and NO ONE should run as root).
+
 1. Wireguard VPN port - default is 5555 - pls do not to use defaults
 2. EOS API / HTTP port - default is 8888 - pls do not to use defaults
 3. EOS P2P port - default is 9876 - pls do not to use defaults
@@ -65,22 +66,23 @@ For the Ghostbusters testnet, you will need to choose 4 ports that can be whatev
 
 - Selecting your Wireguard IP and port
 
+Your Wireguard IP address should be within the range of 192.168.100.X to 192.168.103.X, where X is between 0 and 255, inclusive.
+
 To check which IPs have been claimed:
 ```console
 cd ~/kbfs/team/eos_ghostbusters/ip_list
 ls
 # You will see the list of IP addresses that have already been claimed
 # Choose an address that is open
-touch <your-node-name>@<chosen-ip-address>
-This adds a file with your IP address to the ip_list folder.
+touch <chosen-ip-address>@<your-node-name>
+This adds a file with your IP address to the ip_list folder in an easy to sort format.
 ```
 
-Your Wireguard IP address should be within the range of 192.168.100.X to 192.168.103.X, where X is between 0 and 255, inclusive.
-You can input any number for "X" in `ghostbusters.conf` that hasn't been taken by another node.
-You can put any number in place of "5555" in `ghostbusters.conf` - this is your VPN port.
+Check firewall settings, and make sure that port you chose for your wireguard is open.
 
+If you are using lxd, then you will need to forward ports from your WAN IP. If you are using AWS, then you will need to edit your security policy.
 
-Check firewall settings, and make sure that port 5555 is open. If not, you can use:
+If you use ufw on Ubuntu, you can use:
 ```console
 sudo ufw allow 5555
 ```
