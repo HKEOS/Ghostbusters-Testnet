@@ -317,6 +317,7 @@ if [[ "$SELECTED_USER" == "$keybase_username" ]]; then
 	# Copy files to the bios-files folder
 	cp bios_keys ./bios-files/bios_keys;
 	cp ./genesis.json ./bios-files/genesis.json
+	cp ./randomized_abps ./bios-files/randomized_abps
 else
 	echo "Selected User: $SELECTED_USER";
 	echo
