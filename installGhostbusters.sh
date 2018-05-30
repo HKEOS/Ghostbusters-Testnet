@@ -402,8 +402,8 @@ sudo cp ghostbusters.conf /etc/wireguard/.
 
 #Wireguard
 echo -e "Generating my-peer-info file..."
+echo -e "#Wireguard" >> my-peer-info
 echo -e "[Peer]" > my-peer-info
-echo -e "## wireguard public key from your $GLOBAL_PATH publickey file" >> my-peer-info
 echo -e "PublicKey = $(cat publickey)" >> my-peer-info
 echo -e "AllowedIPs = $WIREGUARD_PRIVATE_IP/32" >> my-peer-info
 echo -e "Endpoint = $NODE_PUBLIC_IP:$WIREGUARD_PORT" >> my-peer-info
@@ -413,7 +413,6 @@ echo -e "\n" >> my-peer-info
 echo -e "#EOS" >> my-peer-info
 echo -e "[EOS]" >> my-peer-info
 echo -e "p2p-peer-address = $WIREGUARD_PRIVATE_IP:$EOS_P2P_PORT" >> my-peer-info
-echo -e "# Your BP EOS Public Key with double quotes around it --> \"EOSxxxxx\"" >> my-peer-info
 echo -e "peer-key = \"$EOS_PUBLIC_KEY\"" >> my-peer-info
 
 # FINISH MESSAGE
