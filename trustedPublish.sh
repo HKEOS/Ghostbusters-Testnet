@@ -14,6 +14,8 @@ if [[ $2 == "" ]]; then
         exit 1;
 fi
 
+TRUSTED_PEERS=cat $2
+
 if ! which keybase > /dev/null; then
    echo -e "Keybase not installed. Exiting..."
    exit 1;
@@ -43,7 +45,7 @@ echo "Keybase user = $keybaseUser";
 
 echo "Signing config file...";
 
-keybase encrypt --anonymous --no-self -i "$1" "$2" | keybase sign --saltpack-version 2 -o $KBFS_MOUNT/team/eos_ghostbusters/mesh/$keybaseUser.trusted_peers.enc.signed
+keybase encrypt --anonymous --no-self -i "$1" $TRUSTED_PEERS | keybase sign --saltpack-version 2 -o $KBFS_MOUNT/team/eos_ghostbusters/mesh/$keybaseUser.trusted_peers.enc.signed
 
 echo "Done. File saved at $KBFS_MOUNT/team/eos_ghostbusters/mesh/$keybaseUser.trusted_peers.enc.signed";
 
