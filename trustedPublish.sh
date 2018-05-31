@@ -14,7 +14,7 @@ if [[ $2 == "" ]]; then
         exit 1;
 fi
 
-TRUSTED_PEERS=cat $2
+TRUSTED_PEERS=$(<$2)
 
 if ! which keybase > /dev/null; then
    echo -e "Keybase not installed. Exiting..."
