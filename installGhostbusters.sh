@@ -230,14 +230,7 @@ if [[ ! -d $TESTNET_DIR ]]; then
     echo "..:: Downloading autolaunch.sh ::..";
     curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/autolaunch.sh > $TESTNET_DIR/autolaunch.sh
     chmod u+x $TESTNET_DIR/autolaunch.sh
-
-    # setupAutoLaunch.sh
-    echo "..:: Downloading setupAutoLaunch.sh ::..";
-    curl https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setupAutoLaunch.sh > $TESTNET_DIR/setupAutoLaunch.sh
-    chmod u+x $TESTNET_DIR/setupAutoLaunch.sh
-
-
-
+    
 # config.ini
 echo -ne "\n\n..:: Creating config.ini ::..\n\n";
 if [[ $ISBP == true && $PRODUCER_PRIV_KEY == "" ]]; then
