@@ -73,10 +73,9 @@ if [[ ! -d $EOS_SOURCE_DIR ]]; then
     mkdir $EOS_SOURCE_DIR
     cd $EOS_SOURCE_DIR
 
-    git clone https://github.com/eosio/eos --recursive .
+    git clone https://github.com/EOS-Mainnet/eos.git
     git checkout $TAG
     git submodule update --init --recursive
-    ex -sc '16i|set( CORE_SYMBOL_NAME "EOS" )' -cx CMakeLists.txt
     cd $GLOBAL_PATH
 fi
 
