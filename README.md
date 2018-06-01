@@ -9,6 +9,8 @@ cd eos
 git checkout DAWN-2018-06-01-ALPHA
 git submodule update --init --recursive
 ./eosio_build.sh
+cd build
+sudo make install
 ```
 
 If you are updating from the EOS-mainnet repo:
@@ -17,6 +19,8 @@ git pull
 git checkout <tag>
 git submodule update --init --recursive
 ./eosio_build.sh
+cd build
+sudo make install
 ```
 
 ### 0. Install Keybase
