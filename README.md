@@ -23,6 +23,17 @@ cd build
 sudo make install
 ```
 
+- Time sync first
+
+```console
+sudo timedatectl set-ntp no
+# Check if default timesyncd is off
+timedatectl
+sudo apt-get install ntp
+# Check if ntp is fine
+sudo ntpq -p
+```
+
 ### 0. Install Keybase
 
 **Note:** Skip parts that you have already completed.
