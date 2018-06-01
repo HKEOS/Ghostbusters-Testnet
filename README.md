@@ -1,5 +1,23 @@
 # Ghostbusters Testnet Instructions
 
+- As of June 1st, 2018, we will be using the EOS-mainnet repository. EOS.IO should be built using this repository.
+
+```console
+# Clean install
+git clone https://github.com/EOS-Mainnet/eos.git
+git checkout DAWN-2018-06-01
+git submodule update --init --recursive
+./eosio_build.sh
+```
+
+If you are updating from the EOS-mainnet repo:
+```console
+git pull
+git checkout <tag>
+git submodule update --init --recursive
+./eosio_build.sh
+```
+
 ### 0. Install Keybase
 
 **Note:** Skip parts that you have already completed.
