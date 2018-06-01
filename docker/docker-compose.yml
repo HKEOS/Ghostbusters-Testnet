@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  nodeosd:
+    image: winlin/eos:DAWN-2018-05-30
+    command: /opt/eosio/bin/nodeosd.sh --data-dir /opt/eosio/bin/data-dir --max-transaction-time=5000
+    hostname: nodeosd
+    ports:
+      - 10010:10010
+      - 10011:10011
+    expose:
+      - "10010"
+      - "10011"
+    environment:
+      - NODEOSPORT=10010
+      - WALLETPORT=8888
+    volumes:
+      - /data/eos/Ghostbusters-Testnet/nodeosd:/opt/eosio/bin/data-dir
+
+  keosd:
+    image: winlin/eos:DAWN-2018-05-30
+    command: /opt/eosio/bin/keosd --wallet-dir /opt/eosio/bin/data-dir
+    hostname: keosd
+    environment:
+      - NODEOSPORT=10010
+      - WALLETPORT=8888
+    volumes:
+      - /data/eos/Ghostbusters-Testnet/wallet:/opt/eosio/bin/data-dir

@@ -14,15 +14,27 @@ EOS_TARGET_VERSION="3655280044";
 TESTNET="ghostbusters";
 
 ##### REQUIRED PARAMETERS TO BE MODIFIED ######
+GLOBAL_PATH=$(pwd)
+#DOCKER ATTENTION: put nodeos docker-compose.yml under the TESTNET_DIR
+TESTNET_DIR="$GLOBAL_PATH/$TESTNET";
+
+# Set port numbers for everything on the BP
+#DOCKER ATTENTION: deploy by docker plase keep same with the docker port and path
+API_PORT="10010"
+EOS_P2P_PORT="10011"
+WIREGUARD_PORT="80"
+WALLET_PORT="8888"
+#DOCKER ATTENTION: put keosd docker-compose.yml under the WALLET_DIR
+WALLET_DIR="$GLOBAL_PATH/wallet"
 
 # EOS Source code folder, if left completely blank - it will create the folder, download sources and compile on the specified tag
 EOS_SOURCE_DIR="/path/to/eos"
-
-# Set port numbers for everything on the BP
-API_PORT=""
-EOS_P2P_PORT=""
-WIREGUARD_PORT=""
-WALLET_PORT="7777"
+USE_DOCKER=false
+DOCKER_PATH="$GLOBAL_PATH/docker"
+DOCKER_FILE="$DOCKER_PATH/docker-compose.yml"
+NODEOSD_SNAME="nodeosd"
+KEOSD_SNAME="keosd"
+DOCKER_CLEOS_CMD="sudo docker-compose exec keosd /opt/eosio/bin/cleos -u http://nodeosd:$API_PORT --wallet-url http://localhost:$WALLET_PORT \"\$@\""
 
 # Set your keybase username here
 KEYBASE_USER="<your-keybase-username>"

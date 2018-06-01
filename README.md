@@ -112,6 +112,22 @@ WIREGUARD_PRIVATE_IP="192.168.10Y.X"
 
 **Note:** Producer name must be exactly **12 characters** long!
 
+#### 3.1 For Docker 
+If you deploy with docker, you should change the follows:
+```
+# params.sh
+USE_DOCKER=false   # MUST change into 'true' if you use Docker
+DOCKER_PATH="$GLOBAL_PATH/docker"
+DOCKER_FILE="$DOCKER_PATH/docker-compose.yml"
+NODEOSD_SNAME="nodeosd"
+KEOSD_SNAME="keosd"
+DOCKER_CLEOS_CMD="sudo docker-compose exec keosd /opt/eosio/bin/cleos -u http://nodeosd:$API_PORT --wallet-url http://localhost:$WALLET_PORT \"\$@\""
+
+# docker/docker-compose.yml
+# adjust the content to adapt you deployment
+```
+
+
 ### 4. Run the script
 
 Install testnet folder and scripts.

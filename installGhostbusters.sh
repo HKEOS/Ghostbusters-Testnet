@@ -6,10 +6,9 @@
 ##                                      ##
 ## Edited for Ghostbusters Testnet by   ##
 ## Igor Lins e Silva, EOS Rio           ##
-## Jae Chung, HKEOS                     ##
+## Jae Chung, HKEOS, EOSBIXIN           ##
 ##########################################
 
-GLOBAL_PATH=$(pwd)
 source "$(dirname $0)/params.sh"
 
 NODE_HTTP_SRV_ADDR="$NODE_NET_ADDR:$NODE_API_PORT"
@@ -17,10 +16,13 @@ NODE_P2P_LST_ENDP="$NODE_NET_ADDR:$NODE_P2P_PORT"
 NODE_P2P_SRV_ADDR="$NODE_HOST:$NODE_P2P_PORT"
 NODE_HTTPS_SERVER_ADDR="$NODE_HOST:$NODE_SSL_PORT"
 
-if [[ $ISBP == true ]]; then
-    TESTNET="$TESTNET-$PRODUCER_NAME"
-else
-    TESTNET="$TESTNET-node"
+if [[ ! $USE_DOCKER ]]; then
+    if [[ $ISBP == true ]]; then
+        TESTNET="$TESTNET-$PRODUCER_NAME"
+    else
+        TESTNET="$TESTNET-node"
+    fi
+    TESTNET_DIR="$GLOBAL_PATH/$TESTNET";
 fi
 
 echo "$TESTNET" > testnet.name;
@@ -58,17 +60,14 @@ if [[ $NODE_SSL_PORT == "" ]]; then
 fi
 
 PRODUCER_PRIV_KEY_DEF="!! INSERT HERE PRIVATE KEY TO THIS PUBLIC ADDRESS !!";
-TESTNET_DIR="$GLOBAL_PATH/$TESTNET";
 
-if [[ $EOS_SOURCE_DIR == "" ]]; then
+if [[ ! $USE_DOCKER && $EOS_SOURCE_DIR == "" ]]; then
     EOS_SOURCE_DIR="$GLOBAL_PATH/eos-source"
 fi
 
-WALLET_DIR="$GLOBAL_PATH/wallet"
-
 # Download sources
 
-if [[ ! -d $EOS_SOURCE_DIR ]]; then
+if [[ ! $USE_DOCKER && ! -d $EOS_SOURCE_DIR ]]; then
     echo "..:: Downloading EOS Sources ::..";
     mkdir $EOS_SOURCE_DIR
     cd $EOS_SOURCE_DIR
@@ -82,7 +81,7 @@ fi
 
 
 # Compile Sources
-if [[ ! -d $EOS_SOURCE_DIR/build ]]; then
+if [[ ! $USE_DOCKER && ! -d $EOS_SOURCE_DIR/build ]]; then
     echo "..:: Compiling EOS Sources ::..";
     cd $EOS_SOURCE_DIR
     git pull
@@ -90,14 +89,17 @@ if [[ ! -d $EOS_SOURCE_DIR/build ]]; then
     cd $GLOBAL_PATH
 fi
 
-# Check version
-EOS_GIT_BRANCH=$(git -C $EOS_SOURCE_DIR branch | grep '*' | cut -f 5 -d' ' | cut -f1 -d')');
-echo "Source code at branch $EOS_GIT_BRANCH";
-EOS_VERSION=$("$EOS_SOURCE_DIR/build/programs/nodeos/nodeos" --version)
-echo "Current nodeos version: $EOS_VERSION";
-if [[ "$EOS_VERSION" != "$EOS_TARGET_VERSION" ]]; then
-    echo "Wrong version, $EOS_TARGET_VERSION required!";
-    exit 1
+if [[ ! $USE_DOCKER ]]; then
+    # Check version
+    EOS_GIT_BRANCH=$(git -C $EOS_SOURCE_DIR branch | grep '*' | cut -f 5 -d' ' | cut -f1 -d')');
+    echo "Source code at branch $EOS_GIT_BRANCH";
+    EOS_VERSION=$("$EOS_SOURCE_DIR/build/programs/nodeos/nodeos" --version)
+
+    echo "Current nodeos version: $EOS_VERSION";
+    if [[ "$EOS_VERSION" != "$EOS_TARGET_VERSION" ]]; then
+        echo "Wrong version, $EOS_TARGET_VERSION required!";
+        exit 1
+    fi
 fi
 
 # Creating Wallet Folder and files
@@ -111,6 +113,7 @@ signature='#!/bin/bash
 ## https://github.com/CryptoLions                    ##
 ## https://github.com/eosrio                         ##
 ## https://github.com/HKEOS/Ghostbusters-Testnet     ##
+## https://github.com/eosbixin                       ##
 ##                                                   ##
 #######################################################\n\n';
 
@@ -122,8 +125,15 @@ if [[ ! -d $WALLET_DIR ]]; then
     # Creating start.sh for wallet
     echo -ne "$signature" > $WALLET_DIR/start.sh
     echo "DATADIR=$WALLET_DIR" >> $WALLET_DIR/start.sh
-    echo "\$DATADIR/stop.sh" >> $WALLET_DIR/start.sh
-    echo "$EOS_SOURCE_DIR/build/programs/keosd/keosd --data-dir \$DATADIR --http-server-address $WALLET_HOST:$WALLET_PORT \"\$@\" > $WALLET_DIR/stdout.txt 2> $WALLET_DIR/stderr.txt  & echo \$! > \$DATADIR/wallet.pid" >> $WALLET_DIR/start.sh
+    if [[ $USE_DOCKER ]]; then
+        echo "( cd $DOCKER_PATH" >> $WALLET_DIR/start.sh
+        echo "sudo docker-compose stop $KEOSD_SNAME" >> $WALLET_DIR/start.sh
+        echo "sudo docker-compose up -d $KEOSD_SNAME )" >> $WALLET_DIR/start.sh
+        echo "echo \$! > \$DATADIR/wallet.pid" >> $WALLET_DIR/start.sh
+    else
+        echo "\$DATADIR/stop.sh" >> $WALLET_DIR/start.sh
+        echo "$EOS_SOURCE_DIR/build/programs/keosd/keosd --data-dir \$DATADIR --http-server-address $WALLET_HOST:$WALLET_PORT \"\$@\" > $WALLET_DIR/stdout.txt 2> $WALLET_DIR/stderr.txt  & echo \$! > \$DATADIR/wallet.pid" >> $WALLET_DIR/start.sh
+    fi
     echo "echo \"Wallet started\"" >> $WALLET_DIR/start.sh
     chmod u+x $WALLET_DIR/start.sh
 
@@ -131,24 +141,32 @@ if [[ ! -d $WALLET_DIR ]]; then
     # Creating stop.sh for wallet
     echo -ne "$signature" > $WALLET_DIR/stop.sh
     echo "DIR=$WALLET_DIR" >> $WALLET_DIR/stop.sh
-    echo '
-    if [ -f $DIR"/wallet.pid" ]; then
-        pid=$(cat $DIR"/wallet.pid")
-        echo $pid
-        kill $pid
-        rm -r $DIR"/wallet.pid"
+    if [[ $USE_DOCKER ]]; then
+        echo "( cd $DOCKER_PATH" >> $WALLET_DIR/stop.sh
+        echo "sudo docker-compose stop $KEOSD_SNAME)" >> $WALLET_DIR/stop.sh
+        echo "rm -r \$DIR/wallet.pid" >> $WALLET_DIR/stop.sh
+        echo "echo \"Wallet stopped\"" >> $WALLET_DIR/stop.sh
+    else
+        echo '
+        if [ -f $DIR"/wallet.pid" ]; then
+            pid=$(cat $DIR"/wallet.pid")
+            echo $pid
+            kill $pid
+            rm -r $DIR"/wallet.pid"
 
-        echo -ne "Stopping Wallet"
+            echo -ne "Stopping Wallet"
 
-        while true; do
-            [ ! -d "/proc/$pid/fd" ] && break
-            echo -ne "."
-            sleep 1
-        done
-        echo -ne "\rWallet stopped. \n"
+            while true; do
+                [ ! -d "/proc/$pid/fd" ] && break
+                echo -ne "."
+                sleep 1
+            done
+            echo -ne "\rWallet stopped. \n"
 
+        fi
+        ' >>  $WALLET_DIR/stop.sh
     fi
-    ' >>  $WALLET_DIR/stop.sh
+
     chmod u+x $WALLET_DIR/stop.sh
 
 fi
@@ -159,6 +177,7 @@ if [[ ! -f $WALLET_DIR/wallet.pid ]]; then
     $WALLET_DIR/start.sh
 fi
 
+
 #################### TESTNET #################################
 
 # Creating TestNet Folder and files
@@ -166,16 +185,22 @@ if [[ ! -d $TESTNET_DIR ]]; then
     echo "..:: Creating Testnet Dir: $TESTNET_DIR ::..";
 
     mkdir $TESTNET_DIR
-
     # Creating node start.sh
     echo "..:: Creating start.sh ::..";
     echo -ne "$signature" > $TESTNET_DIR/start.sh
-    echo "NODEOS=$EOS_SOURCE_DIR/build/programs/nodeos/nodeos" >> $TESTNET_DIR/start.sh
     echo "DATADIR=$TESTNET_DIR" >> $TESTNET_DIR/start.sh
     echo -ne "\n";
-    echo "\$DATADIR/stop.sh" >> $TESTNET_DIR/start.sh
-    echo -ne "\n";
-    echo "\$NODEOS --data-dir \$DATADIR --config-dir \$DATADIR \"\$@\" > \$DATADIR/stdout.txt 2> \$DATADIR/stderr.txt &  echo \$! > \$DATADIR/nodeos.pid" >> $TESTNET_DIR/start.sh
+    if [[ $USE_DOCKER ]]; then
+        echo "( cd $DOCKER_PATH" >> $TESTNET_DIR/start.sh
+        echo "sudo docker-compose stop $NODEOSD_SNAME" >> $TESTNET_DIR/start.sh
+        echo "sudo docker-compose up -d $NODEOSD_SNAME )" >> $TESTNET_DIR/start.sh
+        echo "echo \$! > \$DATADIR/nodeos.pid" >> $TESTNET_DIR/start.sh
+    else
+        echo "NODEOS=$EOS_SOURCE_DIR/build/programs/nodeos/nodeos" >> $TESTNET_DIR/start.sh
+        echo "\$DATADIR/stop.sh" >> $TESTNET_DIR/start.sh
+        echo -ne "\n";
+        echo "\$NODEOS --data-dir \$DATADIR --config-dir \$DATADIR \"\$@\" > \$DATADIR/stdout.txt 2> \$DATADIR/stderr.txt &  echo \$! > \$DATADIR/nodeos.pid" >> $TESTNET_DIR/start.sh
+    fi
     chmod u+x $TESTNET_DIR/start.sh
 
 
@@ -184,37 +209,49 @@ if [[ ! -d $TESTNET_DIR ]]; then
     echo -ne "$signature" > $TESTNET_DIR/stop.sh
     echo "DIR=$TESTNET_DIR" >> $TESTNET_DIR/stop.sh
     echo -ne "\n";
-    echo '
-    if [ -f $DIR"/nodeos.pid" ]; then
-        pid=$(cat $DIR"/nodeos.pid")
-        echo $pid
-        kill $pid
-        rm -r $DIR"/nodeos.pid"
+    if [[ $USE_DOCKER ]]; then
+        echo "( cd $DOCKER_PATH" >> $TESTNET_DIR/stop.sh
+        echo "sudo docker-compose stop $NODEOSD_SNAME )" >> $TESTNET_DIR/stop.sh
+        echo "rm -r \$DIR/nodeos.pid" >> $TESTNET_DIR/stop.sh
+        echo "echo \"rNodeos stopped\"" >> $TESTNET_DIR/stop.sh
+    else
+        echo '
+        if [ -f $DIR"/nodeos.pid" ]; then
+            pid=$(cat $DIR"/nodeos.pid")
+            echo $pid
+            kill $pid
+            rm -r $DIR"/nodeos.pid"
 
-        echo -ne "Stopping Nodeos"
+            echo -ne "Stopping Nodeos"
 
-        while true; do
-            [ ! -d "/proc/$pid/fd" ] && break
-            echo -ne "."
-            sleep 1
-        done
-        echo -ne "\rNodeos stopped. \n"
+            while true; do
+                [ ! -d "/proc/$pid/fd" ] && break
+                echo -ne "."
+                sleep 1
+            done
+            echo -ne "\rNodeos stopped. \n"
 
+        fi
+        ' >>  $TESTNET_DIR/stop.sh
     fi
-    ' >>  $TESTNET_DIR/stop.sh
     chmod u+x $TESTNET_DIR/stop.sh
 
 
     # Creating cleos.sh
     echo "..:: Creating cleos.sh ::..";
     echo -ne "$signature" > $TESTNET_DIR/cleos.sh
-    echo "CLEOS=$EOS_SOURCE_DIR/build/programs/cleos/cleos" >> $TESTNET_DIR/cleos.sh
-    echo -ne "\n"
-    if [[ $NODE_SSL_PORT != "" ]]; then
-        echo "\$CLEOS -u https://$NODE_HTTP_SRV_ADDR:$NODE_SSL_PORT --wallet-url http://127.0.0.1:$WALLET_PORT \"\$@\"" >> $TESTNET_DIR/cleos.sh
+    if [[ $USE_DOCKER ]]; then
+        echo "( cd $DOCKER_PATH" >> $TESTNET_DIR/cleos.sh
+        echo $DOCKER_CLEOS_CMD >> $TESTNET_DIR/cleos.sh
+        echo ")" >> $TESTNET_DIR/cleos.sh
     else
-        echo "\$CLEOS -u http://$NODE_HTTP_SRV_ADDR:$NODE_API_PORT --wallet-url http://127.0.0.1:$WALLET_PORT \"\$@\"" >> $TESTNET_DIR/cleos.sh
-
+        echo "CLEOS=$EOS_SOURCE_DIR/build/programs/cleos/cleos" >> $TESTNET_DIR/cleos.sh
+        echo -ne "\n"
+        if [[ $NODE_SSL_PORT != "" ]]; then
+            echo "\$CLEOS -u https://$NODE_HTTP_SRV_ADDR:$NODE_SSL_PORT --wallet-url http://127.0.0.1:$WALLET_PORT \"\$@\"" >> $TESTNET_DIR/cleos.sh
+        else
+            echo "\$CLEOS -u http://$NODE_HTTP_SRV_ADDR:$NODE_API_PORT --wallet-url http://127.0.0.1:$WALLET_PORT \"\$@\"" >> $TESTNET_DIR/cleos.sh
+        fi
     fi
     chmod u+x $TESTNET_DIR/cleos.sh
 
@@ -477,4 +514,5 @@ echo "1 to publish your peer info to keybase >> ./publishPeerInfo my-peer-info"
 echo "2 to start your wireguard interface >> sudo wg-quick up ghostbusters"
 echo "3 to connect to the other ghostbusters peers >> ./updatePeers.sh"
 read -n 1 -s -r -p "Press any key to continue"
+echo ""
 chmod 644 $0
