@@ -5,7 +5,7 @@
 ```console
 # Clean install
 git clone https://github.com/EOS-Mainnet/eos.git
-git checkout DAWN-2018-06-01
+git checkout DAWN-2018-06-01-ALPHA
 git submodule update --init --recursive
 ./eosio_build.sh
 ```
