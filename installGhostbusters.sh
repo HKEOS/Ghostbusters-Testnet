@@ -338,7 +338,6 @@ if [[ $ISBP == true ]]; then
     echo "producer-name = $PRODUCER_NAME" >> $BASE_CONFIG;
     echo "plugin = eosio::producer_plugin" >> $BASE_CONFIG; 
 else
-    echo 'private-key = ["'$PRODUCER_PUB_KEY'","'$PRODUCER_PRIV_KEY'"]' >> $BASE_CONFIG;
     echo "producer-name = $PRODUCER_NAME" >> $BASE_CONFIG;
     echo "plugin = eosio::producer_plugin" >> $BASE_CONFIG;
     echo "plugin = eosio::chain_api_plugin" >> $BASE_CONFIG;
