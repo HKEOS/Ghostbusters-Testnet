@@ -8,13 +8,7 @@ This is a quick guide on how to get ready for the next launch as soon as possibl
 
 ### Update EOS
 ```console
-cd /path/to/eos
-git reset --hard
-git pull
-git checkout DAWN-2018-05-30
-git submodule update --init --recursive
-ex -sc '16i|set( CORE_SYMBOL_NAME "EOS" )' -cx CMakeLists.txt
-./eosio_build.sh
+Follow the updated part in the beginning of the Readme.md file.
 ```
 
 ### Ghostbusters folder
