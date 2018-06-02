@@ -25,7 +25,7 @@ To find your automatically created account visit
 public key, this will return your EOS public key and your created account name.
 This new account name should be 12 lowercase alphanumeric (a-z,0–9)
 
-    cleos.sh system newaccount — stake-net “4.0000 EOS” — stake-cpu “4.0000 EOS” — buy-ram-kbytes 8 accountname newaccountname <owner-publickey> <active-publickey>
+    cleos.sh system newaccount --stake-net “4.0000 EOS” --stake-cpu “4.0000 EOS” --buy-ram-kbytes 8 accountname newaccountname <owner-publickey> <active-publickey>
 
 **Load new account private key into your wallet.**
 
