@@ -423,6 +423,38 @@ echo -e "[EOS]" >> my-peer-info
 echo -e "p2p-peer-address = $WIREGUARD_PRIVATE_IP:$EOS_P2P_PORT" >> my-peer-info
 echo -e "peer-key = \"$EOS_PUBLIC_KEY\"" >> my-peer-info
 
+# Check if Keybase is installed
+
+if ! which keybase > /dev/null; then
+   echo -e "Keybase not installed. Exiting..."
+   exit 1;
+fi
+
+## Check KBFS mount point
+echo
+echo "--------------- VERIFYING KEYBASE FILE SYSTEM ---------------";
+echo
+
+KBFS_MOUNT=$(keybase status | grep mount | cut -f 2 -d: | sed -e 's/^\s*//' -e '/^$/d');
+
+## Restart Keybase if needed
+
+if [ ! -d "$KBFS_MOUNT" ]; then
+        echo "KBFS is not running!";
+        run_keybase
+        sleep 3
+else
+        echo "KBFS mount point: $KBFS_MOUNT";
+        echo
+fi
+
+keybaseUser=$(keybase status | grep Username: | cut -f2- -d: | sed -e 's/^\s*//' -e '/^$/d');
+
+echo "Keybase user = $keybaseUser";
+
+cd ~/kbfs/team/eos_ghostbusters/ip_list
+touch $NODE_HOST@$keybaseUser
+
 # FINISH MESSAGE
 FINISHTEXT="\n .====================================================================.\n"
 FINISHTEXT+=" |====================================================================|\n"
