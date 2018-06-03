@@ -4,6 +4,8 @@ Prometheus is a reverse proxy machine that goes in front of your full node. It u
 
 This guide assumes that you are running on Ubuntu 18.04. We recommend using simple cloud server for this.
 
+Make sure that your firewall settings allows traffic in from port 80, and any other ports needed to allow communication between your full node and the prometheus node.
+
 ### Grab Michael's great LXC container image
 
 ```console
