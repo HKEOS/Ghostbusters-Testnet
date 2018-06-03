@@ -9,8 +9,8 @@
 ## Jae Chung, HKEOS
 ##########################################
 
-TAG="v1.0.1";
-EOS_TARGET_VERSION="157394272";
+TAG="launch-rc";
+EOS_TARGET_VERSION="1603685708";
 TESTNET="ghostbusters";
 
 ##### REQUIRED PARAMETERS TO BE MODIFIED ######
