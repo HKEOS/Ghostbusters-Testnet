@@ -6,7 +6,9 @@ This guide assumes that you are running on Ubuntu 18.04. We recommend using simp
 
 ### Grab Michael's great LXC container image
 
+```console
 wget <link>
+```
 
 ### Configure LXD (LXC daemon)
 
@@ -48,5 +50,7 @@ exit
 ```
 
 ### Edit iptable rules
+```console
 sudo iptables -F
 sudo iptables -t nat -A PREROUTING -p tcp -i <network-interface> -d <host-private-ip> --dport 80 -j DNAT --to-destination <container-IP-address>:80
+```
