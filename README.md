@@ -8,7 +8,7 @@
 # Clean install
 git clone https://github.com/EOS-Mainnet/eos.git
 cd eos
-git checkout DAWN-2018-06-01-ALPHA
+git checkout v1.0.1
 git submodule update --init --recursive
 ./eosio_build.sh
 cd build
