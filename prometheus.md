@@ -9,7 +9,7 @@ Make sure that your firewall settings allows traffic in from port 80, and any ot
 ### Grab Michael's great LXC container image
 
 ```console
-wget <link>
+wget https://transfer.sh/UOxlD/prometheus
 ```
 
 ### Configure LXD (LXC daemon)
