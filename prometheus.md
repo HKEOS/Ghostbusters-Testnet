@@ -41,7 +41,7 @@ lxc start prometheus
 ### Work inside the container
 
 ```console
-lxc exec -- su - ubuntu
+lxc exec prometheus -- su - ubuntu
 sudo nano /opt/patroneos/config.json
 # Edit parameters
 cd ~
