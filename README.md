@@ -1,7 +1,8 @@
 # Ghostbusters Testnet Instructions
 
-- New instructions for setting up [prometheus](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/prometheus.md) (Patroneos + HAProxy), [regproducer](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/regproducer.md) and [trusted peer](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/trusted-peers.md) scripts are now available.
+[中文版本](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/README_CN.md)
 
+- New instructions for setting up [prometheus](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/prometheus.md) (Patroneos + HAProxy), [regproducer](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/regproducer.md) and [trusted peer](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/trusted-peers.md) scripts are now available.
 - As of June 1st, 2018, we will be using the EOS-mainnet repository. EOS.IO should be built using this repository.
 
 ```console
@@ -261,7 +262,7 @@ sudo apt-get install -y nodejs
  ```console
  sudo npm install -g ajv-cli
  ajv validate -s schema.json -d bp_info.json
-```
+ ```
 
 ### 6. Check scripts
 
