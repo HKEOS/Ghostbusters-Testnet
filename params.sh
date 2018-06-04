@@ -10,7 +10,7 @@
 ##########################################
 
 TAG="launch-rc";
-EOS_TARGET_VERSION="1603685708";
+EOS_TARGET_VERSION="438824506";
 TESTNET="ghostbusters";
 
 ##### REQUIRED PARAMETERS TO BE MODIFIED ######
