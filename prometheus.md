@@ -44,6 +44,10 @@ lxc start prometheus
 lxc exec prometheus -- su - ubuntu
 sudo nano /opt/patroneos/config.json
 # Edit parameters
+cd /etc/haproxy
+sudo rm haproxy.conf
+sudo wget https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/haproxy.conf
+sudo service haxproxy restart
 cd ~
 sudo ./script.sh
 sudo ifconfig
