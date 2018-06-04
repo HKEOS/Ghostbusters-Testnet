@@ -1,6 +1,6 @@
 # Ghostbusters Testnet Instructions
 
-- New instructions for doing [regproducer](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/regproducer.md) and [trusted peer](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/trusted-peers.md) scripts are now available.
+- New instructions for setting up [prometheus](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/prometheus.md) (Patroneos + HaProxy), [regproducer](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/regproducer.md) and [trusted peer](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/trusted-peers.md) scripts are now available.
 
 - As of June 1st, 2018, we will be using the EOS-mainnet repository. EOS.IO should be built using this repository.
 
