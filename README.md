@@ -1,4 +1,4 @@
-# Ghostbusters Testnet Instructions
+# EOS Core instructions
 
 [中文版本](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/README_CN.md)
 
@@ -269,35 +269,7 @@ sudo apt-get install -y nodejs
 `cd` into your Ghostbusters testnet folder, which was created from the install script.
 Try `cat config.ini`, and `cat cleos.sh` to check that all the information is correct.
 
-### 7. Setup Autolaunch
-
-```console
-sudo apt install jq
-crontab -e
-# Select nano (if you are initializing cron for the first time)
-# Exit
-```
-
-Run `autolaunch.sh` when the team (on Keybase) is ready to queue up and launch. Run `autolaunch.sh` on only one of your nodes, and manually launch the rest of them when the genesis.json file is published.
-
-```console
-# Run autolaunch, answer questions prompted by script
-./autolaunch.sh
-
-# If the target BTC block was not reached at runtime,
-# it will schedule itself on CRON, please verify with
-crontab -e
-```
-If `autolaunch.sh` doesn't start your node correctly, run the following command:
-```console
-./start.sh --delete-all-blocks --genesis-json ./genesis.json
-```
-
-### 8. Bios Node
-
-If you were selected as the bios node, please follow instructions [here](https://github.com/hkeos/Ghostbusters-Testnet/blob/master/bios-node/bios-instructions.md)
-
-### 9. Resync
+### 7. Resync
 
 If at any point you need to restart your node:
 ```console
