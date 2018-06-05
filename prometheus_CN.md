@@ -1,37 +1,35 @@
-# Welcome to Prometheus
+# 欢迎来到 Prometheus
 
-[中文版本](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/prometheus_CN.md)
+Prometheus是一个反向代理机器，在你的整个节点前面。它使用haproxy和patroneos。
 
-Prometheus is a reverse proxy machine that goes in front of your full node. It uses haproxy and patroneos.
+本指南假设您运行的是Ubuntu 18.04，我们建议使用简单的云服务器来运行。
 
-This guide assumes that you are running on Ubuntu 18.04. We recommend using simple cloud server for this.
+确保您的防火墙设置允许来自端口80的通信，以及允许您的完整节点与prometheus节点之间通信所需的任何其他端口。
 
-Make sure that your firewall settings allows traffic in from port 80, and any other ports needed to allow communication between your full node and the prometheus node.
+## 获取Michael的优秀的LXC容器映像
 
-### Grab Michael's great LXC container image
-
-```console
+```
 wget https://transfer.sh/UOxlD/prometheus
 ```
 
-### Configure LXD (LXC daemon)
+配置LXD(LXC后台程序)
 
-```console
+```
 lxd init
 # Type default options for everything
 ```
 
-### Import image
+导入图片
 
-```console
+```
 lxc image import <name of image>
 lxc image list
 # Check that your image has been imported
 ```
 
-### Launch container
+启动容器
 
-```console
+```
 lxc launch <fingerprint-name-of-image>
 lxc list
 # Check the name of the container
@@ -40,9 +38,9 @@ lxc rename <name-of-container> prometheus
 lxc start prometheus
 ```
 
-### Work inside the container
+容器内的工作
 
-```console
+```
 lxc exec prometheus -- su - ubuntu
 sudo nano /opt/patroneos/config.json
 # Edit parameters
@@ -57,8 +55,9 @@ sudo ifconfig
 exit
 ```
 
-### Edit iptable rules
-```console
+编辑 iptable 规则
+
+```
 sudo iptables -F
 sudo iptables -t nat -A PREROUTING -p tcp -i <network-interface> -d <host-private-ip> --dport 80 -j DNAT --to-destination <container-IP-address>:80
 ```
