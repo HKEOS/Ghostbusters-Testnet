@@ -1,10 +1,52 @@
-# Ghostbusters Testnet Instructions
+# EOS Core instructions
+
+[中文版本](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/README_CN.md)
+[한국어](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/README_KO.md)
+
+- New instructions for setting up [prometheus](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/prometheus.md) (Patroneos + HAProxy), [regproducer](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/regproducer.md) and [trusted peer](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/trusted-peers.md) scripts are now available.
+- As of June 1st, 2018, we will be using the EOS-mainnet repository. EOS.IO should be built using this repository.
+
+```console
+# Clean install
+git clone https://github.com/EOS-Mainnet/eos.git
+cd eos
+git checkout launch-rc
+git submodule update --init --recursive
+./eosio_build.sh
+cd build
+sudo make install
+```
+
+If you are updating from the EOS-mainnet repo:
+```console
+git pull
+git checkout <tag>
+git submodule update --init --recursive
+./eosio_build.sh
+cd build
+sudo make install
+```
+
+- Time sync first
+
+```console
+sudo timedatectl set-ntp no
+# Check if default timesyncd is off
+timedatectl
+sudo apt-get install ntp
+# Check if ntp is fine
+sudo ntpq -p
+```
 
 ### 0. Install Keybase
 
 **Note:** Skip parts that you have already completed.
 
 Start by joining the eos_ghostbusters Keybase group: https://keybase.io/team/eos_ghostbusters.
+
+If you don't already have keybase, you will need to install it and verify your identity. Join requests to the eos_ghostbusters group require a verified keybase identity.
+
+It is recommended that you use Keybase chat when communicating information related to your node. There are keybase clients for every OS and mobile. Keybase is very secure and all of the BPs are relying on it.
 
 - Install keybase: https://keybase.io/docs/the_app/install_linux
 
@@ -24,7 +66,7 @@ run_keybase
 
  - Mandatory step: modify keybase default storage path for kbfs
  ```console
- curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/keybase_relocate.sh | bash -
+ curl -sL https://raw.githubusercontent.com/hkeos/Ghostbusters-Testnet/master/keybase_relocate.sh | bash -
  ```
 
  - Login or signup:
@@ -44,66 +86,76 @@ sudo apt-get update
 sudo apt-get install wireguard resolvconf
 ```
 
-### 2. Setup
+### 2. Setup Node
 
 `cd` to your `opt` folder.
 
 ```console
 mkdir Ghostbusters && cd Ghostbusters
-curl -sL https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/setup.sh | bash -
+curl -sL https://raw.githubusercontent.com/hkeos/Ghostbusters-Testnet/master/setup.sh | bash -
 ```
 - Note
-For the Ghostbusters testnet, you will need to choose 3 ports that can be whatever you want (greater than 1024):
-1. wireguard VPN port - default is 5555
-2. EOS API / HTTP port - some are using 8888
-3. EOS P2P port - some are using 9876
+For the Ghostbusters testnet, you will need to choose 4 ports that can be whatever you want - we encourage diversity! Please write down what you plan to use for each of these so that you have it as a guide moving forward. (Ports must greater than 1024 unless you run as root and NO ONE should run as root).
 
-- Create Wireguard keys and config
-```console
-umask 077
-wg genkey | tee privatekey | wg pubkey > publickey
-echo -e "[Interface]\nPrivateKey = $(cat privatekey)\nSaveConfig = true\nDNS = 1.1.1.1" > ghostbusters.conf
-echo -e "ListenPort = 5555" >> ghostbusters.conf
-echo -e "Address = 192.168.100.X/22" >> ghostbusters.conf
-sudo cp ghostbusters.conf /etc/wireguard/.
-```
+1. Wireguard VPN port - default is 5555 - pls do not to use defaults
+2. EOS API / HTTP port - default is 8888 - pls do not to use defaults
+3. EOS P2P port - default is 9876 - pls do not to use defaults
+4. Wallet port used by `keosd` - this is only for localhost connections - default is 7777
 
-
-- Selecting your Wireguard IP
+- Selecting your Wireguard IP and port
 
 Your Wireguard IP address should be within the range of 192.168.100.X to 192.168.103.X, where X is between 0 and 255, inclusive.
-You can input any number for "X" in `ghostbusters.conf` that hasn't been taken by another node.
+
 To check which IPs have been claimed:
 ```console
 cd ~/kbfs/team/eos_ghostbusters/ip_list
 ls
 # You will see the list of IP addresses that have already been claimed
 # Choose an address that is open
-touch <your-node-name>@<chosen-ip-address>
+touch <chosen-ip-address>@<your-node-name>
+This adds a file with your IP address to the ip_list folder in an easy to sort format.
 ```
 
-This adds your a file with your IP address to the ip_list folder.
+Check firewall settings, and make sure that port you chose for your wireguard is open.
 
-```console
-sudo nano /etc/wireguard/ghostbusters.conf
-# Add in the value of X that you have chosen
-# Save the file
-```
+If you are using lxd, then you will need to forward ports from your WAN IP. If you are using AWS, then you will need to edit your security policy.
 
-It is recommended that you use Keybase when communicating information related to your node.
-
-- Publish peer information
-```console
-nano my-peer-info
- ## Fill in your information for PublicKey, AllowedIPs, Endpoint, p2p-peer-address, and peer-key
-
- ## then run this script  
-./publishPeerInfo.sh my-peer-info
-```
-
-Check firewall settings, and make sure that port 5555 is open. If not, you can use:
+If you use ufw on Ubuntu, you can use (substitute 5555 for whatever port you plan to use for your Wireguard VPN):
 ```console
 sudo ufw allow 5555
+```
+
+### 3. Fill out your info in the install script
+
+```console
+cd /path/to/Ghostbusters
+nano params.sh
+```
+
+Please update your information in the fields above ## OPTIONAL ### (the rest are optional):
+```console
+EOS_SOURCE_DIR="/path/to/eos"
+API_PORT=""
+EOS_P2P_PORT=""
+WIREGUARD_PORT=""
+WALLET_PORT="7777"
+KEYBASE_USER="<yourkeybaseusername>"
+EOS_PUBLIC_KEY=""
+EOS_PRODUCER_NAME=""
+NODE_PUBLIC_IP="xxx.xxx.xxx.xxx"
+AGENT_NAME="<agent-name>"
+WIREGUARD_PRIVATE_IP="192.168.10Y.X"
+```
+
+
+**Note:** Producer name must be exactly **12 characters** long!
+
+### 4. Run the script
+
+Install testnet folder and scripts.
+```console
+ # Run testnet installation script
+./installGhostbusters.sh
 ```
 
 Then, start Wireguard and check if it's working.
@@ -114,31 +166,45 @@ sudo wg-quick up ghostbusters
 # Test configuration
 sudo wg show ghostbusters
 # If at any time you want to reload the network interface
-sudo ip link del dev ghostbusters && sudo wg-quick up ghostbusters
+sudo ip link del dev ghostbusters && sudo wg-quick up ghostbusters.conf
 ```
 
-### 3. Fill out your info in the install script
-
+Publish peer info.
 ```console
-nano params.sh
+./publishPeerInfo.sh my-peer-info
 ```
-Input your information for the highlighted fields shown below:
 
-![gb-config](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/gb-config.png)
-
-**Note:** Producer name must be exactly **12 characters** long!
-
-### 4. Run the script
-
+Optional: Publish peer info to only trusted peers
 ```console
- # Run testnet installation script
-./installGhostbusters.sh
+nano trusted-peers
+# Add a list of the keybase usernames of your trusted peers. Add a space in between each one, without commas or new lines in between.
+./trustedPublish.sh my-peer-info trusted-peers
+```
 
+Update Wireguard and EOS `config.ini`
+```console
  # update peers on the base config.ini
 ./updatePeers.sh
  # You can run updatePeers.sh again to automatically update Wireguard and EOS peer configs any time a new peer joins and publishes their peer info.
+```
 
-# other options for updatePeers.sh
+Optional: Update trusted Wireguard and EOS peers only
+```console
+./trustedUpdate.sh
+```
+
+Checking Wireguard connections
+```console
+# You can check your communication with other peers
+sudo wg show
+
+# Count your handshakes with peers
+sudo wg show|grep hand|wc -l
+```
+
+Other optional commands
+```console
+# Other options for updatePeers.sh
 ./updatePeers.sh - restart # will reload nodeos after update
 ./updatePeers.sh lxd restart # will reload nodeos on lxd after update
 
@@ -148,13 +214,36 @@ Input your information for the highlighted fields shown below:
 ./peerCleanup.sh # debug mode, doesn't actually remove peers
 ```
 
+If you change your wireguard IP, here is where you need to update it
+```console
+# This is the configuration file that you can edit to change your VPN IP and port
+nano /path/to/Ghostbusters/ghostbusters.conf
+
+# You will also need to update the following locations
+nano /path/to/Ghostbusters/my-peer-info
+/path/to/Ghostbusters/publishPeerInfo.sh my-peer-info
+nano /path/to/Ghostbusters/base_config.ini
+nano /path/to/Ghostbusters/params.sh
+nano /path/to/Ghostbusters/ghostbusters-<your-producername>/config.ini
+#then you need to restart your wireguard
+cd /path/to/Ghostbusters
+sudo ip link del dev ghostbusters && sudo wg-quick up ghostbusters.conf
+
+# Ask team members to update peers
+```
+
+
 ### 5. Publishing BP info on Keybase
 
  - Save on KBFS:
  `cd` to your `Ghostbusters` folder if you are not in there already.
  ```console
  nano bp_info.json
-  # add your bp info and save it!
+# add your basic bp info and save it! at a minimum you will need the producer_account_name,
+# producer_public_key. Bonus points if you add your LAT and LONG for the map.
+#  "producer_account_name": "<producername>",
+#  "producer_public_key": "<eos-producer-public-key>",
+
  cp bp_info.json ~/kbfs/public/<username>
  ```
  **Note:** You do not have to fill out your BP node's api_endpoint and p2p_endpoint-- this way, they can remain hidden from public.
@@ -174,42 +263,14 @@ sudo apt-get install -y nodejs
  ```console
  sudo npm install -g ajv-cli
  ajv validate -s schema.json -d bp_info.json
-```
+ ```
 
 ### 6. Check scripts
 
 `cd` into your Ghostbusters testnet folder, which was created from the install script.
 Try `cat config.ini`, and `cat cleos.sh` to check that all the information is correct.
 
-### 7. Setup Autolaunch
-
-```console
-sudo apt install jq
-crontab -e
-# Select nano (if you are initializing cron for the first time)
-# Exit
-```
-
-Run `autolaunch.sh` when the team (on Keybase) is ready to queue up and launch. Run `autolaunch.sh` on only one of your nodes, and manually launch the rest of them when the genesis.json file is published.
-
-```console
-# Run autolaunch, answer questions prompted by script
-./autolaunch.sh
-
-# If the target BTC block was not reached at runtime,
-# it will schedule itself on CRON, please verify with
-crontab -e
-```
-If `autolaunch.sh` doesn't start your node correctly, run the following command:
-```console
-./start.sh --delete-all-blocks --genesis-json ./genesis.json
-```
-
-### 8. Bios Node
-
-If you were selected as the bios node, please follow instructions [here](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/bios-node/bios-instructions.md)
-
-### 9. Resync
+### 7. Resync
 
 If at any point you need to restart your node:
 ```console
