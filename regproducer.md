@@ -1,5 +1,7 @@
 ### EOS Block Producer Registration Commands
 
+[中文版本](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/regproducer_CN.md)
+
 **Many thanks to Charles H from EOS42 for providing these helpful instructions for the community**
 
 #### **Create EOS wallet**
