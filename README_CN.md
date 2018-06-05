@@ -1,6 +1,6 @@
 # Ghostbusters测试网络操作指南
 
-- 现在可以执行 regproducer和trusted peer等脚本的新指令。
+- 目前有了可以设置 [prometheus](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/prometheus.md) (Patroneos + HAProxy)、[regproducer](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/regproducer.md)和[可信任的伙伴节点](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/trusted-peers.md)脚本的新指令。
 - 从2018年6月1日起，我们将使用EOS-mainnet存储库。EOS.IO应该使用此存储库构建。
 
 ```
@@ -48,14 +48,14 @@ sudo make install
 
   ​
 
-  - 安装keybase:https://keybase.io/docs/the_app/install_linux
+  -  安装keybase:https://keybase.io/docs/the_app/install_linux
 
   Ubuntu说明-不要作为root用户安装，请在适当的地方使用sudo。
 
   ```
   # Install curl if required
   sudo apt install curl
-  
+
   curl -O https://prerelease.keybase.io/keybase_amd64.deb
   # if you see an error about missing `libappindicator1`
   # from the next command, you can ignore it, as the
@@ -80,7 +80,7 @@ sudo make install
   keybase signup
   ```
 
-  ## 1.防火墙设置
+  ## 1.防火墙设置 
 
   - 安装防火墙
 
@@ -90,7 +90,7 @@ sudo make install
   sudo apt-get install wireguard resolvconf
   ```
 
-  ## 2.设置节点'cd' 到你的'opt'文件夹。
+  ## 2.设置节点`cd` 到你的`opt`文件夹。
 
   ```
   mkdir Ghostbusters && cd Ghostbusters
@@ -105,11 +105,11 @@ sudo make install
 
   3、EOS P2P端口-默认是9876 -请不要使用默认
 
-  4、keosd使用的钱包端口——这仅用于本地主机连接——默认值是7777
+  4、`keosd`使用的钱包端口——这仅用于本地主机连接——默认值是7777
 
-  - 选择您的线保护IP和端口
-    您的防火墙IP地址应该在192.168.100范围到X 192.168.103，且X在0到255（包含）之间。
-    检查已申领的ip地址:
+    - 选择您的线保护IP和端口
+  您的防火墙IP地址应该在192.168.100范围到X 192.168.103，且X在0到255（包含）之间。
+  检查已申领的ip地址:
 
 ```
 cd ~/kbfs/team/eos_ghostbusters/ip_list
@@ -185,7 +185,7 @@ nano trusted-peers
 ./trustedPublish.sh my-peer-info trusted-peers
 ```
 
-更新防火墙和EOS 'config.ini'
+更新防火墙和EOS `config.ini`
 
 ```
 # update peers on the base config.ini
@@ -243,7 +243,7 @@ sudo ip link del dev ghostbusters && sudo wg-quick up ghostbusters.conf
 
 ## 5.在keybase上发布BP信息
 
-在KBFS保存: 如果你还没有在那里，'cd' 你的'Ghostbusters'文件夹
+在KBFS保存: 如果你还没有在那里，`cd` 你的`Ghostbusters`文件夹
 
 ```
 nano bp_info.json
@@ -257,7 +257,7 @@ cp bp_info.json ~/kbfs/public/<username>
 
 注意:您不必填写BP节点的api_endpoint和p2p_endpoint——需要将他们隐藏起来。
 
-- 在如下链接检查文件是否已经打开 https://<username>.keybase.pub/bp_info.json
+- 在如下链接检查文件是否已经打开 `https://<username>.keybase.pub/bp_info.json`
 
 ### 5.1 验证BP信息(可选项)
 
@@ -268,7 +268,7 @@ curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
 
-'schema.json'应该是从前面的Ghostbusters安装脚本生成的，bp_info.json文件也应该在其中。
+`schema.json`应该是从前面的Ghostbusters安装脚本生成的，`bp_info.json`文件也应该在其中。
 
 ```
 sudo npm install -g ajv-cli
@@ -277,7 +277,7 @@ ajv validate -s schema.json -d bp_info.json
 
 ## 6.检查脚本
 
-'cd' 在Ghostbusters testnet文件夹中，该文件夹是由安装脚本所创建的。试试'cat config.ini'，同时'cat cleos.sh'检查所有信息是否正确。
+`cd` 在Ghostbusters testnet文件夹中，该文件夹是由安装脚本所创建的。试试`cat config.ini`，同时`cat cleos.sh`检查所有信息是否正确。
 
 ## 7.设置Autolaunch
 
@@ -288,7 +288,7 @@ crontab -e
 # Exit
 ```
 
-当团队(在Keybase上)准备排队和启动时，可以运行'autolaunch.sh'当只在您的一个节点上，并在创建时手动启动其余的节点同时发布了json文件，可以运行'autolaunch.sh'
+当团队(在Keybase上)准备排队和启动时，可以运行`autolaunch.sh`当只在您的一个节点上，并在创建时手动启动其余的节点同时发布了json文件，可以运行`autolaunch.sh`
 
 ```
 # Run autolaunch, answer questions prompted by script
@@ -299,7 +299,7 @@ crontab -e
 crontab -e
 ```
 
-如果 'autolaunch.sh' 没有正确启动节点，请运行以下命令:
+如果 `autolaunch.sh`没有正确启动节点，请运行以下命令:
 
 ```
 ./start.sh --delete-all-blocks --genesis-json ./genesis.json
@@ -307,8 +307,7 @@ crontab -e
 
 ## 8.Bios节点
 
-如果您被选择为bios节点，请遵循说明[这里](https://github.com/hkeos/Ghostbusters-Testnet/blob/master/bios-node/bios-instructions.md)。
-
+如果您被选择为bios节点，请遵循说明 [这里](https://github.com/hkeos/Ghostbusters-Testnet/blob/master/bios-node/bios-instructions.md)
 ## 9.重新同步
 
 如果您需要重新启动节点:
