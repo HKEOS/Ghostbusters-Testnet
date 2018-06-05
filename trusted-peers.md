@@ -1,5 +1,7 @@
 # How to use the trusted peer scripts correctly
 
+[中文版本](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/trusted-peers_CN.md)
+
 The general `publishPeerInfo.sh` and `updatePeers.sh` scripts allows all nodes in the private mesh to peer with each other.
 If you would like to join the large mesh and open your node to connect too all others, or have no trusted peers, use these to start off.
 We do not recommend to use this for your BP nodes.

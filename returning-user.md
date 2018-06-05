@@ -1,5 +1,7 @@
 # Quick Instructions for Returning User
 
+[中文版本](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/returning-user_CN.md)
+
 Between launches, we will typically update a significant portion of the scripts. 
 
 This is a quick guide on how to get ready for the next launch as soon as possible.
