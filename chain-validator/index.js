@@ -3,25 +3,56 @@ const os = require('os'),
     cpuCount = os.cpus().length;
 const Eos = require('eosjs');
 const ProgressBar = require('progress');
+const mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
+mongoose.Promise = require('bluebird');
 let eos = null;
 let bar = null;
 const chunks = [];
 let totalBlocks = null;
+let totalRAM_alloc = 0;
 let processedBlocks = 0;
 let tempBlocks = 0;
-const progress_bar = false;
-initEOSJS();
+const progress_bar = true;
+
+const TokenHolderSchema = new Schema({
+    eth: {type: String, unique: true},
+    acc: {type: String, unique: true},
+    eos: {type: String},
+    bal: String,
+    proof: Schema.Types.Mixed,
+    created: Boolean,
+    balanceValid: Boolean,
+    stakedBalance: Number,
+    freeBalance: Number,
+    creationBlock: String
+});
+const TokenHolder = mongoose.model('tokenholder', TokenHolderSchema);
+
+let checkCalled = false;
+
+function checkNonValidated() {
+    if (checkCalled === false) {
+        checkCalled = true;
+        setTimeout(() => {
+            TokenHolder.find({balanceValid: {"$ne": true}}).then((invalidAcc) => {
+                console.log('Found ' + invalidAcc.length + " non-validadted accounts!");
+            });
+        }, 1000);
+    }
+}
 
 function initEOSJS() {
     const config = {
         keyProvider: [],
-        httpEndpoint: 'http://aurora.eosrio.io:28888',
+        httpEndpoint: 'http://localhost:8888',
         expireInSeconds: 60,
         broadcast: true,
         debug: false,
-        sign: false
+        sign: false,
+        chainId: '0d6c11e66db1ea0668d630330aaee689aa6aa156a27d39419b64b5ad81c0a760'
     };
-    eos = Eos.Localnet(config);
+    eos = Eos(config);
     eos['getInfo']({}).then(result => {
 
         // Get last irreversible block
@@ -45,7 +76,7 @@ function initEOSJS() {
         }
 
         if (progress_bar) {
-            bar = new ProgressBar('  reading blocks [:curr/:total] [:bar] :rate/bps :percent :etas', {
+            bar = new ProgressBar('  reading blocks [:curr/:total] [:bar] :rate/bps :percent :etas - :ram bytes', {
                 complete: '=',
                 incomplete: ' ',
                 width: 50,
@@ -78,7 +109,8 @@ function initEOSJS() {
                         processedBlocks = processedBlocks + msg.count;
                         if (progress_bar) {
                             bar.tick(msg.count, {
-                                curr: processedBlocks
+                                curr: processedBlocks,
+                                ram: totalRAM_alloc
                             });
                         }
                     }
@@ -89,8 +121,20 @@ function initEOSJS() {
                             index: index
                         });
                     }
+                    if (msg.status === "buyrambytes") {
+                        totalRAM_alloc += msg.bytes;
+                    }
+                    if (msg.status === "finishScan") {
+                        checkNonValidated();
+                    }
                 });
             }, index * 100);
         });
     });
 }
+
+mongoose.connect('mongodb://localhost/mainnet').then(() => {
+    initEOSJS();
+}, (err) => {
+    console.log(err);
+});
