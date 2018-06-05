@@ -4,7 +4,10 @@
    
 본 지침은 EOS NodeOne이 번역했습니다.
 
+[English](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/README.md)
+
 [中文版本](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/README_CN.md)
+
 - [prometheus](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/prometheus.md) (Patroneos + HAProxy), [regproducer](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/regproducer.md) 그리고 [trusted peer](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/trusted-peers.md) 의 설정을 위한 안내서를 이제 보실 수 있습니다.
 - 2018년 6월 1일부터 EOS-mainnet 저장소를 사용할 것입니다. EOS.IO는 이 저장소를 이용해 빌드 되어야합니다.
  
@@ -27,7 +30,8 @@ git submodule update --init --recursive
 ./eosio_build.sh
 cd build
 sudo make install
-```- 시간을 먼저 동기화 합니다
+```
+- 시간을 먼저 동기화 합니다
 ```console
 sudo timedatectl set-ntp no
 # 기본 timesyncd 가 꺼져있는지 확인
