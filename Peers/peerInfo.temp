@@ -1,6 +1,0 @@
-## Temp settings
-WG_IP="192.168.100.1"
-WG_IP="192.168.100.102"
-WG_PublicKey="2342342423"
-WG_Endpoint="alpha.eosrio.io:5555"
-WG_PKA="20"
