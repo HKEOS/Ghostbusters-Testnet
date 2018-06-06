@@ -271,6 +271,11 @@ sudo apt-get install -y nodejs
 `cd` into your Ghostbusters testnet folder, which was created from the install script.
 Try `cat config.ini`, and `cat cleos.sh` to check that all the information is correct.
 
+Start your node when ready:
+```console
+./start.sh --delete-all-blocks --genesis-json /path/to/genesis.json
+```
+
 ### 7. Resync
 
 If at any point you need to restart your node:
@@ -279,7 +284,7 @@ If at any point you need to restart your node:
 tail -F stderr.txt
 
 # Hard resync
-./start.sh --delete-all-blocks --hard-replay-blockchain
+./start.sh --delete-all-blocks --genesis-json /path/to/genesis.json
 tail -F stderr.txt
 ```
 You can also update your peers and restart at the same time:
