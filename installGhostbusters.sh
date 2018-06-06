@@ -410,13 +410,12 @@ sudo cp ghostbusters.conf /etc/wireguard/.
 
 #Wireguard
 echo -e "Generating my-peer-info file..."
-echo -e "#Wireguard" >> my-peer-info
-echo -e "[Peer]" > my-peer-info
+echo -e "#Wireguard" > my-peer-info
+echo -e "[Peer]" >> my-peer-info
 echo -e "PublicKey = $(cat publickey)" >> my-peer-info
 echo -e "AllowedIPs = $WIREGUARD_PRIVATE_IP/32" >> my-peer-info
 echo -e "Endpoint = $NODE_PUBLIC_IP:$WIREGUARD_PORT" >> my-peer-info
 echo -e "PersistentKeepAlive = 20" >> my-peer-info
-echo -e "\n" >> my-peer-info
 echo -e "\n" >> my-peer-info
 echo -e "#EOS" >> my-peer-info
 echo -e "[EOS]" >> my-peer-info
