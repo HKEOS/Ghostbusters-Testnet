@@ -279,36 +279,7 @@ ajv validate -s schema.json -d bp_info.json
 
 `cd` 在Ghostbusters testnet文件夹中，该文件夹是由安装脚本所创建的。试试`cat config.ini`，同时`cat cleos.sh`检查所有信息是否正确。
 
-## 7.设置Autolaunch
-
-```
-sudo apt install jq
-crontab -e
-# Select nano (if you are initializing cron for the first time)
-# Exit
-```
-
-当团队(在Keybase上)准备排队和启动时，可以运行`autolaunch.sh`当只在您的一个节点上，并在创建时手动启动其余的节点同时发布了json文件，可以运行`autolaunch.sh`
-
-```
-# Run autolaunch, answer questions prompted by script
-./autolaunch.sh
-
-# If the target BTC block was not reached at runtime,
-# it will schedule itself on CRON, please verify with
-crontab -e
-```
-
-如果 `autolaunch.sh`没有正确启动节点，请运行以下命令:
-
-```
-./start.sh --delete-all-blocks --genesis-json ./genesis.json
-```
-
-## 8.Bios节点
-
-如果您被选择为bios节点，请遵循说明 [这里](https://github.com/hkeos/Ghostbusters-Testnet/blob/master/bios-node/bios-instructions.md)
-## 9.重新同步
+## 7.重新同步
 
 如果您需要重新启动节点:
 
@@ -317,7 +288,7 @@ crontab -e
 tail -F stderr.txt
 
 # Hard resync
-./start.sh --delete-all-blocks --hard-replay-blockchain
+./start.sh --delete-all-blocks --genesis-json /path/to/genesis.json
 tail -F stderr.txt
 ```
 
