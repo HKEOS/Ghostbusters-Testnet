@@ -310,7 +310,7 @@ ajv validate -s schema.json -d bp_info.json
 tail -F stderr.txt
 
 # 하드 리싱크(Hard resync)
-./start.sh --delete-all-blocks --hard-replay-blockchain
+./start.sh --delete-all-blocks --genesis-json /path/to/genesis.json
 tail -F stderr.txt
 ```
 
