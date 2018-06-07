@@ -1,4 +1,4 @@
-# Welcome to Prometheus
+# Welcome to Prometheus - ADVANCED
 
 [中文版本](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/prometheus_CN.md)
 
