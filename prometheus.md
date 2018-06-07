@@ -49,7 +49,7 @@ sudo nano /opt/patroneos/config.json
 cd /etc/haproxy
 sudo rm haproxy.cfg
 sudo wget https://raw.githubusercontent.com/HKEOS/Ghostbusters-Testnet/master/haproxy.cfg
-sudo service haxproxy restart
+sudo service haproxy restart
 cd ~
 sudo ./script.sh
 sudo ifconfig
