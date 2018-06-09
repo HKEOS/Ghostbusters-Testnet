@@ -30,13 +30,12 @@ const TokenHolderSchema = new Schema({
 const TokenHolder = mongoose.model('tokenholder', TokenHolderSchema);
 
 let checkCalled = false;
-
 function checkNonValidated() {
     if (checkCalled === false) {
         checkCalled = true;
         setTimeout(() => {
             TokenHolder.find({balanceValid: {"$ne": true}}).then((invalidAcc) => {
-                console.log('Found ' + invalidAcc.length + " non-validadted accounts!");
+                console.log("\n\n" + ' >> Found ' + invalidAcc.length + " invalid accounts!" + "\n");
             });
         }, 1000);
     }
@@ -44,20 +43,19 @@ function checkNonValidated() {
 
 function initEOSJS() {
     const config = {
-        keyProvider: [],
+        keyProvider: [''],
         httpEndpoint: 'http://localhost:8888',
         expireInSeconds: 60,
         broadcast: true,
         debug: false,
         sign: false,
-        chainId: '0d6c11e66db1ea0668d630330aaee689aa6aa156a27d39419b64b5ad81c0a760'
+        chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
     };
     eos = Eos(config);
     eos['getInfo']({}).then(result => {
-
         // Get last irreversible block
         const lib_num = result['last_irreversible_block_num'];
-        console.log('Starting at block: ' + lib_num);
+        console.log(' >> Starting at block: ' + lib_num);
         const chunkSize = Math.ceil(lib_num / cpuCount) * 4;
         let b = lib_num;
         totalBlocks = lib_num;
@@ -74,9 +72,8 @@ function initEOSJS() {
             });
             b = low;
         }
-
         if (progress_bar) {
-            bar = new ProgressBar('  reading blocks [:curr/:total] [:bar] :rate/bps :percent :etas - :ram bytes', {
+            bar = new ProgressBar(' >> reading blocks [:curr/:total] [:bar] :rate/bps :percent :etas - :ram bytes', {
                 complete: '=',
                 incomplete: ' ',
                 width: 50,
@@ -90,7 +87,6 @@ function initEOSJS() {
                 tempBlocks = processedBlocks;
             }, 1000);
         }
-
         chunks.forEach((chunk, index) => {
             setTimeout(() => {
                 const subNode = cp.fork(`${__dirname}/worker.js`);

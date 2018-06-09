@@ -13,7 +13,7 @@ const config = {
     broadcast: true,
     debug: false,
     sign: true,
-    chainId: '0d6c11e66db1ea0668d630330aaee689aa6aa156a27d39419b64b5ad81c0a760'
+    chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
 };
 const eos = Eos(config);
 
@@ -31,18 +31,6 @@ const TokenHolderSchema = new Schema({
     buyrefund: Boolean
 });
 const TokenHolder = mongoose.model('tokenholder', TokenHolderSchema);
-
-// function discoverAccounts() {
-//     eos['getAccount']({
-//         account_name: 'eosio'
-//     }).then(result => {
-//         result['permissions'].forEach((perm) => {
-//             perm['required_auth'].keys.forEach((keyData) => {
-//                 console.log(keyData.key);
-//             });
-//         });
-//     });
-// }
 
 const BlockSchema = new Schema({
     blk_id: {type: String, unique: true},
@@ -71,6 +59,11 @@ function verifyAccounts() {
     TokenHolder.find({}).then((fullAccountMap) => {
         console.log(fullAccountMap.length);
         async.eachSeries(fullAccountMap, (data, callback) => {
+            // data.created = false;
+            // data.save().then(() => {
+            //     bar.tick(1, {});
+            //     callback();
+            // });
             return eos['getAccount'](data.acc).then((accdata) => {
                 if (accdata.voter_info.staked > 0) {
                     bar.tick(1, {});
@@ -102,38 +95,38 @@ function verifyAccounts() {
 }
 
 mongoose.connect('mongodb://localhost/mainnet').then(() => {
-    // mongoose.connection.dropCollection('blocks');
+    mongoose.connection.dropCollection('blocks');
     eos['getInfo']({}).then(result => {
         console.log("LIB: " + result['last_irreversible_block_num']);
-        verifyAccounts();
-        // Block.find({}).sort({blk_num: -1}).cursor().eachAsync((blockData) => {
-        //     return new Promise((resolve, reject) => {
-        //         if (lastBlock === null) {
-        //             console.log('updating last block...');
-        //             bar = new ProgressBar(' >> Checking block links [:current/:total] [:bar] :rate blocks/s :percent :etas', {
-        //                 complete: '=',
-        //                 incomplete: ' ',
-        //                 width: 50,
-        //                 total: blockData.blk_num
-        //             });
-        //             lastBlock = blockData.prev_id;
-        //         } else {
-        //             if (lastBlock !== blockData.blk_id) {
-        //                 console.log('Block link failed!');
-        //                 failedBlocks.push();
-        //                 reject();
-        //             }
-        //             lastBlock = blockData.prev_id;
-        //         }
-        //         resolve();
-        //         bar.tick(1, {});
-        //     });
-        // }).catch((err) => {
-        //     console.log("Error processing blocks...");
-        //     console.log(err);
-        // }).finally(() => {
-        //     console.log('All block links verified!');
-        // });
+        Block.find({}).sort({blk_num: -1}).cursor().eachAsync((blockData) => {
+            return new Promise((resolve, reject) => {
+                if (lastBlock === null) {
+                    console.log('updating last block...');
+                    bar = new ProgressBar(' >> Checking block links [:current/:total] [:bar] :rate blocks/s :percent :etas', {
+                        complete: '=',
+                        incomplete: ' ',
+                        width: 50,
+                        total: blockData.blk_num
+                    });
+                    lastBlock = blockData.prev_id;
+                } else {
+                    if (lastBlock !== blockData.blk_id) {
+                        console.log('Block link failed!');
+                        failedBlocks.push();
+                        reject();
+                    }
+                    lastBlock = blockData.prev_id;
+                }
+                resolve();
+                bar.tick(1, {});
+            });
+        }).catch((err) => {
+            console.log("Error processing blocks...");
+            console.log(err);
+        }).finally(() => {
+            console.log('All block links verified!');
+            verifyAccounts();
+        });
     });
 }, (err) => {
     console.log(err);

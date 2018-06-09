@@ -3,13 +3,13 @@ const mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 mongoose.Promise = require('bluebird');
 const config = {
-    keyProvider: [],
+    keyProvider: [''],
     httpEndpoint: 'http://localhost:8888',
     expireInSeconds: 60,
     broadcast: true,
     debug: false,
     sign: false,
-    chainId: '0d6c11e66db1ea0668d630330aaee689aa6aa156a27d39419b64b5ad81c0a760'
+    chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
 };
 const eos = Eos(config);
 mongoose.connect('mongodb://localhost/mainnet').then(() => {
@@ -54,7 +54,15 @@ function invalidateAction(action, msg) {
     console.log("Chain state is invalid!");
 }
 
-const allowedContracts = ['eosio.token', 'eosio.msig', 'eosio'];
+const allowedContracts = ['eosio.token', 'eosio.msig', 'eosio', 'eosio.unregd'];
+const allowedAmounts = ['2.0000 EOS', '10.0000 EOS', '0.1000 EOS'];
+const allowedCPUUsage = [100000000, 200000];
+const allowedAccounts = [
+    'eosio.token', 'eosio.msig', 'b1',
+    'eosio', 'eosio.unregd', 'eosio.ram',
+    'eosio.ramfee', 'eosio.names', 'eosio.stake',
+    'eosio.saving', 'eosio.bpay', 'eosio.vpay', 'genesisblock'
+];
 
 function fetchBlockRecursively(blk, limit, idx) {
     eos['getBlock']({
@@ -75,11 +83,18 @@ function fetchBlockRecursively(blk, limit, idx) {
                                     if (err) {
                                         console.log(err);
                                     } else {
-                                        data['creationBlock'] = blk;
-                                        data.save().then(() => {
-                                        }).catch((error) => {
-                                            console.log(error);
-                                        });
+                                        if (data) {
+                                            data['creationBlock'] = blk;
+                                            data['created'] = true;
+                                            data.save().then(() => {
+                                            }).catch((error) => {
+                                                console.log(error);
+                                            });
+                                        } else {
+                                            if (!allowedAccounts.includes(action.data.name)) {
+                                                invalidateAction(action, "Newaccount action was called");
+                                            }
+                                        }
                                     }
                                 });
                             }
@@ -126,6 +141,58 @@ function fetchBlockRecursively(blk, limit, idx) {
                                     }
                                 });
                             }
+                        } else if (action.name === 'transfer') {
+                            const q = action.data.quantity;
+                            if (action.data.memo === 'init') {
+                                if (!allowedAmounts.includes(q)) {
+                                    invalidateAction(action, "Invalid amount!");
+                                }
+                            } else {
+                                console.log("\n\n");
+                                console.log(" >> " + action.data.memo);
+                                console.log("\n");
+                            }
+                        } else if (action.name === 'setparams') {
+                            if (!allowedCPUUsage.includes(action.data.params.max_block_cpu_usage)) {
+                                invalidateAction(action, "Invalid max_block_cpu_usage!");
+                            }
+                        } else if (action.name === 'setcode') {
+                            const targetContract = action.data.account;
+                            if (!allowedContracts.includes(targetContract)) {
+                                invalidateAction(action, "Setcode called on invalid contract");
+                            }
+                        } else if (action.name === 'setpriv') {
+                            if (action.data.account !== 'eosio.msig') {
+                                invalidateAction(action, "Action not allowed!");
+                            }
+                        } else if (action.name === 'setprods') {
+                            if (action.account !== 'eosio') {
+                                invalidateAction(action, "Action not allowed!");
+                            }
+                        }  else if (action.name === 'setprods') {
+                            if (action.account !== 'eosio') {
+                                invalidateAction(action, "Action not allowed!");
+                            }
+                        } else if (action.name === 'updateauth' && action.account === 'eosio') {
+                            console.log(action);
+                            const targetContract = action.data.account;
+                            if (!allowedAccounts.includes(targetContract)) {
+                                invalidateAction(action, "updateauth called on invalid contract");
+                            }
+                        } else if (action.name === 'issue' && action.account === 'eosio.token') {
+                            if (action.data.to !== 'eosio') {
+                                invalidateAction(action, "Issue not allowed!");
+                            }
+                        } else if (action.name === 'create' && action.account === 'eosio.token') {
+                            if (action.data.issuer !== 'eosio') {
+                                invalidateAction(action, "create not allowed!");
+                            }
+                        } else if (action.name === 'add') {
+                            if (action.account !== 'eosio.unregd') {
+                                invalidateAction(action, "Issue not allowed!");
+                            }
+                        } else {
+                            invalidateAction(action, "Action not allowed!");
                         }
                     });
                 }
@@ -148,7 +215,6 @@ function fetchBlockRecursively(blk, limit, idx) {
                 }
                 fetchBlockRecursively(result['previous'], limit, idx)
             } else {
-                console.log('Process reached limit');
                 process.send({
                     status: 'end',
                     data: {
@@ -157,14 +223,12 @@ function fetchBlockRecursively(blk, limit, idx) {
                 });
             }
         }).catch(() => {
-            console.log('Duplicate found...');
             findLastInserted(result['block_num'], limit)
         });
     });
 }
 
 function findLastInserted(current, limit) {
-    console.log('Searching for lower number inserted...');
     const query = Block.find({blk_num: {"$lt": current, "$gt": limit}}).sort({blk_num: 1}).limit(1);
     query.exec().then((data) => {
         if (data.length > 0) {
@@ -175,7 +239,6 @@ function findLastInserted(current, limit) {
             console.log('block: ' + data[0]['blk_num']);
             fetchBlockRecursively(data[0]['blk_num'] - 1, limit);
         } else {
-            console.log("END!");
             process.send({
                 status: 'finishScan'
             });
@@ -186,8 +249,10 @@ function findLastInserted(current, limit) {
 }
 
 process.on('message', (m) => {
-    console.log(" Worker #" + (m.index + 1) + " started! - From " + m.high + " to " + m.low);
-    fetchBlockRecursively(m.high, m.low, m.index);
+    console.log(" >> Worker #" + (m.index + 1) + " started! - From " + m.high + " to " + m.low);
+    setTimeout(() => {
+        fetchBlockRecursively(m.high, m.low, m.index);
+    }, 1000);
 });
 process.on('beforeExit', (code) => {
     console.log(`About to exit with code: ${code}`);
