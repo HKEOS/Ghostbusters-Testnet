@@ -2,6 +2,8 @@
 
 [中文版本](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/prometheus_CN.md)
 
+**Note:** Patroneos should be updated regularly, as there are still active changes being made on the repository.
+
 Prometheus is a reverse proxy machine that goes in front of your full node. It uses haproxy and patroneos.
 
 This guide assumes that you are running on Ubuntu 18.04. We recommend using simple cloud server for this.
