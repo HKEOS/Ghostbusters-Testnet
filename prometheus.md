@@ -10,6 +10,8 @@ This guide assumes that you are running on Ubuntu 18.04. We recommend using simp
 
 Make sure that your firewall settings allows traffic in from port 80, and any other ports needed to allow communication between your full node and the prometheus node.
 
+Sam from EOS Dublin has create a setup script for the majority of this process too: https://github.com/eosdublin/scripts/blob/master/nyx/setup.sh
+
 ### Grab Michael's great LXC container image
 
 ```console
