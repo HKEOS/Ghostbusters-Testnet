@@ -2,7 +2,7 @@
 
 [中文版本](https://github.com/HKEOS/Ghostbusters-Testnet/blob/master/prometheus_CN.md)
 
-**Note:** Patroneos should be updated regularly, as there are still active changes being made on the repository.
+**Note:** Patroneos should be updated regularly, as there are still active changes being made on the repository. Find the Patroneos update script below (designed for Prometheus).
 
 Prometheus is a reverse proxy machine that goes in front of your full node. It uses haproxy and patroneos.
 
@@ -10,7 +10,10 @@ This guide assumes that you are running on Ubuntu 18.04. We recommend using simp
 
 Make sure that your firewall settings allows traffic in from port 80, and any other ports needed to allow communication between your full node and the prometheus node.
 
-Sam from EOS Dublin has create a setup script for the majority of this process too: https://github.com/eosdublin/scripts/blob/master/nyx/setup.sh
+Sam from EOS Dublin has created a setup script for the majority of this process too: https://github.com/eosdublin/scripts/blob/master/nyx/setup.sh
+
+He also wrote a Patroneos update script:
+https://github.com/eosdublin/scripts/blob/master/nyx/update_patroneos.sh
 
 ### Grab Michael's great LXC container image
 
