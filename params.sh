@@ -9,8 +9,8 @@
 ## Jae Chung, HKEOS
 ##########################################
 
-TAG="mainnet-1.0.2.1";
-EOS_TARGET_VERSION="759439493";
+TAG="mainnet-1.0.5";
+EOS_TARGET_VERSION="3674411875";
 TESTNET="ghostbusters";
 
 ##### REQUIRED PARAMETERS TO BE MODIFIED ######
