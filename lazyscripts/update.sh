@@ -6,6 +6,6 @@ cd eos
 git pull
 git checkout tags/$TAG
 git submodule update --init --recursive
-./eosio_build.sh
+./eosio_build.sh -s "EOS"
 cd build
 sudo make install
