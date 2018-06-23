@@ -13,7 +13,7 @@ git clone https://github.com/EOS-Mainnet/eos.git
 cd eos
 git checkout mainnet-1.0.5
 git submodule update --init --recursive
-./eosio_build.sh
+./eosio_build.sh -s "EOS"
 cd build
 sudo make install
 ```
@@ -23,7 +23,7 @@ If you are updating from the EOS-mainnet repo:
 git pull
 git checkout <tag>
 git submodule update --init --recursive
-./eosio_build.sh
+./eosio_build.sh -s "EOS"
 cd build
 sudo make install
 ```
