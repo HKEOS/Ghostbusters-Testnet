@@ -7,9 +7,9 @@
 # Clean install
 git clone https://github.com/EOS-Mainnet/eos.git
 cd eos
-git checkout launch-rc
+git checkout mainnet-1.0.8
 git submodule update --init --recursive
-./eosio_build.sh
+./eosio_build.sh -s "EOS"
 cd build
 sudo make install
 ```
