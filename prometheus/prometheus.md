@@ -18,7 +18,7 @@ https://github.com/eosdublin/scripts/blob/master/nyx/update_patroneos.sh
 ### Grab Michael's great LXC container image
 
 ```console
-wget https://transfer.sh/UOxlD/prometheus
+wget https://keybase.pub/hkeos/prometheus
 ```
 
 ### Configure LXD (LXC daemon)
